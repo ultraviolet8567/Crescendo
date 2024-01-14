@@ -145,7 +145,7 @@ spotless {
         formatAnnotations()
         toggleOffOn()
         trimTrailingWhitespace()
-        indentWithTabs(4)
+        indentWithTabs(2)
         endWithNewline()
     }
 }
