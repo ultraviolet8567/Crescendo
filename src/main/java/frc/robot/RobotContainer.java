@@ -3,7 +3,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerType;
 import frc.robot.Constants.OIConstants;
@@ -14,6 +13,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Odometry;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Vision;
 import frc.robot.util.ControllerIO;
 
 /**
@@ -29,6 +29,7 @@ public class RobotContainer {
 	private static final Odometry odometry = new Odometry();
 	private static final Shooter shooter = new Shooter();
 	private static final Swerve swerve = new Swerve();
+	private static final Vision vision = new Vision();
 
 	// Joysticks
 	private static final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
