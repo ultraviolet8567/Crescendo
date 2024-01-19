@@ -6,6 +6,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import frc.robot.util.LoggedTunableNumber;
 
 public final class Constants {
 	/**
@@ -18,7 +19,7 @@ public final class Constants {
 	 * <p>
 	 * Odometry - Forward = x+ - Left = y+ - Counterclockwise = z+
 	 */
-	public static final Mode currentMode = Mode.REAL;
+	public static final Mode currentMode = Mode.SIM;
 
 	public static final ModuleType powerDistributionType = ModuleType.kRev;
 	public static final boolean fieldOriented = true;
@@ -122,6 +123,10 @@ public final class Constants {
 				* 0.4;
 		public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
 		public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
+	}
+
+	public static final class ArmConstants {
+		public static final LoggedTunableNumber intakeSpeed = new LoggedTunableNumber("Max intake speed", 0.5);
 	}
 
 	public static enum Mode {

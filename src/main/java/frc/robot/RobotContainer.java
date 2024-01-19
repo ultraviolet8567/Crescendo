@@ -3,10 +3,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerType;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.Pickup;
 import frc.robot.commands.SwerveTeleOp;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
@@ -54,7 +55,9 @@ public class RobotContainer {
 	 * created via the {@link Trigger#Trigger(java.util.function.BooleanSupplier)}
 	 * constructor with an arbitrary predicate
 	 */
-	private void configureBindings() {
+	public void configureBindings() {
+		new JoystickButton(driverJoystick, XboxController.Button.kA.value).whileTrue(new Pickup(intake));
+
 	}
 
 	public Command getAutonomousCommand() {
