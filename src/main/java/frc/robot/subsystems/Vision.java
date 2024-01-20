@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.photonvision.PhotonCamera;
 
 public class Vision extends SubsystemBase {
-	PhotonCamera camera = new PhotonCamera("photonvisionA");
+	PhotonCamera camera = new PhotonCamera("OV9281");
 	/** Creates a new Vision. */
 	public Vision() {
 
@@ -16,11 +16,10 @@ public class Vision extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		System.out.println("I exist");
 		var result = camera.getLatestResult();
 		boolean hasTargets = result.hasTargets();
 		if (hasTargets) {
-			System.out.println("Sees april tag!!!");
+			System.out.println(result.getBestTarget().getFiducialId());
 			/*
 			 * List<PhotonTrackedTarget> targets = result.getTargets();
 			 *
