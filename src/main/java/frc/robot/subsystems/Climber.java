@@ -28,7 +28,7 @@ public class Climber extends SubsystemBase {
 
 	}
 	/* Define all subsystem-specific methods and enums here */
-	public void startClimb(boolean reverse) {
+	public void startClimb() {
 		climb.set(climbSpeed);
 	}
 
