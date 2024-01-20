@@ -8,16 +8,29 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.photonvision.PhotonCamera;
 
 public class Vision extends SubsystemBase {
-	PhotonCamera camera = new PhotonCamera("photonvision");
+	PhotonCamera camera = new PhotonCamera("photonvisionA");
 	/** Creates a new Vision. */
 	public Vision() {
+
 	}
 
 	@Override
 	public void periodic() {
+		System.out.println("I exist");
 		var result = camera.getLatestResult();
 		boolean hasTargets = result.hasTargets();
-		System.out.println(hasTargets);
+		if (hasTargets) {
+			System.out.println("Sees april tag!!!");
+			/*
+			 * List<PhotonTrackedTarget> targets = result.getTargets();
+			 *
+			 * List<List<Transform3d>> poses; for (PhotonTrackedTarget target : targets) {
+			 * List<Transform3d> posePair; posePair.add(target.getBestCameraToTarget());
+			 * posePair.add(target.getAlternateCameraToTarget()); poses.add(posePair); }
+			 * //TODO: check for combination of poses that are the most similar (lowest std
+			 * dev for each combination?)
+			 */
+		}
 		// This method will be called once per scheduler run
 	}
 }
