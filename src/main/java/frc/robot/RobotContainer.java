@@ -9,6 +9,7 @@ import frc.robot.Constants.ControllerType;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Climb;
 import frc.robot.commands.Pickup;
+import frc.robot.commands.Shoot;
 import frc.robot.commands.SwerveTeleOp;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
@@ -59,7 +60,7 @@ public class RobotContainer {
 	public void configureBindings() {
 		new JoystickButton(driverJoystick, XboxController.Button.kA.value).whileTrue(new Pickup(intake));
 		new JoystickButton(driverJoystick, XboxController.Button.kB.value).whileTrue(new Climb(climber));
-
+		new JoystickButton(driverJoystick, XboxController.Button.kX.value).whileTrue(new Shoot(shooter));
 	}
 
 	public Command getAutonomousCommand() {
