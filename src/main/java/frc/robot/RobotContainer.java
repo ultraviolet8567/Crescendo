@@ -28,27 +28,32 @@ import frc.robot.util.ControllerIO;
  * declared here.
  */
 public class RobotContainer {
-	private static final Arm arm;
-	private static final Climber climber;
-	private static final Intake intake;
-	private static final Odometry odometry;
-	private static final Shooter shooter;
-	private static final Swerve swerve;
-
 	// Subsystems
-	switch (Constants.getMode()) {
-		case REAL {
+	private final Arm arm;
+	private final Climber climber;
+	private final Intake intake;
+	private final Odometry odometry;
+	private final Shooter shooter;
+	private final Swerve swerve;
+
+	// Joysticks
+	private static final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
+	private static final Joystick operatorJoystick = new Joystick(OIConstants.kOperatorControllerPort);
+
+	public RobotContainer() {
+		switch (Constants.currentMode) {
+		case REAL -> {
 			arm = new Arm();
 			climber = new Climber();
-			intake = new Intake(IntakeIOSparkMax);
+			intake = new Intake(new IntakeIOSparkMax());
 			odometry = new Odometry();
 			shooter = new Shooter();
 			swerve = new Swerve();
 		}
-		case SIM {
+		case SIM -> {
 			arm = new Arm();
 			climber = new Climber();
-			intake = new Intake(IntakeIOSim);
+			intake = new Intake(new IntakeIOSim());
 			odometry = new Odometry();
 			shooter = new Shooter();
 			swerve = new Swerve();
@@ -56,20 +61,12 @@ public class RobotContainer {
 		default -> {
 			arm = new Arm();
 			climber = new Climber();
-			intake = new Intake(IntakeIO);
+			intake = new Intake(new IntakeIO() {});
 			odometry = new Odometry();
 			shooter = new Shooter();
 			swerve = new Swerve();
 		}
 	}
-
-	
-
-	// Joysticks
-	private static final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
-	private static final Joystick operatorJoystick = new Joystick(OIConstants.kOperatorControllerPort);
-
-	public RobotContainer() {
 		// Configure default commands for driving and arm movement
 		swerve.setDefaultCommand(new SwerveTeleOp(swerve, odometry,
 				() -> ControllerIO.inversionY() * driverJoystick.getRawAxis(ControllerIO.getLeftY()),
