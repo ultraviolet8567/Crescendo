@@ -9,6 +9,7 @@ import frc.robot.Constants.ControllerType;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Climb;
 import frc.robot.commands.Pickup;
+import frc.robot.commands.SetArmAngle;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.SwerveTeleOp;
 import frc.robot.subsystems.Odometry;
@@ -87,10 +88,28 @@ public class RobotContainer {
 	 * created via the {@link Trigger#Trigger(java.util.function.BooleanSupplier)}
 	 * constructor with an arbitrary predicate
 	 */
+
 	public void configureBindings() {
-		new JoystickButton(driverJoystick, XboxController.Button.kA.value).whileTrue(new Pickup(intake));
-		new JoystickButton(driverJoystick, XboxController.Button.kB.value).whileTrue(new Climb(climber));
-		new JoystickButton(driverJoystick, XboxController.Button.kX.value).whileTrue(new Shoot(shooter));
+		new JoystickButton(operatorJoystick, XboxController.Button.kLeftBumper.value).whileTrue(new Pickup(intake));
+		new JoystickButton(operatorJoystick, XboxController.Button.kRightBumper.value).whileTrue(new Shoot(shooter));
+		new JoystickButton(operatorJoystick, XboxController.Button.kBack.value).whileTrue(new Climb(climber));
+		new JoystickButton(operatorJoystick, XboxController.Button.kY.value).whileTrue(new SetArmAngle(arm, 0, 1));
+		new JoystickButton(operatorJoystick, XboxController.Button.kA.value).whileTrue(new SetArmAngle(arm, 0, 2));
+
+		// new JoystickButton(operatorJoystick, operatorJoystick.pov).whileTrue(new
+		// SetArmAngle(arm, 0, 1));
+
+		// new JoystickButton(operatorJoystick, dPadUp()).whileTrue(new SetArmAngle(arm,
+		// 0, 1));
+		// new JoystickButton(operatorJoystick, dPadDown()).whileTrue(new
+		// SetArmAngle(arm, 0, 2));
+		// new JoystickButton(operatorJoystick, dPadRight()).whileTrue(new
+		// SetArmAngle(arm, 0, 3));
+		// new JoystickButton(operatorJoystick, dPadLeft()).whileTrue(new
+		// SetArmAngle(arm, 0, 4));
+		// new JoystickButton(operatorJoystick, XboxController.Button.kRightStick.value)
+		// .onTrue(new SetArmAngle(arm, operatorJoystick.getY(), 0));
+
 	}
 
 	public Command getAutonomousCommand() {
@@ -104,4 +123,28 @@ public class RobotContainer {
 	public static Joystick getOperatorJoystick() {
 		return operatorJoystick;
 	}
+	// public int dPadUp() {
+	// if (operatorJoystick.getPOV() == 0) {
+	// return 1;
+	// }
+	// return 0;
+	// }
+	// public int dPadRight() {
+	// if (operatorJoystick.getPOV() == 90) {
+	// return 2;
+	// }
+	// return 0;
+	// }
+	// public int dPadDown() {
+	// if (operatorJoystick.getPOV() == 180) {
+	// return 3;
+	// }
+	// return 0;
+	// }
+	// public int dPadLeft() {
+	// if (operatorJoystick.getPOV() == 270) {
+	// return 1;
+	// }
+	// return 0;
+	// }
 }
