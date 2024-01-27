@@ -11,11 +11,14 @@ import frc.robot.commands.Climb;
 import frc.robot.commands.Pickup;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.SwerveTeleOp;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIO;
+import frc.robot.subsystems.intake.IntakeIOSim;
+import frc.robot.subsystems.intake.IntakeIOSparkMax;
 import frc.robot.subsystems.Odometry;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.ControllerIO;
 
@@ -25,13 +28,42 @@ import frc.robot.util.ControllerIO;
  * declared here.
  */
 public class RobotContainer {
+	private static final Arm arm;
+	private static final Climber climber;
+	private static final Intake intake;
+	private static final Odometry odometry;
+	private static final Shooter shooter;
+	private static final Swerve swerve;
+
 	// Subsystems
-	private static final Arm arm = new Arm();
-	private static final Climber climber = new Climber();
-	private static final Intake intake = new Intake();
-	private static final Odometry odometry = new Odometry();
-	private static final Shooter shooter = new Shooter();
-	private static final Swerve swerve = new Swerve();
+	switch (Constants.getMode()) {
+		case REAL {
+			arm = new Arm();
+			climber = new Climber();
+			intake = new Intake(IntakeIOSparkMax);
+			odometry = new Odometry();
+			shooter = new Shooter();
+			swerve = new Swerve();
+		}
+		case SIM {
+			arm = new Arm();
+			climber = new Climber();
+			intake = new Intake(IntakeIOSim);
+			odometry = new Odometry();
+			shooter = new Shooter();
+			swerve = new Swerve();
+		}
+		default -> {
+			arm = new Arm();
+			climber = new Climber();
+			intake = new Intake(IntakeIO);
+			odometry = new Odometry();
+			shooter = new Shooter();
+			swerve = new Swerve();
+		}
+	}
+
+	
 
 	// Joysticks
 	private static final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);

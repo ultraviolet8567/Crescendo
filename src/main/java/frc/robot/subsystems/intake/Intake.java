@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.intake;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -13,39 +13,37 @@ public class Intake extends SubsystemBase {
 	 * Declare components of subsystem here (motor controllers, encoders, sensors,
 	 * etc.)
 	 */
-	CANSparkMax intake;
+	private final IntakeIO io;
+	private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
 
 	/*
 	 * Initialize all components here, as well as any one-time logic to be completed
 	 * on boot-up
 	 */
-	public Intake() {
-		intake = new CANSparkMax(CAN.kIntakePort, MotorType.kBrushless);
-		intake.enableVoltageCompensation(12.0);
-		intake.setSmartCurrentLimit(40);
-		intake.setIdleMode(IdleMode.kBrake);
+	public Intake(IntakeIO io) {
+		this.io = io;
 	}
 
 	/* Runs periodically (about once every 20 ms) */
 	@Override
 	public void periodic() {
-		Logger.recordOutput("Setpoints/Intake", intake.get());
-		Logger.recordOutput("Measured/Intake", intake.getEncoder().getVelocity());
+		//Logger.recordOutput("Setpoints/Intake", intake.get());
+		//Logger.recordOutput("Measured/Intake", intake.getEncoder().getVoltage());
+		io.updateInputs(inputs);
+		Logger.processInputs("Intake", inputs);
 	}
 
 	/* Define all subsystem-specific methods and enums here */
 
 	public void pickup() {
-		intake.set(ArmConstants.intakeSpeed.get());
+		io.setInputVoltage(ArmConstants.intakeVoltage.get());
 	}
 
-	// Drop function if necessary
-	// public void drop()
-	// {
-	// intake.set(-ArmConstants.intakeSpeed.get());
-	// }
+	public void drop() {
+		io.setInputVoltage(-ArmConstants.intakeVoltage.get());
+	}
 
 	public void stop() {
-		intake.stopMotor();
+		io.stop();
 	}
 }

@@ -130,7 +130,7 @@ public final class Constants {
 	}
 
 	public static final class ArmConstants {
-		public static final LoggedTunableNumber intakeSpeed = new LoggedTunableNumber("Max intake speed", 0.5);
+		public static final LoggedTunableNumber intakeVoltage = new LoggedTunableNumber("Intake Voltage", 0.5);
 	}
 
 	public static enum Mode {
