@@ -47,8 +47,8 @@ public final class Constants {
 		public static final int kRightFlywheelPort = 6;
 
 		// Temp values for now
-		public static final int kShooterTopPort = 0;
-		public static final int kShooterBottomPort = 0;
+		public static final int kShooterTopPort = 7;
+		public static final int kShooterBottomPort = 8;
 
 		public static final int kFrontLeftDriveMotorPort = 11;
 		public static final int kFrontRightDriveMotorPort = 12;
