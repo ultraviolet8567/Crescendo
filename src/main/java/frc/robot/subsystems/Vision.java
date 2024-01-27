@@ -1,6 +1,10 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+/**
+ * things that we could do now:
+ * horizontal alignment (swerve)
+ * id (which side of the field we're on) affects calculations --> will differ based on field-based/robot-based
+ * - field: positive theta is counter-clockwise, positive x-axis is away from alliance wall, positive y-axis is perpendicular & to the left of positive x
+ * - robot: positive theta is counter-clockwise, positive x-axis is dir robot is facing, positive y-axis is perpendicular & to the left of robot
+*/
 
 package frc.robot.subsystems;
 
@@ -37,9 +41,30 @@ public class Vision extends SubsystemBase {
 			Transform3d meanPose = getMean(poses);
 			Transform3d bestSpace = leastWrongSpace(poses, meanPose);
 			Transform3d bestAngle = leastWrongAngle(poses, meanPose);
+
+			boolean onBlue = findFieldSide(targets);
 		}
 	}
 
+	public double distanceSquared(Transform3d pose){
+		return Math.pow(pose.getX(), 2) + Math.pow(pose.getY(), 2);
+	}
+
+	// return side of field we're on
+	// true if on blue, false if on red
+	public boolean findFieldSide(List<PhotonTrackedTarget> targets){
+		PhotonTrackedTarget closest = targets.get(0);
+		
+		for (PhotonTrackedTarget target : targets) {
+			Transform3d pose = target.getBestCameraToTarget();
+			if (distanceSquared(closest.getBestCameraToTarget()) > distanceSquared(pose)){
+				closest = target;
+			}
+		}
+
+		int id = closest.getFiducialId();
+		return (id <= 2 || id >= 14 || (id >= 6 && id <= 8));
+	}
 
 	// get mean of pose list
 	public Transform3d getMean(List<List<Transform3d>> poses) {
@@ -69,7 +94,7 @@ public class Vision extends SubsystemBase {
 		}
 	}
 	
-	// get and sort distances
+	// return least wrong transform3d spacially
 	public Transform3d leastWrongSpace(List<List<Transform3d>> poses, Transform3d mean) {
 		Transform3d best = new Transform3d();
 		double bestDist = 99999999;
@@ -95,6 +120,7 @@ public class Vision extends SubsystemBase {
 		}
 	}
 
+	// returns the least wrong transform3d angle-wise
 	public Transform3d leastWrongAngle(List<List<Transform3d>> poses, Transform3d mean) {
 		Transform3d leastWrong = poses.get(0).get(0);
 		Rotation3d toCompare = mean.getRotation().minus(poses.get(0).get(0).getRotation());
