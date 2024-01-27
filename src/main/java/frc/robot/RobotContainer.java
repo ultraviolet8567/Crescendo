@@ -11,15 +11,15 @@ import frc.robot.commands.Climb;
 import frc.robot.commands.Pickup;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.SwerveTeleOp;
+import frc.robot.subsystems.Odometry;
+import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.intake.IntakeIOSparkMax;
-import frc.robot.subsystems.Odometry;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.Swerve;
 import frc.robot.util.ControllerIO;
 
 /**
@@ -42,31 +42,32 @@ public class RobotContainer {
 
 	public RobotContainer() {
 		switch (Constants.currentMode) {
-		case REAL -> {
-			arm = new Arm();
-			climber = new Climber();
-			intake = new Intake(new IntakeIOSparkMax());
-			odometry = new Odometry();
-			shooter = new Shooter();
-			swerve = new Swerve();
+			case REAL -> {
+				arm = new Arm();
+				climber = new Climber();
+				intake = new Intake(new IntakeIOSparkMax());
+				odometry = new Odometry();
+				shooter = new Shooter();
+				swerve = new Swerve();
+			}
+			case SIM -> {
+				arm = new Arm();
+				climber = new Climber();
+				intake = new Intake(new IntakeIOSim());
+				odometry = new Odometry();
+				shooter = new Shooter();
+				swerve = new Swerve();
+			}
+			default -> {
+				arm = new Arm();
+				climber = new Climber();
+				intake = new Intake(new IntakeIO() {
+				});
+				odometry = new Odometry();
+				shooter = new Shooter();
+				swerve = new Swerve();
+			}
 		}
-		case SIM -> {
-			arm = new Arm();
-			climber = new Climber();
-			intake = new Intake(new IntakeIOSim());
-			odometry = new Odometry();
-			shooter = new Shooter();
-			swerve = new Swerve();
-		}
-		default -> {
-			arm = new Arm();
-			climber = new Climber();
-			intake = new Intake(new IntakeIO() {});
-			odometry = new Odometry();
-			shooter = new Shooter();
-			swerve = new Swerve();
-		}
-	}
 		// Configure default commands for driving and arm movement
 		swerve.setDefaultCommand(new SwerveTeleOp(swerve, odometry,
 				() -> ControllerIO.inversionY() * driverJoystick.getRawAxis(ControllerIO.getLeftY()),

@@ -12,9 +12,9 @@ public class IntakeIOSparkMax implements IntakeIO {
 	 * etc.)
 	 */
 	public final CANSparkMax intakeMotor;
-    public final RelativeEncoder intakeEncoder;
+	public final RelativeEncoder intakeEncoder;
 
-    private double appliedVoltage = 0.0;
+	private double appliedVoltage = 0.0;
 
 	/*
 	 * Initialize all components here, as well as any one-time logic to be completed
@@ -26,25 +26,25 @@ public class IntakeIOSparkMax implements IntakeIO {
 		intakeMotor.setSmartCurrentLimit(40);
 		intakeMotor.setIdleMode(IdleMode.kBrake);
 
-        intakeEncoder = intakeMotor.getEncoder();
-        intakeEncoder.setPositionConversionFactor(1.0 /*/ reduction*/ * 2 * Math.PI);
-        intakeEncoder.setVelocityConversionFactor(1.0 /*/ reduction*/ * 2 * Math.PI);    
+		intakeEncoder = intakeMotor.getEncoder();
+		intakeEncoder.setPositionConversionFactor(1.0 /* / reduction */ * 2 * Math.PI);
+		intakeEncoder.setVelocityConversionFactor(1.0 /* / reduction */ * 2 * Math.PI);
 	}
 
-    @Override
-    public void updateInputs(IntakeIOInputs inputs) {
-        inputs.velocityRadPerSec = intakeEncoder.getVelocity();
-        inputs.positionRads = intakeEncoder.getPosition();
-        inputs.appliedVoltage = intakeMotor.getAppliedOutput();
-        inputs.currentAmps = intakeMotor.getOutputCurrent();
-    }
+	@Override
+	public void updateInputs(IntakeIOInputs inputs) {
+		inputs.velocityRadPerSec = intakeEncoder.getVelocity();
+		inputs.positionRads = intakeEncoder.getPosition();
+		inputs.appliedVoltage = intakeMotor.getAppliedOutput();
+		inputs.currentAmps = intakeMotor.getOutputCurrent();
+	}
 
-    public void setInputVoltage(double volts) {
-        intakeMotor.setVoltage(volts);
-    }
+	public void setInputVoltage(double volts) {
+		intakeMotor.setVoltage(volts);
+	}
 
-    public void stop() {
-        appliedVoltage = 0.0;
-        setInputVoltage(appliedVoltage);
-    }
+	public void stop() {
+		appliedVoltage = 0.0;
+		setInputVoltage(appliedVoltage);
+	}
 }
