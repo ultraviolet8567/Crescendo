@@ -177,17 +177,17 @@ public class Vision extends SubsystemBase {
 				Rotation3d temp = mean.getRotation().minus(posePair.get(0).getRotation());
 				Rotation3d altTemp = mean.getRotation().minus(posePair.get(1).getRotation());
 
-				double meanSum = Math.pow(mean.getX(), 2) + Math.pow(mean.getY(), 2) + Math.pow(mean.getZ(), 2);
+				double compareSum = Math.pow(toCompare.getX(), 2) + Math.pow(toCompare.getY(), 2) + Math.pow(toCompare.getZ(), 2);
 				double tempSum = Math.pow(temp.getX(), 2) + Math.pow(temp.getY(), 2) + Math.pow(temp.getZ(), 2);
 				double altSum = Math.pow(altTemp.getX(), 2) + Math.pow(altTemp.getY(), 2) + Math.pow(altTemp.getZ(), 2);
 
 				if (tempSum >= altSum) {
-					if (tempSum >= meanSum) {
+					if (tempSum >= compareSum) {
 						toCompare = temp;
 						leastWrong = posePair.get(0);
 					}
 				} else {
-					if (altSum >= meanSum) {
+					if (altSum >= compareSum) {
 						toCompare = altTemp;
 						leastWrong = posePair.get(1);
 					}
