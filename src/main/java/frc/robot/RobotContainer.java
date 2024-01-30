@@ -1,6 +1,8 @@
 package frc.robot;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
@@ -25,6 +27,13 @@ public class RobotContainer {
 	private static final Shooter shooter = new Shooter();
 	// private static final Swerve swerve = new Swerve();
 	private static final Vision vision = new Vision();
+
+	// Shuffleboard, haha
+	GenericEntry alliance = Shuffleboard
+		.getTab("Horrible, horrible Shuffleboard")
+		.add("Alliance", false)
+		.withWidget("Toggle Button")
+		.getEntry();
 
 	// Joysticks
 	private static final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);

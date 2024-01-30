@@ -28,7 +28,7 @@ public class YawAlign extends Command {
 
 	@Override
 	public void execute() {
-        turn(vision.getDistToAlign(alliance.get().getBoolean(), vision.getTargets()));
+		turn(vision.getDistToAlign(alliance.get().getBoolean(), vision.getTargets()));
 	}
 
 	@Override

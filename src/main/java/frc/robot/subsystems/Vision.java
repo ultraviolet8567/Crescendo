@@ -8,30 +8,21 @@
 
 package frc.robot.subsystems;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import org.photonvision.PhotonCamera;
-import org.photonvision.targeting.PhotonTrackedTarget;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Vision extends SubsystemBase {
 	PhotonCamera camera = new PhotonCamera("OV9281");
 
-	public Vision() {
-		GenericEntry alliance = Shuffleboard.getTab("Horrible, horrible Shuffleboard").add("Alliance", false)
-				.withWidget("Toggle Button")
-				.withProperties(Map.of("colorWhenTrue", "green", "colorWhenFalse", "maroon"))
-				.getEntry();
-	}
+	public Vision() {}
 
 	@Override
 	public void periodic() {
@@ -48,21 +39,19 @@ public class Vision extends SubsystemBase {
 			}
 
 			Transform3d meanPose = getMean(poses);
-			Transform3d bestSpace = leastWrongSpace(poses, meanPose);
-			Transform3d bestAngle = leastWrongAngle(poses, meanPose);
-
-			String side = findFieldSide(targets);
+			// Transform3d bestSpace = leastWrongSpace(poses, meanPose);
+			// Transform3d bestAngle = leastWrongAngle(poses, meanPose);
 		}
 	}
-	
-	public List<PhotonTrackedTarget> getTargets() { 
-		var result = camera.getLatestResult(); 
 
-		if (result.hasTargets()) { 
-			return result.getTargets(); 
+	public List<PhotonTrackedTarget> getTargets() {
+		var result = camera.getLatestResult();
+
+		if (result.hasTargets()) {
+			return result.getTargets();
 		}
 
-		return new ArrayList<PhotonTrackedTarget>(); 
+		return new ArrayList<PhotonTrackedTarget>();
 	}
 
 	public Rotation2d getDistToAlign(boolean side, List<PhotonTrackedTarget> targets) {
@@ -73,6 +62,7 @@ public class Vision extends SubsystemBase {
 		} else {
 			idToFind = 7;
 		}
+
 		PhotonTrackedTarget shootTarget = null;
 		for (PhotonTrackedTarget target : targets) {
 			if (target.getFiducialId() == idToFind) {
@@ -80,35 +70,19 @@ public class Vision extends SubsystemBase {
 				break;
 			}
 		}
+
 		double angleToTurn = 0;
+
 		if (!Objects.isNull(shootTarget)) {
 			angleToTurn = -1 * shootTarget.getYaw();
 		}
+
 		return new Rotation2d(angleToTurn);
 
 	}
+
 	public double distanceSquared(Transform3d pose) {
 		return Math.pow(pose.getX(), 2) + Math.pow(pose.getY(), 2);
-	}
-
-	// return side of field we're on
-	// true if on blue, false if on red
-	public String findFieldSide(List<PhotonTrackedTarget> targets) {
-		PhotonTrackedTarget closest = targets.get(0);
-
-		for (PhotonTrackedTarget target : targets) {
-			Transform3d pose = target.getBestCameraToTarget();
-			if (distanceSquared(closest.getBestCameraToTarget()) > distanceSquared(pose)) {
-				closest = target;
-			}
-		}
-
-		int id = closest.getFiducialId();
-		if (id <= 2 || id >= 14 || (id >= 6 && id <= 8)) {
-			return "Red";
-		}
-
-		return "Blue";
 	}
 
 	// get mean of pose list
@@ -137,6 +111,58 @@ public class Vision extends SubsystemBase {
 					yaw / (poses.size() * 2));
 			return new Transform3d(x / (poses.size() * 2), y / (poses.size() * 2), z / (poses.size() * 2), angle);
 		}
+	}
+
+	// find median of dataset
+	public Transform3d getMedian(double[][] sorted) {
+		return new Transform3d(findMedian(sorted[0]), findMedian(sorted[1]), findMedian(sorted[2]),
+				new Rotation3d(findMedian(sorted[3]), findMedian(sorted[4]), findMedian(sorted[5])));
+	}
+
+	// find median of double array
+	private double findMedian(double[] arr) {
+		if (arr.length % 2 != 0) {
+			return arr[arr.length - 1 / 2] + arr[arr.length / 2] / 2;
+		} else {
+			return arr[arr.length - 1 / 2];
+		}
+	}
+
+	// sort dataset
+	public double[][] sortList(List<List<Transform3d>> poses) {
+		// distances
+		double[] x = new double[poses.size() * 2], y = new double[poses.size() * 2], z = new double[poses.size() * 2];
+		// angles
+		double[] roll = new double[poses.size() * 2], pitch = new double[poses.size() * 2],
+				yaw = new double[poses.size() * 2];
+
+		int i = 0;
+		for (List<Transform3d> posePair : poses) {
+			// distances
+			x[i] = posePair.get(0).getX();
+			x[i + 1] = posePair.get(1).getX();
+			y[i] = posePair.get(0).getY();
+			y[i + 1] = posePair.get(1).getY();
+			z[i] = posePair.get(0).getZ();
+			z[i + 1] = posePair.get(1).getZ();
+
+			// angles
+			roll[i] = posePair.get(0).getRotation().getX();
+			roll[i + 1] = posePair.get(1).getRotation().getX();
+			pitch[i] = posePair.get(0).getRotation().getY();
+			pitch[i + 1] = posePair.get(1).getRotation().getY();
+			yaw[i] = posePair.get(0).getRotation().getZ();
+			yaw[i + 1] = posePair.get(1).getRotation().getZ();
+		}
+
+		Arrays.parallelSort(x);
+		Arrays.parallelSort(y);
+		Arrays.parallelSort(z);
+		Arrays.parallelSort(roll);
+		Arrays.parallelSort(pitch);
+		Arrays.parallelSort(yaw);
+
+		return new double[][]{x, y, z, roll, pitch, yaw};
 	}
 
 	// get and sort distances
@@ -177,7 +203,8 @@ public class Vision extends SubsystemBase {
 				Rotation3d temp = mean.getRotation().minus(posePair.get(0).getRotation());
 				Rotation3d altTemp = mean.getRotation().minus(posePair.get(1).getRotation());
 
-				double compareSum = Math.pow(toCompare.getX(), 2) + Math.pow(toCompare.getY(), 2) + Math.pow(toCompare.getZ(), 2);
+				double compareSum = Math.pow(toCompare.getX(), 2) + Math.pow(toCompare.getY(), 2)
+						+ Math.pow(toCompare.getZ(), 2);
 				double tempSum = Math.pow(temp.getX(), 2) + Math.pow(temp.getY(), 2) + Math.pow(temp.getZ(), 2);
 				double altSum = Math.pow(altTemp.getX(), 2) + Math.pow(altTemp.getY(), 2) + Math.pow(altTemp.getZ(), 2);
 
