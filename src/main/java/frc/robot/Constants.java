@@ -6,6 +6,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import frc.robot.util.LoggedTunableNumber;
 
 public final class Constants {
 	/**
@@ -18,7 +19,7 @@ public final class Constants {
 	 * <p>
 	 * Odometry - Forward = x+ - Left = y+ - Counterclockwise = z+
 	 */
-	public static final Mode currentMode = Mode.REAL;
+	public static final Mode currentMode = Mode.SIM;
 
 	public static final ModuleType powerDistributionType = ModuleType.kRev;
 	public static final boolean fieldOriented = true;
@@ -45,6 +46,14 @@ public final class Constants {
 		public static final int kLeftFlywheelPort = 5;
 		public static final int kRightFlywheelPort = 6;
 
+		// Temp values for now
+		public static final int kShooterTopPort = 7;
+		public static final int kShooterBottomPort = 8;
+
+		// Temp values for now
+		public static final int kArm1Port = 9;
+		public static final int kArm2Port = 10;
+
 		public static final int kFrontLeftDriveMotorPort = 11;
 		public static final int kFrontRightDriveMotorPort = 12;
 		public static final int kBackLeftDriveMotorPort = 14;
@@ -52,8 +61,8 @@ public final class Constants {
 
 		public static final int kFrontLeftTurningMotorPort = 21;
 		public static final int kFrontRightTurningMotorPort = 22;
-		public static final int kBackLeftTurningMotorPort = 24;
-		public static final int kBackRightTurningMotorPort = 23;
+		public static final int kBackLeftTurningMotorPort = 23;
+		public static final int kBackRightTurningMotorPort = 24;
 	}
 
 	public static final class ModuleConstants {
@@ -122,6 +131,30 @@ public final class Constants {
 				* 0.4;
 		public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
 		public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
+	}
+
+	public static final class ArmConstants {
+		public static final LoggedTunableNumber intakeVoltage = new LoggedTunableNumber("Intake Voltage", 0.5);
+
+		public static final int kArm1EncoderPort = 25;
+		public static final int kArm2EncoderPort = 2;
+
+		// Dummy values
+		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Max Speed", 3.5);
+		public static final LoggedTunableNumber kMaxAcceleration = new LoggedTunableNumber("Max Acceleration", 1);
+
+		// Dummy Automatic Set Point values
+		public static final LoggedTunableNumber kTaxiAngle = new LoggedTunableNumber("Taxi Angle", Math.PI / 4);
+		public static final LoggedTunableNumber kRoombaAngle = new LoggedTunableNumber("Roomba Angle", Math.PI / 12);
+		public static final LoggedTunableNumber kSpeakerAngle = new LoggedTunableNumber("Speaker Angle", 0.24434609527);
+
+		public static final LoggedTunableNumber kP = new LoggedTunableNumber("[P]ID", 0);
+		public static final LoggedTunableNumber kI = new LoggedTunableNumber("P[I]D", 0);
+		public static final LoggedTunableNumber kD = new LoggedTunableNumber("PI[D]", 0);
+
+		// Another temp value
+		public static final double MaxArmAngle = 0;
+		public static final double MinArmAngle = 0;
 	}
 
 	public static enum Mode {
