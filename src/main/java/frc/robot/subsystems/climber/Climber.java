@@ -12,11 +12,11 @@ public class Climber extends SubsystemBase {
 	 */
 	private CANSparkMax climb;
 	private double climbSpeed = 1000;
+
 	/*
 	 * Initialize all components here, as well as any one-time logic to be completed
 	 * on boot-up
 	 */
-
 	public Climber() {
 		climb = new CANSparkMax(1, MotorType.kBrushless);
 		climb.setIdleMode(IdleMode.kBrake);
@@ -27,6 +27,7 @@ public class Climber extends SubsystemBase {
 	public void periodic() {
 
 	}
+
 	/* Define all subsystem-specific methods and enums here */
 	public void startClimb() {
 		climb.set(climbSpeed);

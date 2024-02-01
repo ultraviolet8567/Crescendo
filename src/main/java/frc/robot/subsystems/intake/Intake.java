@@ -5,12 +5,12 @@ import frc.robot.Constants.ArmConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
+	private final IntakeIO io;
+	private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
 	/*
 	 * Declare components of subsystem here (motor controllers, encoders, sensors,
 	 * etc.)
 	 */
-	private final IntakeIO io;
-	private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
 
 	/*
 	 * Initialize all components here, as well as any one-time logic to be completed

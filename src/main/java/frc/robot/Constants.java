@@ -136,8 +136,7 @@ public final class Constants {
 	public static final class ArmConstants {
 		public static final LoggedTunableNumber intakeVoltage = new LoggedTunableNumber("Intake Voltage", 0.5);
 
-		public static final int kArm1EncoderPort = 25;
-		public static final int kArm2EncoderPort = 2;
+		public static final int kArmEncoderPort = 0;
 
 		// Dummy values
 		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Max Speed", 3.5);

@@ -17,11 +17,11 @@ public class Arm extends SubsystemBase {
 	 * etc.)
 	 */
 	public final CANSparkMax arm1, arm2;
-	private final Constraints arm1Constraints, arm2Constraints;
-	private final ProfiledPIDController arm1PID, arm2PID;
+	private final Constraints armConstraints;
+	private final ProfiledPIDController armPID;
 
 	// For use in presets (yet to be made)
-	private final DutyCycleEncoder arm1Encoder, arm2Encoder;
+	private final DutyCycleEncoder armEncoder;
 
 	public double targetAngle;
 
@@ -41,16 +41,12 @@ public class Arm extends SubsystemBase {
 		arm2.setIdleMode(IdleMode.kBrake);
 
 		// For use in presets (yet to be made)
-		arm1Encoder = new DutyCycleEncoder(ArmConstants.kArm1EncoderPort);
-		arm2Encoder = new DutyCycleEncoder(ArmConstants.kArm2EncoderPort);
+		armEncoder = new DutyCycleEncoder(ArmConstants.kArmEncoderPort);
 
-		arm1Constraints = new Constraints(ArmConstants.kMaxSpeed.get(), ArmConstants.kMaxAcceleration.get());
-		arm2Constraints = new Constraints(ArmConstants.kMaxSpeed.get(), ArmConstants.kMaxAcceleration.get());
+		armConstraints = new Constraints(ArmConstants.kMaxSpeed.get(), ArmConstants.kMaxAcceleration.get());
 
-		arm1PID = new ProfiledPIDController(ArmConstants.kP.get(), ArmConstants.kI.get(), ArmConstants.kD.get(),
-				arm1Constraints);
-		arm2PID = new ProfiledPIDController(ArmConstants.kP.get(), ArmConstants.kI.get(), ArmConstants.kD.get(),
-				arm2Constraints);
+		armPID = new ProfiledPIDController(ArmConstants.kP.get(), ArmConstants.kI.get(), ArmConstants.kD.get(),
+				armConstraints);
 	}
 
 	/* Runs periodically (about once every 20 ms) */
@@ -63,14 +59,13 @@ public class Arm extends SubsystemBase {
 		Logger.recordOutput("Measured/Intake", arm2.getEncoder().getVelocity());
 	}
 
+	/* Define all subsystem-specific methods and enums here */
 	public void setTargetAngle(double targetAngle) {
-		double arm1Angle, arm2Angle;
+		double armAngle = armEncoder.getAbsolutePosition();
 
-		arm1Angle = arm1Encoder.getAbsolutePosition();
-		arm2Angle = arm2Encoder.getAbsolutePosition();
-
-		arm1.set(arm1PID.calculate(arm1Angle, targetAngle));
-		arm2.set(arm2PID.calculate(arm2Angle, targetAngle));
+		// Both motors spin the same and in the same direction
+		arm1.set(armPID.calculate(armAngle, targetAngle));
+		arm2.set(armPID.calculate(armAngle, targetAngle));
 	}
 
 	public void setTurnSpeed(double factor) {
@@ -80,7 +75,4 @@ public class Arm extends SubsystemBase {
 		arm1.set(factor * ArmConstants.kMaxSpeed.get());
 		arm2.set(factor * ArmConstants.kMaxSpeed.get());
 	}
-
-	/* Define all subsystem-specific methods and enums here */
-
 }
