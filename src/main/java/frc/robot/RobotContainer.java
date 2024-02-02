@@ -15,12 +15,18 @@ import frc.robot.commands.SwerveTeleOp;
 import frc.robot.subsystems.Odometry;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmIO;
+import frc.robot.subsystems.arm.ArmIOSim;
+import frc.robot.subsystems.arm.ArmIOSparkMax;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.intake.IntakeIOSparkMax;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterIO;
+import frc.robot.subsystems.shooter.ShooterIOSim;
+import frc.robot.subsystems.shooter.ShooterIOSparkMax;
 import frc.robot.util.ControllerIO;
 
 /**
@@ -44,28 +50,30 @@ public class RobotContainer {
 	public RobotContainer() {
 		switch (Constants.currentMode) {
 			case REAL -> {
-				arm = new Arm();
+				arm = new Arm(new ArmIOSparkMax());
 				climber = new Climber();
 				intake = new Intake(new IntakeIOSparkMax());
 				odometry = new Odometry();
-				shooter = new Shooter();
+				shooter = new Shooter(new ShooterIOSparkMax());
 				swerve = new Swerve();
 			}
 			case SIM -> {
-				arm = new Arm();
+				arm = new Arm(new ArmIOSim());
 				climber = new Climber();
 				intake = new Intake(new IntakeIOSim());
 				odometry = new Odometry();
-				shooter = new Shooter();
+				shooter = new Shooter(new ShooterIOSim());
 				swerve = new Swerve();
 			}
 			default -> {
-				arm = new Arm();
+				arm = new Arm(new ArmIO() {
+				});
 				climber = new Climber();
 				intake = new Intake(new IntakeIO() {
 				});
 				odometry = new Odometry();
-				shooter = new Shooter();
+				shooter = new Shooter(new ShooterIO() {
+				});
 				swerve = new Swerve();
 			}
 		}

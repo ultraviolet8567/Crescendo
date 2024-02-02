@@ -4,8 +4,8 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 
 public class ShooterIOSim implements ShooterIO {
-	private final FlywheelSim topShooterSim = new FlywheelSim(DCMotor.getNEO(1), 1.0, 0.01);
-	private final FlywheelSim bottomShooterSim = new FlywheelSim(DCMotor.getNEO(1), 1.0, 0.01);
+	private final FlywheelSim topShooterSim = new FlywheelSim(DCMotor.getNEO(1), 1, 0.1);
+	private final FlywheelSim bottomShooterSim = new FlywheelSim(DCMotor.getNEO(1), 1, 0.1);
 
 	private double topAppliedVoltage = 0.0;
 	private double bottomAppliedVoltage = 0.0;
@@ -26,21 +26,31 @@ public class ShooterIOSim implements ShooterIO {
 		inputs.bottomCurrentAmps = bottomShooterSim.getCurrentDrawAmps();
 	}
 
+	// Sets the input voltage for the top motor/row of wheels
 	@Override
 	public void setTopInputVoltage(double volts) {
 		topAppliedVoltage = volts;
 		topShooterSim.setInputVoltage(volts);
 	}
 
+	// Sets the input voltage for the bottom motor/row of wheels
 	@Override
 	public void setBottomInputVoltage(double volts) {
 		bottomAppliedVoltage = volts;
 		bottomShooterSim.setInputVoltage(volts);
 	}
 
-	/*
-	 * @Override public void stop() { topAppliedVoltage = 0.0; bottomAppliedVoltage
-	 * = 0.0; topShooterSim.setTopInputVoltage(0.0);
-	 * bottomShooterSim.setBottomInputVoltage(0.0); }
-	 */
+	// Sets the input voltage for both motors/rows of wheels
+	@Override
+	public void setInputVoltage(double topVolts, double bottomVolts) {
+		setTopInputVoltage(topVolts);
+		setBottomInputVoltage(bottomVolts);
+	}
+
+	@Override
+	public void stop() {
+		topAppliedVoltage = 0.0;
+		bottomAppliedVoltage = 0.0;
+		setInputVoltage(0.0, 0.0);
+	}
 }

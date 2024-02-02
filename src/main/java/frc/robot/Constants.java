@@ -134,10 +134,10 @@ public final class Constants {
 	}
 
 	public static final class ArmConstants {
-		public static final LoggedTunableNumber intakeVoltage = new LoggedTunableNumber("Intake Voltage", 0.5);
+		public static final LoggedTunableNumber kIntakeVoltage = new LoggedTunableNumber("Intake Voltage", 0.5);
 
 		public static final int kArm1EncoderPort = 25;
-		public static final int kArm2EncoderPort = 2;
+		public static final int kArm2EncoderPort = 26;
 
 		// Dummy values
 		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Max Speed", 3.5);
@@ -153,8 +153,10 @@ public final class Constants {
 		public static final LoggedTunableNumber kD = new LoggedTunableNumber("PI[D]", 0);
 
 		// Another temp value
-		public static final double MaxArmAngle = 0;
-		public static final double MinArmAngle = 0;
+		public static final double kMaxArmAngle = 180.0;
+		public static final double kMinArmAngle = 0.0;
+
+		public static final double kArmPIDTolerance = 0.0;
 	}
 
 	public static enum Mode {

@@ -25,6 +25,9 @@ public interface ShooterIO {
 	default void setBottomInputVoltage(double volts) {
 	}
 
+	default void setInputVoltage(double topVolts, double bottomVolts) {
+	}
+
 	default void stop() {
 	}
 }
