@@ -48,7 +48,7 @@ public class RobotContainer {
 				climber = new Climber();
 				intake = new Intake(new IntakeIOSparkMax());
 				odometry = new Odometry();
-				shooter = new Shooter();
+				shooter = new Shooter(intake);
 				swerve = new Swerve();
 			}
 			case SIM -> {
@@ -56,7 +56,7 @@ public class RobotContainer {
 				climber = new Climber();
 				intake = new Intake(new IntakeIOSim());
 				odometry = new Odometry();
-				shooter = new Shooter();
+				shooter = new Shooter(intake);
 				swerve = new Swerve();
 			}
 			default -> {
@@ -65,7 +65,7 @@ public class RobotContainer {
 				intake = new Intake(new IntakeIO() {
 				});
 				odometry = new Odometry();
-				shooter = new Shooter();
+				shooter = new Shooter(intake);
 				swerve = new Swerve();
 			}
 		}
@@ -93,7 +93,8 @@ public class RobotContainer {
 	public void configureBindings() {
 		new JoystickButton(operatorJoystick, XboxController.Button.kLeftBumper.value).whileTrue(new Pickup(intake));
 		new JoystickButton(operatorJoystick, XboxController.Button.kRightBumper.value).whileTrue(new Shoot(shooter));
-		new JoystickButton(operatorJoystick, XboxController.Button.kBack.value).whileTrue(new Climb(climber));
+		new JoystickButton(operatorJoystick, XboxController.Button.kStart.value).whileTrue(new Climb(climber, "extend"));
+		new JoystickButton(operatorJoystick, XboxController.Button.kBack.value).whileTrue(new Climb(climber, "retract"));
 		new JoystickButton(operatorJoystick, XboxController.Button.kY.value).whileTrue(new SetArmAngle(arm, 0, 1));
 		new JoystickButton(operatorJoystick, XboxController.Button.kA.value).whileTrue(new SetArmAngle(arm, 0, 2));
 

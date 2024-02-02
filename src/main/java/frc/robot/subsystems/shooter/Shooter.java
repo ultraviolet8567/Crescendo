@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN;
 import org.littletonrobotics.junction.Logger;
+import frc.robot.subsystems.intake.Intake;
 
 public class Shooter extends SubsystemBase {
 	/*
@@ -14,6 +15,8 @@ public class Shooter extends SubsystemBase {
 	 */
 	CANSparkMax shooterTop;
 	CANSparkMax shooterBottom;
+
+	Intake intake;
 	/*
 	 * Initialize all components here, as well as any one-time logic to be completed
 	 * on boot-up
@@ -21,7 +24,7 @@ public class Shooter extends SubsystemBase {
 
 	// Add shooter ports!!!!!
 
-	public Shooter() {
+	public Shooter(Intake intake) {
 		shooterTop = new CANSparkMax(CAN.kShooterTopPort, MotorType.kBrushless);
 		shooterTop.enableVoltageCompensation(12.0);
 		shooterTop.setSmartCurrentLimit(40);
@@ -32,6 +35,7 @@ public class Shooter extends SubsystemBase {
 		shooterBottom.setSmartCurrentLimit(40);
 		shooterBottom.setIdleMode(IdleMode.kBrake);
 
+		this.intake = intake;
 	}
 
 	/* Runs periodically (about once every 20 ms) */
@@ -45,8 +49,11 @@ public class Shooter extends SubsystemBase {
 
 	/* Define all subsystem-specific methods and enums here */
 	public void shoot(double topVel, double bottomVel) {
-		shooterTop.set(topVel);
-		shooterBottom.set(bottomVel);
+		if (intake.hasNote)
+		{
+			shooterTop.set(topVel);
+			shooterBottom.set(bottomVel);
+		}
 	}
 
 	public void stop() {

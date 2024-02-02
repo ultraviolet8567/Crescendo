@@ -1,11 +1,13 @@
-package frc.robot;
+	package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.I2C;
 import frc.robot.util.LoggedTunableNumber;
 
 public final class Constants {
@@ -133,11 +135,19 @@ public final class Constants {
 		public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
 	}
 
+	public static final class ClimberConstants {
+		public static final LoggedTunableNumber climbVoltage = new LoggedTunableNumber("Climber Voltage", 0.1);
+	}
+
 	public static final class ArmConstants {
 		public static final LoggedTunableNumber intakeVoltage = new LoggedTunableNumber("Intake Voltage", 0.5);
 
 		public static final int kArmEncoderPort = 0;
+		public static final I2C.Port kArmColorSensorPort = I2C.Port.kOnboard;
 
+		// Color of note, subject to change. NOTE: PROGRAM LACKS COLOR TOLERANCE
+		public static final Color kNoteColor = new Color(255,127,80);
+		
 		// Dummy values
 		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Max Speed", 3.5);
 		public static final LoggedTunableNumber kMaxAcceleration = new LoggedTunableNumber("Max Acceleration", 1);
@@ -170,4 +180,5 @@ public final class Constants {
 	public static enum ControllerType {
 		XBOX, LOGITECH, JOYSTICK
 	}
+	
 }

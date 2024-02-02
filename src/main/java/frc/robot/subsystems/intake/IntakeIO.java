@@ -8,15 +8,19 @@ public interface IntakeIO {
 		public double velocityRadPerSec = 0.0;
 		public double positionRads = 0.0;
 		public double appliedVoltage = 0.0;
-		public double currentAmps = 0.0;
+		public double[] currentAmps = new double[] {};
+		public double[] tempCelsius = new double[] {};
 	}
 
-	default void updateInputs(IntakeIOInputs inputs) {
+	public default void updateInputs(IntakeIOInputs inputs) {
 	}
 
-	default void setInputVoltage(double volts) {
+	public default void setInputVoltage(double volts) {
 	}
 
-	default void stop() {
+	public default void setBrakeMode(boolean brake) {
+	}
+	
+	public default void stop() {
 	}
 }
