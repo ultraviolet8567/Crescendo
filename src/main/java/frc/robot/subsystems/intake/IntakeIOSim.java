@@ -14,7 +14,7 @@ public class IntakeIOSim implements IntakeIO {
 		inputs.velocityRadPerSec = intakeSim.getAngularVelocityRadPerSec();
 		inputs.positionRads += intakeSim.getAngularVelocityRadPerSec() * 0.02;
 		inputs.appliedVoltage = appliedVoltage;
-		inputs.currentAmps = intakeSim.getCurrentDrawAmps();
+		inputs.currentAmps = new double[] {intakeSim.getCurrentDrawAmps()};
 	}
 
 	@Override

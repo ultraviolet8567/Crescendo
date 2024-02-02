@@ -54,7 +54,7 @@ public class RobotContainer {
 				climber = new Climber();
 				intake = new Intake(new IntakeIOSparkMax());
 				odometry = new Odometry();
-				shooter = new Shooter(new ShooterIOSparkMax());
+				shooter = new Shooter(new ShooterIOSparkMax(), intake);
 				swerve = new Swerve();
 			}
 			case SIM -> {
@@ -62,7 +62,7 @@ public class RobotContainer {
 				climber = new Climber();
 				intake = new Intake(new IntakeIOSim());
 				odometry = new Odometry();
-				shooter = new Shooter(new ShooterIOSim());
+				shooter = new Shooter(new ShooterIOSim(), intake);
 				swerve = new Swerve();
 			}
 			default -> {
@@ -73,10 +73,11 @@ public class RobotContainer {
 				});
 				odometry = new Odometry();
 				shooter = new Shooter(new ShooterIO() {
-				});
+				}, intake);
 				swerve = new Swerve();
 			}
 		}
+
 		// Configure default commands for driving and arm movement
 		swerve.setDefaultCommand(new SwerveTeleOp(swerve, odometry,
 				() -> ControllerIO.inversionY() * driverJoystick.getRawAxis(ControllerIO.getLeftY()),
@@ -100,7 +101,8 @@ public class RobotContainer {
 	public void configureBindings() {
 		new JoystickButton(operatorJoystick, XboxController.Button.kLeftBumper.value).whileTrue(new Pickup(intake));
 		new JoystickButton(operatorJoystick, XboxController.Button.kRightBumper.value).whileTrue(new Shoot(shooter));
-		new JoystickButton(operatorJoystick, XboxController.Button.kBack.value).whileTrue(new Climb(climber));
+		new JoystickButton(operatorJoystick, XboxController.Button.kStart.value).whileTrue(new Climb(climber, "extend"));
+		new JoystickButton(operatorJoystick, XboxController.Button.kBack.value).whileTrue(new Climb(climber, "retract"));
 		new JoystickButton(operatorJoystick, XboxController.Button.kY.value).whileTrue(new SetArmAngle(arm, 0, 1));
 		new JoystickButton(operatorJoystick, XboxController.Button.kA.value).whileTrue(new SetArmAngle(arm, 0, 2));
 
@@ -131,6 +133,7 @@ public class RobotContainer {
 	public static Joystick getOperatorJoystick() {
 		return operatorJoystick;
 	}
+
 	// public int dPadUp() {
 	// if (operatorJoystick.getPOV() == 0) {
 	// return 1;

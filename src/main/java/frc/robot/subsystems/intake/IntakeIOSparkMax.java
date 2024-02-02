@@ -21,6 +21,8 @@ public class IntakeIOSparkMax implements IntakeIO {
 	 * on boot-up
 	 */
 	public IntakeIOSparkMax() {
+		System.out.println("[Init] Creating IntakeIOSparkMax");
+
 		intakeMotor = new CANSparkMax(CAN.kIntakePort, MotorType.kBrushless);
 		intakeMotor.enableVoltageCompensation(12.0);
 		intakeMotor.setSmartCurrentLimit(40);
@@ -35,16 +37,20 @@ public class IntakeIOSparkMax implements IntakeIO {
 	public void updateInputs(IntakeIOInputs inputs) {
 		inputs.velocityRadPerSec = intakeEncoder.getVelocity();
 		inputs.positionRads = intakeEncoder.getPosition();
-		inputs.appliedVoltage = intakeMotor.getAppliedOutput();
-		inputs.currentAmps = intakeMotor.getOutputCurrent();
+		inputs.appliedVoltage = intakeMotor.getAppliedOutput() * intakeMotor.getBusVoltage();
+		inputs.currentAmps = new double[] {intakeMotor.getOutputCurrent()};
+		inputs.tempCelsius = new double[] {intakeMotor.getMotorTemperature()};
 	}
 
 	public void setInputVoltage(double volts) {
 		intakeMotor.setVoltage(volts);
 	}
 
+	public void setBrakeMode(boolean brake) {
+		intakeMotor.setIdleMode(brake ? IdleMode.kBrake : IdleMode.kCoast);
+	}
+
 	public void stop() {
-		appliedVoltage = 0.0;
-		setInputVoltage(appliedVoltage);
+		setInputVoltage(0.0);
 	}
 }
