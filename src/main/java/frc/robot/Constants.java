@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
@@ -25,6 +27,9 @@ public final class Constants {
 	public static final String logpath = "/media/sda1/";
 
 	public static final Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Red);
+
+	public static final AprilTagFields field = AprilTagFields.k2024Crescendo;
+	public static final AprilTagFieldLayout fieldLayout = field.loadAprilTagLayoutField();
 
 	public static final class OIConstants {
 		public static final ControllerType controllerTypeDriver = ControllerType.XBOX;

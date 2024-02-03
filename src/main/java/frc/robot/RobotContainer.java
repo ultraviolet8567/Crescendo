@@ -9,8 +9,10 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.KMeans;
 import frc.robot.subsystems.Odometry;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Test;
 import frc.robot.subsystems.Vision;
 
 /**
@@ -27,13 +29,12 @@ public class RobotContainer {
 	private static final Shooter shooter = new Shooter();
 	// private static final Swerve swerve = new Swerve();
 	private static final Vision vision = new Vision();
+	private static final KMeans kmeans = new KMeans();
+	private static final Test test = new Test(kmeans);
 
 	// Shuffleboard, haha
-	GenericEntry alliance = Shuffleboard
-		.getTab("Horrible, horrible Shuffleboard")
-		.add("Alliance", false)
-		.withWidget("Toggle Button")
-		.getEntry();
+	GenericEntry alliance = Shuffleboard.getTab("Horrible, horrible Shuffleboard").add("Alliance", false)
+			.withWidget("Toggle Button").getEntry();
 
 	// Joysticks
 	private static final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
