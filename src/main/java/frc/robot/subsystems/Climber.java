@@ -25,7 +25,7 @@ public class Climber extends SubsystemBase {
 	/* Runs periodically (about once every 20 ms) */
 	@Override
 	public void periodic() {
-		
+
 	}
 	/* Define all subsystem-specific methods and enums here */
 	public void startClimb(boolean reverse) {
