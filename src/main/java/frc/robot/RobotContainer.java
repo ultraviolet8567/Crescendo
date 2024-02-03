@@ -16,6 +16,9 @@ import frc.robot.subsystems.Odometry;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.ClimberIO;
+import frc.robot.subsystems.climber.ClimberIOSim;
+import frc.robot.subsystems.climber.ClimberIOSparkMax;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOSim;
@@ -45,7 +48,7 @@ public class RobotContainer {
 		switch (Constants.currentMode) {
 			case REAL -> {
 				arm = new Arm();
-				climber = new Climber();
+				climber = new Climber(new ClimberIOSparkMax());
 				intake = new Intake(new IntakeIOSparkMax());
 				odometry = new Odometry();
 				shooter = new Shooter(intake);
@@ -53,7 +56,7 @@ public class RobotContainer {
 			}
 			case SIM -> {
 				arm = new Arm();
-				climber = new Climber();
+				climber = new Climber(new ClimberIOSim());
 				intake = new Intake(new IntakeIOSim());
 				odometry = new Odometry();
 				shooter = new Shooter(intake);
@@ -61,7 +64,8 @@ public class RobotContainer {
 			}
 			default -> {
 				arm = new Arm();
-				climber = new Climber();
+				climber = new Climber(new ClimberIO() {
+				});
 				intake = new Intake(new IntakeIO() {
 				});
 				odometry = new Odometry();
@@ -93,8 +97,10 @@ public class RobotContainer {
 	public void configureBindings() {
 		new JoystickButton(operatorJoystick, XboxController.Button.kLeftBumper.value).whileTrue(new Pickup(intake));
 		new JoystickButton(operatorJoystick, XboxController.Button.kRightBumper.value).whileTrue(new Shoot(shooter));
-		new JoystickButton(operatorJoystick, XboxController.Button.kStart.value).whileTrue(new Climb(climber, "extend"));
-		new JoystickButton(operatorJoystick, XboxController.Button.kBack.value).whileTrue(new Climb(climber, "retract"));
+		new JoystickButton(operatorJoystick, XboxController.Button.kStart.value)
+				.whileTrue(new Climb(climber, "extend"));
+		new JoystickButton(operatorJoystick, XboxController.Button.kBack.value)
+				.whileTrue(new Climb(climber, "retract"));
 		new JoystickButton(operatorJoystick, XboxController.Button.kY.value).whileTrue(new SetArmAngle(arm, 0, 1));
 		new JoystickButton(operatorJoystick, XboxController.Button.kA.value).whileTrue(new SetArmAngle(arm, 0, 2));
 

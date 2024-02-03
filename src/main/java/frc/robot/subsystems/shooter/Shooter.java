@@ -5,8 +5,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN;
-import org.littletonrobotics.junction.Logger;
 import frc.robot.subsystems.intake.Intake;
+import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
 	/*
@@ -49,8 +49,7 @@ public class Shooter extends SubsystemBase {
 
 	/* Define all subsystem-specific methods and enums here */
 	public void shoot(double topVel, double bottomVel) {
-		if (intake.hasNote)
-		{
+		if (intake.hasNote) {
 			shooterTop.set(topVel);
 			shooterBottom.set(bottomVel);
 		}

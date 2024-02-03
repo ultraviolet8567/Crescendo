@@ -1,13 +1,13 @@
-	package frc.robot;
+package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.util.LoggedTunableNumber;
 
 public final class Constants {
@@ -24,7 +24,7 @@ public final class Constants {
 	public static final Mode currentMode = Mode.SIM;
 
 	public static final ModuleType powerDistributionType = ModuleType.kRev;
-	public static final boolean fieldOriented = true;
+	public static final boolean fieldOriented = false;
 	public static final String logpath = "/media/sda1/";
 
 	public static final Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Red);
@@ -136,18 +136,21 @@ public final class Constants {
 	}
 
 	public static final class ClimberConstants {
-		public static final LoggedTunableNumber climbVoltage = new LoggedTunableNumber("Climber Voltage", 0.1);
+		public static final LoggedTunableNumber climbVoltage = new LoggedTunableNumber("Climber Voltage", 5);
+
+		public static final double kClimberPositionReduction = 1.0;
+		public static final double kClimberVelocityReduction = 1.0;
 	}
 
 	public static final class ArmConstants {
-		public static final LoggedTunableNumber intakeVoltage = new LoggedTunableNumber("Intake Voltage", 0.5);
+		public static final LoggedTunableNumber intakeVoltage = new LoggedTunableNumber("Intake Voltage", 7);
 
 		public static final int kArmEncoderPort = 0;
 		public static final I2C.Port kArmColorSensorPort = I2C.Port.kOnboard;
 
 		// Color of note, subject to change. NOTE: PROGRAM LACKS COLOR TOLERANCE
-		public static final Color kNoteColor = new Color(255,127,80);
-		
+		public static final Color kNoteColor = new Color(255, 127, 80);
+
 		// Dummy values
 		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Max Speed", 3.5);
 		public static final LoggedTunableNumber kMaxAcceleration = new LoggedTunableNumber("Max Acceleration", 1);
@@ -164,6 +167,8 @@ public final class Constants {
 		// Another temp value
 		public static final double MaxArmAngle = 0;
 		public static final double MinArmAngle = 0;
+
+		public static final double kIntakeReduction = 1.0;
 	}
 
 	public static enum Mode {
@@ -180,5 +185,5 @@ public final class Constants {
 	public static enum ControllerType {
 		XBOX, LOGITECH, JOYSTICK
 	}
-	
+
 }

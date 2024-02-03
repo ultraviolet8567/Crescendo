@@ -6,10 +6,9 @@ public interface IntakeIO {
 	@AutoLog
 	class IntakeIOInputs {
 		public double velocityRadPerSec = 0.0;
-		public double positionRads = 0.0;
 		public double appliedVoltage = 0.0;
-		public double[] currentAmps = new double[] {};
-		public double[] tempCelsius = new double[] {};
+		public double[] currentAmps = new double[]{};
+		public double[] tempCelsius = new double[]{};
 	}
 
 	public default void updateInputs(IntakeIOInputs inputs) {
@@ -20,7 +19,7 @@ public interface IntakeIO {
 
 	public default void setBrakeMode(boolean brake) {
 	}
-	
+
 	public default void stop() {
 	}
 }

@@ -20,11 +20,6 @@ public class Intake extends SubsystemBase {
 	private ColorSensorV3 sensor;
 
 	/*
-	 * Declare components of subsystem here (motor controllers, encoders, sensors,
-	 * etc.)
-	 */
-
-	/*
 	 * Initialize all components here, as well as any one-time logic to be completed
 	 * on boot-up
 	 */
@@ -36,8 +31,6 @@ public class Intake extends SubsystemBase {
 	/* Runs periodically (about once every 20 ms) */
 	@Override
 	public void periodic() {
-		// Logger.recordOutput("Setpoints/Intake", intake.get());
-		// Logger.recordOutput("Measured/Intake", intake.getEncoder().getVoltage());
 		io.updateInputs(inputs);
 		Logger.processInputs("Intake", inputs);
 
@@ -59,7 +52,6 @@ public class Intake extends SubsystemBase {
 	}
 
 	/* Define all subsystem-specific methods and enums here */
-
 	public void pickup() {
 		if (!hasNote) {
 			io.setInputVoltage(ArmConstants.intakeVoltage.get());

@@ -4,22 +4,13 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import frc.robot.Constants;
 import frc.robot.Constants.CAN;
 
 public class IntakeIOSparkMax implements IntakeIO {
-	/*
-	 * Declare components of subsystem here (motor controllers, encoders, sensors,
-	 * etc.)
-	 */
 	public final CANSparkMax intakeMotor;
 	public final RelativeEncoder intakeEncoder;
 
-	private double appliedVoltage = 0.0;
-
-	/*
-	 * Initialize all components here, as well as any one-time logic to be completed
-	 * on boot-up
-	 */
 	public IntakeIOSparkMax() {
 		System.out.println("[Init] Creating IntakeIOSparkMax");
 
@@ -29,17 +20,15 @@ public class IntakeIOSparkMax implements IntakeIO {
 		intakeMotor.setIdleMode(IdleMode.kBrake);
 
 		intakeEncoder = intakeMotor.getEncoder();
-		intakeEncoder.setPositionConversionFactor(1.0 /* / reduction */ * 2 * Math.PI);
-		intakeEncoder.setVelocityConversionFactor(1.0 /* / reduction */ * 2 * Math.PI);
+		intakeEncoder.setVelocityConversionFactor(1.0 / Constants.ArmConstants.kIntakeReduction * 2 * Math.PI);
 	}
 
 	@Override
 	public void updateInputs(IntakeIOInputs inputs) {
 		inputs.velocityRadPerSec = intakeEncoder.getVelocity();
-		inputs.positionRads = intakeEncoder.getPosition();
 		inputs.appliedVoltage = intakeMotor.getAppliedOutput() * intakeMotor.getBusVoltage();
-		inputs.currentAmps = new double[] {intakeMotor.getOutputCurrent()};
-		inputs.tempCelsius = new double[] {intakeMotor.getMotorTemperature()};
+		inputs.currentAmps = new double[]{intakeMotor.getOutputCurrent()};
+		inputs.tempCelsius = new double[]{intakeMotor.getMotorTemperature()};
 	}
 
 	public void setInputVoltage(double volts) {
