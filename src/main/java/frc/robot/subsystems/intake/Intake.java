@@ -54,14 +54,14 @@ public class Intake extends SubsystemBase {
 	/* Define all subsystem-specific methods and enums here */
 	public void pickup() {
 		if (!hasNote) {
-			io.setInputVoltage(ArmConstants.intakeVoltage.get());
+			io.setInputVoltage(ArmConstants.kIntakeVoltage.get());
 			isPicking = true;
 			colorPasses = 0;
 		}
 	}
 
 	public void drop() {
-		io.setInputVoltage(-ArmConstants.intakeVoltage.get());
+		io.setInputVoltage(-ArmConstants.kIntakeVoltage.get());
 	}
 
 	public void stop() {

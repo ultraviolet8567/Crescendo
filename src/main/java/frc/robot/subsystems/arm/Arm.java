@@ -25,11 +25,16 @@ public class Arm extends SubsystemBase {
 
 	public double targetAngle;
 
+	private final ArmIO io;
+	private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
+
 	/*
 	 * Initialize all components here, as well as any one-time logic to be completed
 	 * on boot-up
 	 */
-	public Arm() {
+	public Arm(ArmIO io) {
+		this.io = io;
+
 		arm1 = new CANSparkMax(CAN.kArm1Port, MotorType.kBrushless);
 		arm1.enableVoltageCompensation(12.0);
 		arm1.setSmartCurrentLimit(40);
@@ -52,11 +57,18 @@ public class Arm extends SubsystemBase {
 	/* Runs periodically (about once every 20 ms) */
 	@Override
 	public void periodic() {
-		Logger.recordOutput("Setpoints/Intake", arm1.get());
-		Logger.recordOutput("Measured/Intake", arm1.getEncoder().getVelocity());
+		io.updateInputs(inputs);
+		io.update();
 
-		Logger.recordOutput("Setpoints/Intake", arm2.get());
-		Logger.recordOutput("Measured/Intake", arm2.getEncoder().getVelocity());
+		Logger.processInputs("Arms", inputs);
+
+		Logger.recordOutput("Setpoints/Intake", arm1.get());
+		// Logger.recordOutput("Measured/Intake", arm1.getEncoder().getVelocity());
+
+		// Logger.recordOutput("Setpoints/Intake", arm2.get());
+		// Logger.recordOutput("Measured/Intake", arm2.getEncoder().getVelocity());
+
+		io.setInputVoltage(0.1);
 	}
 
 	/* Define all subsystem-specific methods and enums here */
@@ -69,8 +81,9 @@ public class Arm extends SubsystemBase {
 	}
 
 	public void setTurnSpeed(double factor) {
-		if (arm1.getEncoder().getPosition() + factor * ArmConstants.kMaxSpeed.get() > ArmConstants.MinArmAngle
-				&& arm1.getEncoder().getPosition() + factor * ArmConstants.kMaxSpeed.get() < ArmConstants.MaxArmAngle) {
+		if (arm1.getEncoder().getPosition() + factor * ArmConstants.kMaxSpeed.get() > ArmConstants.kMinArmAngle
+				&& arm1.getEncoder().getPosition()
+						+ factor * ArmConstants.kMaxSpeed.get() < ArmConstants.kMaxArmAngle) {
 		}
 		arm1.set(factor * ArmConstants.kMaxSpeed.get());
 		arm2.set(factor * ArmConstants.kMaxSpeed.get());

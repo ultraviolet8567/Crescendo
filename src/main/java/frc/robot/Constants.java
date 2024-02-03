@@ -136,16 +136,16 @@ public final class Constants {
 	}
 
 	public static final class ClimberConstants {
-		public static final LoggedTunableNumber climbVoltage = new LoggedTunableNumber("Climber Voltage", 5);
+		public static final LoggedTunableNumber kClimbVoltage = new LoggedTunableNumber("Climber Voltage", 5);
 
 		public static final double kClimberPositionReduction = 1.0;
 		public static final double kClimberVelocityReduction = 1.0;
 	}
 
 	public static final class ArmConstants {
-		public static final LoggedTunableNumber intakeVoltage = new LoggedTunableNumber("Intake Voltage", 7);
+		public static final LoggedTunableNumber kIntakeVoltage = new LoggedTunableNumber("Intake Voltage", 7);
 
-		public static final int kArmEncoderPort = 0;
+		public static final int kArmEncoderPort = 25;
 		public static final I2C.Port kArmColorSensorPort = I2C.Port.kOnboard;
 
 		// Color of note, subject to change. NOTE: PROGRAM LACKS COLOR TOLERANCE
@@ -163,10 +163,11 @@ public final class Constants {
 		public static final LoggedTunableNumber kP = new LoggedTunableNumber("[P]ID", 0);
 		public static final LoggedTunableNumber kI = new LoggedTunableNumber("P[I]D", 0);
 		public static final LoggedTunableNumber kD = new LoggedTunableNumber("PI[D]", 0);
+		public static final LoggedTunableNumber kArmPIDTolerance = new LoggedTunableNumber("PID Tolerance", 0.5);
 
 		// Another temp value
-		public static final double MaxArmAngle = 0;
-		public static final double MinArmAngle = 0;
+		public static final double kMaxArmAngle = 0;
+		public static final double kMinArmAngle = 0;
 
 		public static final double kIntakeReduction = 1.0;
 	}

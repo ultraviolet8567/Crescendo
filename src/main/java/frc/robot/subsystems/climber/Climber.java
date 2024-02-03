@@ -26,9 +26,9 @@ public class Climber extends SubsystemBase {
 	/* Define all subsystem-specific methods and enums here */
 	public void startClimb(String direction) {
 		if (direction.equals("extend")) {
-			io.setInputVoltage(ClimberConstants.climbVoltage.get());
+			io.setInputVoltage(ClimberConstants.kClimbVoltage.get());
 		} else {
-			io.setInputVoltage(-ClimberConstants.climbVoltage.get());
+			io.setInputVoltage(-ClimberConstants.kClimbVoltage.get());
 		}
 	}
 
