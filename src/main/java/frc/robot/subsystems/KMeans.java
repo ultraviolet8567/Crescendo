@@ -8,9 +8,8 @@ import java.util.List;
 
 public class KMeans extends SubsystemBase {
 	List<Transform3d> points;
-	Transform3d k1, k2, k3;
-	List<Transform3d> cluster1 = new ArrayList<Transform3d>(), cluster2 = new ArrayList<Transform3d>(),
-			cluster3 = new ArrayList<Transform3d>();
+	Transform3d k1, k2;
+	List<Transform3d> cluster1 = new ArrayList<Transform3d>(), cluster2 = new ArrayList<Transform3d>();
 	double diff;
 
 	public KMeans() {
@@ -24,7 +23,7 @@ public class KMeans extends SubsystemBase {
 	public void updatePoints(List<Transform3d> points) {
 		clean();
 
-		for (int i = 1; i <= 50; i++) {
+		for (int i = 1; i <= 80; i++) {
 			for (Transform3d point : points) {
 				reassign(point);
 			}
@@ -33,7 +32,15 @@ public class KMeans extends SubsystemBase {
 
 	// this is the method that should be called to get centroids
 	public Transform3d[] getCentroids() {
-		return new Transform3d[]{k1, k2, k3};
+		return new Transform3d[] {k1, k2};
+	}
+
+	public List<List<Transform3d>> getClusters() {
+		List<List<Transform3d>> toReturn = new ArrayList<List<Transform3d>>();
+		toReturn.add(cluster1);
+		toReturn.add(cluster2);
+
+		return toReturn;
 	}
 
 	private Transform3d findCentroid(List<Transform3d> cluster) {
@@ -70,24 +77,20 @@ public class KMeans extends SubsystemBase {
 
 		double to1 = euclideanDistance(point, k1) + rotationalDistance(point, k1);
 		double to2 = euclideanDistance(point, k2) + rotationalDistance(point, k2);
-		double to3 = euclideanDistance(point, k3) + rotationalDistance(point, k3);
 
-		if (to1 > to2 && to2 > to3) {
+		if (to1 < to2) {
 			cluster1.add(point);
 			k1 = findCentroid(cluster1);
-		} else if (to2 > to1 && to1 > to3) {
+		} else {
 			cluster2.add(point);
 			k2 = findCentroid(cluster2);
-		} else {
-			cluster3.add(point);
-			k3 = findCentroid(cluster3);
 		}
 	}
 
 	// for distance
 	private double euclideanDistance(Transform3d point, Transform3d centroid) {
-		return Math.sqrt(Math.pow(point.getX() - centroid.getX(), 2) + Math.pow(point.getY() - centroid.getY(), 2)
-				+ Math.pow(point.getZ() - centroid.getZ(), 2));
+		return Math.sqrt(Math.pow(Math.abs(point.getX() - centroid.getX()), 2) + Math.pow(Math.abs(point.getY() - centroid.getY()), 2)
+				+ Math.pow(Math.abs(point.getZ() - centroid.getZ()), 2));
 	}
 
 	// for rotation
@@ -100,16 +103,13 @@ public class KMeans extends SubsystemBase {
 	private void remove(Transform3d point) {
 		cluster1.remove(point);
 		cluster2.remove(point);
-		cluster3.remove(point);
 	}
 
 	private void clean() {
 		k1 = new Transform3d(Math.random() * 10, Math.random() * 10, Math.random() * 10, new Rotation3d());
 		k2 = new Transform3d(Math.random() * 10, Math.random() * 10, Math.random() * 10, new Rotation3d());
-		k3 = new Transform3d(Math.random() * 10, Math.random() * 10, Math.random() * 10, new Rotation3d());
 
 		cluster1.clear();
 		cluster2.clear();
-		cluster3.clear();
 	}
 }
