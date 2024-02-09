@@ -18,8 +18,9 @@ public class SetArmAngle extends Command {
 
 	@Override
 	public void execute() {
+		// The first thing that runs when command is called.
 		if (armMode == 0) {
-			manual();;
+			manual();
 		} else {
 			automatic();
 		}

@@ -44,6 +44,7 @@ public class Shooter extends SubsystemBase {
 	public void shoot(double topVel, double bottomVel) {
 		if (intake.hasNote) {
 			io.setInputVoltage(topVel, bottomVel);
+			intake.hasNote = false;
 		}
 	}
 

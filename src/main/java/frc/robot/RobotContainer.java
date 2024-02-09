@@ -3,7 +3,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerType;
 import frc.robot.Constants.OIConstants;
@@ -45,10 +47,16 @@ public class RobotContainer {
 	private final Odometry odometry;
 	private final Shooter shooter;
 	private final Swerve swerve;
+	// private final Lights lights;
 
 	// Joysticks
 	private static final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
 	private static final Joystick operatorJoystick = new Joystick(OIConstants.kOperatorControllerPort);
+
+	// THIS CODE IS TEMPORARY AND NOT FINALIZED - DELETE ON A WHIM IF IT CAUSES ANY
+	// PROBLEMS
+	private static final CommandXboxController operatorController = new CommandXboxController(
+			OIConstants.kOperatorControllerPort);
 
 	public RobotContainer() {
 		switch (Constants.currentMode) {
@@ -105,12 +113,35 @@ public class RobotContainer {
 	public void configureBindings() {
 		new JoystickButton(operatorJoystick, XboxController.Button.kLeftBumper.value).whileTrue(new Pickup(intake));
 		new JoystickButton(operatorJoystick, XboxController.Button.kRightBumper.value).whileTrue(new Shoot(shooter));
+		// new JoystickButton(operatorJoystick,
+		// XboxController.Button.kRightBumper.value).whileTrue();
+
 		new JoystickButton(operatorJoystick, XboxController.Button.kStart.value)
 				.whileTrue(new Climb(climber, "extend"));
 		new JoystickButton(operatorJoystick, XboxController.Button.kBack.value)
 				.whileTrue(new Climb(climber, "retract"));
-		new JoystickButton(operatorJoystick, XboxController.Button.kY.value).whileTrue(new SetArmAngle(arm, 0, 1));
-		new JoystickButton(operatorJoystick, XboxController.Button.kA.value).whileTrue(new SetArmAngle(arm, 0, 2));
+
+		// new JoystickButton(operatorJoystick,
+		// XboxController.Button.kY.value).whileTrue(new SetArmAngle(arm, 0, 1));
+		// new JoystickButton(operatorJoystick,
+		// XboxController.Button.kA.value).whileTrue(new SetArmAngle(arm, 0, 2));
+		new JoystickButton(operatorJoystick, XboxController.Button.kRightStick.value)
+				.onTrue(new SetArmAngle(arm, operatorJoystick.getY(), 0));
+
+		new POVButton(operatorJoystick, -1).whileTrue(new SetArmAngle(arm, 0, 1));
+		new POVButton(operatorJoystick, 0).whileTrue(new SetArmAngle(arm, 0, 2));
+		new POVButton(operatorJoystick, 90).whileTrue(new SetArmAngle(arm, 0, 3));
+		new POVButton(operatorJoystick, 180).whileTrue(new SetArmAngle(arm, 0, 4));
+		new POVButton(operatorJoystick, 270).whileTrue(new SetArmAngle(arm, 0, 5));
+		/*
+		 * NOTE: If you wish to use the TRIGGERS, try this code. NOTE: THIS IS UNTESTED
+		 *
+		 * operatorController.leftTrigger().onTrue("Command here");
+		 * operatorController.leftTrigger().whileTrue("Command here");
+		 *
+		 * operatorController.rightTrigger().onTrue("Command here");
+		 * operatorController.rightTrigger().whileTrue("Command here");
+		 */
 
 		// new JoystickButton(operatorJoystick, operatorJoystick.pov).whileTrue(new
 		// SetArmAngle(arm, 0, 1));
@@ -123,8 +154,7 @@ public class RobotContainer {
 		// SetArmAngle(arm, 0, 3));
 		// new JoystickButton(operatorJoystick, dPadLeft()).whileTrue(new
 		// SetArmAngle(arm, 0, 4));
-		// new JoystickButton(operatorJoystick, XboxController.Button.kRightStick.value)
-		// .onTrue(new SetArmAngle(arm, operatorJoystick.getY(), 0));
+		//
 
 	}
 

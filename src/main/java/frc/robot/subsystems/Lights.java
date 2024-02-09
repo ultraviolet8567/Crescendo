@@ -116,7 +116,7 @@ public class Lights extends VirtualSubsystem {
 		leds.setData(buffer);
 	}
 
-	private void solid(Section section, Color color) {
+	public void solid(Section section, Color color) {
 		for (int i = section.start(); i < section.end(); i++) {
 			buffer.setLED(i, color);
 		}
@@ -210,7 +210,7 @@ public class Lights extends VirtualSubsystem {
 		solid(section, new Color(red, green, blue));
 	}
 
-	private static enum Section {
+	public static enum Section {
 		FULL, BOTTOM, UPPER, LEFTUPPER, LEFTBOTTOM, LEFTFULL, RIGHTUPPER, RIGHTBOTTOM, RIGHTFULL, LEFTSMALL, RIGHTSMALL, LEFTBACK, RIGHTBACK;
 
 		private int start() {

@@ -1,6 +1,8 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.shooter.Shooter;
 
 public class Shoot extends Command {
@@ -16,6 +18,7 @@ public class Shoot extends Command {
 	@Override
 	public void execute() {
 		shooter.shoot(shooterTopVelocity, shooterBottomVelocity);
+		Lights.getInstance().solid(Lights.Section.FULL, Color.kPurple); // Lights thing, just a test for now
 	}
 
 	@Override
