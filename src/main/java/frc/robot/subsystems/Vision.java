@@ -13,11 +13,12 @@ package frc.robot.subsystems;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -25,8 +26,10 @@ public class Vision extends SubsystemBase {
 	PhotonCamera camera = new PhotonCamera("OV9281");
 	AprilTagFieldLayout field = Constants.fieldLayout;
 	List<List<Transform3d>> poses;
+	KMeans kmeans;
 
-	public Vision() {
+	public Vision(KMeans kmeans) {
+		this.kmeans = kmeans;
 	}
 
 	@Override
@@ -72,41 +75,60 @@ public class Vision extends SubsystemBase {
 		return ids;
 	}
 
-	public Rotation2d getDistToAlign(boolean side, List<PhotonTrackedTarget> targets) {
-		int idToFind = 0;
+	public Rotation2d getRotToAlign(List<PhotonTrackedTarget> tags) {
+		int speakerTag = getSpeakerTag();
 
-		if (!side) {
-			idToFind = 4;
-		} else {
-			idToFind = 7;
+		List<Transform3d> toTag = new ArrayList<Transform3d>();
+
+		for (PhotonTrackedTarget tag : tags) {
+			toTag.add(orientTagToField(speakerTag, tag.getBestCameraToTarget()));
+			toTag.add(orientTagToField(speakerTag, tag.getAlternateCameraToTarget()));
 		}
 
-		PhotonTrackedTarget shootTarget = null;
-		for (PhotonTrackedTarget target : targets) {
-			if (target.getFiducialId() == idToFind) {
-				shootTarget = target;
-				break;
+		kmeans.clean();
+		kmeans.updatePoints(toTag);
+		Transform3d distToTag = kmeans.getCentroid();
+
+		return distToTag.getRotation().toRotation2d();
+	}
+
+	public Transform3d getDistance() {
+		kmeans.updatePoints(unNestList());
+		return kmeans.getCentroid();
+	}
+
+	private List<Transform3d> unNestList() {
+		List<Transform3d> unnested = new ArrayList<Transform3d>();
+
+		for (List<Transform3d> posePair : poses) {
+			unnested.add(posePair.get(0));
+			unnested.add(posePair.get(1));
+		}
+
+		return unnested;
+	}
+
+	public int getSpeakerTag() {
+		Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
+		int speakerTag = 0;
+
+		if (alliance.isPresent()) {
+			if (alliance.get() == DriverStation.Alliance.Red) {
+				speakerTag = 4;
+			} else {
+				speakerTag = 7;
 			}
 		}
 
-		double angleToTurn = 0;
-
-		if (!Objects.isNull(shootTarget)) {
-			angleToTurn = -1 * shootTarget.getYaw();
-		}
-
-		return new Rotation2d(angleToTurn);
-
+		return speakerTag;
 	}
 
-	public List<Transform3d> orientToField(List<List<Transform3d>> poses, List<Integer> ids) {
+	public List<Transform3d> orientToField(List<List<Transform3d>> poses, int tag) {
 		List<Transform3d> fieldOrientedPoses = new ArrayList<Transform3d>();
-		int index = 0;
 
 		for (List<Transform3d> pose : poses) {
-			fieldOrientedPoses.add(orientTagToField(ids.get(index), pose.get(0)));
-			fieldOrientedPoses.add(orientTagToField(ids.get(index), pose.get(1)));
-			index++;
+			fieldOrientedPoses.add(orientTagToField(tag, pose.get(0)));
+			fieldOrientedPoses.add(orientTagToField(tag, pose.get(1)));
 		}
 
 		return fieldOrientedPoses;
