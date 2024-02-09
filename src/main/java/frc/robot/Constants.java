@@ -170,6 +170,7 @@ public final class Constants {
 		public static final double kMinArmAngle = 0;
 
 		public static final double kIntakeReduction = 1.0;
+		public static final double kArmReduction = 1.0; // CALCULATE
 	}
 
 	public static enum Mode {

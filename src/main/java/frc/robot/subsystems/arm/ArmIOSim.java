@@ -1,5 +1,7 @@
 package frc.robot.subsystems.arm;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
@@ -9,7 +11,6 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ArmConstants;
-import org.littletonrobotics.junction.Logger;
 
 public class ArmIOSim implements ArmIO {
 	// CHECK IF GEARING AND JKGMETERSSQUARED ARE RIGHT
@@ -22,9 +23,10 @@ public class ArmIOSim implements ArmIO {
 
 	Mechanism2d arm = new Mechanism2d(2, 2);
 	MechanismRoot2d armRoot = arm.getRoot("Arm Root", 1, 0.5);
-	MechanismLigament2d armMech = armRoot.append(new MechanismLigament2d("Arm", 0.58, 90));
-	MechanismLigament2d intakeMech = armMech.append(new MechanismLigament2d("Intake", 0.36, 26.0));
-	MechanismLigament2d shooterMech = armMech.append(new MechanismLigament2d("Shooter", 0.11, 206));
+	MechanismLigament2d superstructureMech = armRoot.append(new MechanismLigament2d("superstructureMech", 0.2, 90));
+	MechanismLigament2d armMech = superstructureMech.append(new MechanismLigament2d("Arm", 0.58, 90));
+	MechanismLigament2d intakeMech = armMech.append(new MechanismLigament2d("Intake", 0.36, 64.0));
+	MechanismLigament2d shooterMech = armMech.append(new MechanismLigament2d("Shooter", 0.11, 244.0));
 
 	private double appliedVoltage = 0.0;
 
@@ -34,7 +36,7 @@ public class ArmIOSim implements ArmIO {
 		inputs.velocityRadPerSec = getPositionRads();
 		inputs.positionRads = armSim.getAngleRads();
 		inputs.appliedVoltage = appliedVoltage;
-		inputs.currentAmps = armSim.getCurrentDrawAmps();
+		inputs.currentAmps = new double[]{armSim.getCurrentDrawAmps()};
 	}
 
 	// An initializing function
@@ -59,14 +61,15 @@ public class ArmIOSim implements ArmIO {
 	}
 
 	// Returns the current position of the arm in radians
+	@Override
 	public double getPositionRads() {
 		return armSim.getAngleRads();
 	}
 
-	// Calculates the voltage to run the motors at -- CHECK IF CALCULATE() CAN
-	// RETURN VOLTS
+	// Calculates the voltage to run the motors at
+	@Override
 	public double calculateInputVoltage(double setpoint) {
-		return (armPIDController.calculate(getPositionRads(), setpoint)) / 100 * 12;
+		return (armPIDController.calculate(getPositionRads(), setpoint)) * 12;
 	}
 
 	// Sets the input voltage for a motor
@@ -77,16 +80,19 @@ public class ArmIOSim implements ArmIO {
 	}
 
 	// Checks if the arm is past the from limit (could hit ground/front of robot)
+	@Override
 	public boolean armPastFrontLimit() {
 		return armSim.hasHitLowerLimit();
 	}
 
 	// Checks if the arm is past the back limit (could hit back/tip over robot)
+    @Override
 	public boolean armPastBackLimit() {
 		return armSim.hasHitUpperLimit();
 	}
 
 	// Check if the arm can be moved
+	@Override
 	public boolean armWithinRange() {
 		return !armPastFrontLimit() && !armPastBackLimit();
 	}
