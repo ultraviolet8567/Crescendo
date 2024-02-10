@@ -58,8 +58,8 @@ public final class Constants {
 
 		public static final int kFrontLeftDriveMotorPort = 11;
 		public static final int kFrontRightDriveMotorPort = 12;
-		public static final int kBackLeftDriveMotorPort = 14;
-		public static final int kBackRightDriveMotorPort = 13;
+		public static final int kBackLeftDriveMotorPort = 13;
+		public static final int kBackRightDriveMotorPort = 14;
 
 		public static final int kFrontLeftTurningMotorPort = 21;
 		public static final int kFrontRightTurningMotorPort = 22;
@@ -148,8 +148,9 @@ public final class Constants {
 		public static final int kArmEncoderPort = 25;
 		public static final I2C.Port kArmColorSensorPort = I2C.Port.kOnboard;
 
-		// Color of note, subject to change. NOTE: PROGRAM LACKS COLOR TOLERANCE
+		// Color of note/lack of note + tolerance, subject to change.
 		public static final Color kNoteColor = new Color(255, 127, 80);
+		public static final double kColorConfidenceThreshold = 0.1;
 
 		// Dummy values
 		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Max Speed", 3.5);
@@ -159,6 +160,8 @@ public final class Constants {
 		public static final LoggedTunableNumber kTaxiAngle = new LoggedTunableNumber("Taxi Angle", Math.PI / 4);
 		public static final LoggedTunableNumber kRoombaAngle = new LoggedTunableNumber("Roomba Angle", Math.PI / 12);
 		public static final LoggedTunableNumber kSpeakerAngle = new LoggedTunableNumber("Speaker Angle", 0.24434609527);
+		public static final LoggedTunableNumber kAmpAngle = new LoggedTunableNumber("Amp Angle", Math.PI / 3); // temporary
+		public static final LoggedTunableNumber kTrapAngle = new LoggedTunableNumber("Trap Angle", Math.PI / 5); // temporary
 
 		public static final LoggedTunableNumber kP = new LoggedTunableNumber("[P]ID", 0);
 		public static final LoggedTunableNumber kI = new LoggedTunableNumber("P[I]D", 0);
