@@ -15,7 +15,7 @@ public class Gyrometer extends SubsystemBase {
 	private SwerveDriveOdometry odometer;
 
 	public Gyrometer(Swerve swerve, Vision vision) {
-		gyro = new Pigeon2(0);
+		gyro = new Pigeon2(31);
 		gyro.reset();
 
 		this.swerve = swerve;
