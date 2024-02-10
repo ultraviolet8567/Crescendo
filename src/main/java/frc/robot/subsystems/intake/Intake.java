@@ -1,8 +1,9 @@
 package frc.robot.subsystems.intake;
 
+import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import org.littletonrobotics.junction.Logger;
 
@@ -18,6 +19,7 @@ public class Intake extends SubsystemBase {
 	public int colorPasses = 0;
 
 	private ColorSensorV3 sensor;
+	private ColorMatch matcher;
 
 	/*
 	 * Initialize all components here, as well as any one-time logic to be completed
@@ -26,6 +28,10 @@ public class Intake extends SubsystemBase {
 	public Intake(IntakeIO io) {
 		this.io = io;
 		sensor = new ColorSensorV3(ArmConstants.kArmColorSensorPort);
+		matcher = new ColorMatch();
+
+		matcher.addColorMatch(ArmConstants.kNoteColor);
+		matcher.setConfidenceThreshold(ArmConstants.kColorConfidenceThreshold);
 	}
 
 	/* Runs periodically (about once every 20 ms) */
@@ -33,11 +39,18 @@ public class Intake extends SubsystemBase {
 	public void periodic() {
 		io.updateInputs(inputs);
 		Logger.processInputs("Intake", inputs);
-
+		
 		if (isPicking) {
-			isSeeingOrange = sensor.getColor() == Constants.ArmConstants.kNoteColor;
+			ColorMatchResult result = matcher.matchColor(sensor.getColor());
 
-			if (wasSeeingOrange == true && isSeeingOrange == false) {
+			if (result == null) {
+				isSeeingOrange = false;
+			}
+			else {
+				isSeeingOrange = true;
+			}
+
+			if (wasSeeingOrange && !isSeeingOrange) {
 				colorPasses += 1;
 			}
 
