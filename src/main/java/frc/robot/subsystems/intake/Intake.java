@@ -31,7 +31,7 @@ public class Intake extends SubsystemBase {
 		matcher = new ColorMatch();
 
 		matcher.addColorMatch(ArmConstants.kNoteColor);
-		matcher.setConfidenceThreshold(ArmConstants.kColorConfidenceThreshold);
+		// matcher.setConfidenceThreshold(ArmConstants.kColorConfidenceThreshold);
 	}
 
 	/* Runs periodically (about once every 20 ms) */
@@ -39,14 +39,13 @@ public class Intake extends SubsystemBase {
 	public void periodic() {
 		io.updateInputs(inputs);
 		Logger.processInputs("Intake", inputs);
-		
+
 		if (isPicking) {
 			ColorMatchResult result = matcher.matchColor(sensor.getColor());
 
 			if (result == null) {
 				isSeeingOrange = false;
-			}
-			else {
+			} else {
 				isSeeingOrange = true;
 			}
 

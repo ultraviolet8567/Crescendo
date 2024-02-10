@@ -58,8 +58,8 @@ public final class Constants {
 
 		public static final int kFrontLeftDriveMotorPort = 11;
 		public static final int kFrontRightDriveMotorPort = 12;
-		public static final int kBackLeftDriveMotorPort = 14;
-		public static final int kBackRightDriveMotorPort = 13;
+		public static final int kBackLeftDriveMotorPort = 13;
+		public static final int kBackRightDriveMotorPort = 14;
 
 		public static final int kFrontLeftTurningMotorPort = 21;
 		public static final int kFrontRightTurningMotorPort = 22;
@@ -97,10 +97,10 @@ public final class Constants {
 		public static final boolean kBackLeftTurningEncoderReversed = true;
 		public static final boolean kBackRightTurningEncoderReversed = true;
 
-		public static final boolean kFrontLeftDriveEncoderReversed = true;
-		public static final boolean kFrontRightDriveEncoderReversed = false;
-		public static final boolean kBackLeftDriveEncoderReversed = true;
-		public static final boolean kBackRightDriveEncoderReversed = false;
+		public static final boolean kFrontLeftDriveEncoderReversed = false;
+		public static final boolean kFrontRightDriveEncoderReversed = true;
+		public static final boolean kBackLeftDriveEncoderReversed = false;
+		public static final boolean kBackRightDriveEncoderReversed = true;
 
 		public static final int kFrontLeftDriveAbsoluteEncoderPort = 0;
 		public static final int kFrontRightDriveAbsoluteEncoderPort = 1;
@@ -112,16 +112,16 @@ public final class Constants {
 		public static final boolean kBackLeftDriveAbsoluteEncoderReversed = false;
 		public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
 
-		public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = Units.degreesToRadians(0.000); // TODO:
+		public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -1.677; // TODO:
 		// Determine
 		// offset
-		public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = Units.degreesToRadians(0.000); // TODO:
+		public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -0.804; // TODO:
 		// Determine
 		// offset
-		public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = Units.degreesToRadians(0.000); // TODO:
+		public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.452; // TODO:
 		// Determine
 		// offset
-		public static final double kBackRightDriveAbsoluteEncoderOffsetRad = Units.degreesToRadians(0.000); // TODO:
+		public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.132; // TODO:
 		// Determine
 		// offset
 
