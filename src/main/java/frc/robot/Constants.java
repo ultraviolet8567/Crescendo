@@ -168,6 +168,16 @@ public final class Constants {
 		public static final LoggedTunableNumber kD = new LoggedTunableNumber("PI[D]", 0);
 		public static final LoggedTunableNumber kArmPIDTolerance = new LoggedTunableNumber("PID Tolerance", 0.5);
 
+
+		// Dummy Shooter values
+		public static final LoggedTunableNumber kShooterMaxSpeed = new LoggedTunableNumber("Shooter Max Speed", 3.5);
+		public static final LoggedTunableNumber kShooterMaxAcceleration = new LoggedTunableNumber("Shooter Max Acceleration", 1);
+
+		public static final LoggedTunableNumber kShooterP = new LoggedTunableNumber("Shooter: [P]ID", 0);
+		public static final LoggedTunableNumber kShooterI = new LoggedTunableNumber("Shooter: P[I]D", 0);
+		public static final LoggedTunableNumber kShooterD = new LoggedTunableNumber("Shooter: PI[D]", 0);
+		public static final LoggedTunableNumber kShooterPIDTolerance = new LoggedTunableNumber("Shooter PID Tolerance", 0.5);
+
 		// Another temp value
 		public static final double kMaxArmAngle = 0;
 		public static final double kMinArmAngle = 0;

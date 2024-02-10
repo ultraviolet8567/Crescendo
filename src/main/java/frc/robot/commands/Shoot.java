@@ -17,7 +17,7 @@ public class Shoot extends Command {
 
 	@Override
 	public void execute() {
-		shooter.shoot(shooterTopVelocity, shooterBottomVelocity);
+		shooter.shoot(shooterTopVelocity);
 		Lights.getInstance().solid(Lights.Section.FULL, Color.kPurple); // Lights thing, just a test for now
 	}
 

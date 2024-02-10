@@ -16,6 +16,22 @@ public interface ShooterIO {
 		public double bottomCurrentAmps = 0.0;
 	}
 
+	default double getTopShooterVelocity() {
+		return 0.0;
+	}
+
+	default double getBottomShooterVelocity() {
+		return 0.0;
+	}
+
+	default double calculateShooterTopVelocity(double topVel) {
+		return 0.0;
+	}
+
+	default double calculateShooterBottomVelocity(double bottomVel) {
+		return 0.0;
+	}
+
 	default void updateInputs(ShooterIOInputs inputs) {
 	}
 

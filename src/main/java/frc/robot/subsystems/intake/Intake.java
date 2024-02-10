@@ -39,14 +39,13 @@ public class Intake extends SubsystemBase {
 	public void periodic() {
 		io.updateInputs(inputs);
 		Logger.processInputs("Intake", inputs);
-		
+
 		if (isPicking) {
 			ColorMatchResult result = matcher.matchColor(sensor.getColor());
 
 			if (result == null) {
 				isSeeingOrange = false;
-			}
-			else {
+			} else {
 				isSeeingOrange = true;
 			}
 

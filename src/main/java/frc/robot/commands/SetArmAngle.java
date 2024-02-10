@@ -42,12 +42,14 @@ public class SetArmAngle extends Command {
 		}
 		// These need Vision
 		else if (armMode == 3) {
-			// Speaker Set Point - angle from floor : 0.24434609527 rad
+			// Speaker Set Point
 			arm.setTargetAngle(ArmConstants.kSpeakerAngle.get());
 		} else if (armMode == 4) {
 			// Amp Set Point
+			arm.setTargetAngle(ArmConstants.kAmpAngle.get());
 		} else if (armMode == 5) {
 			// Trap Set Point
+			arm.setTargetAngle(ArmConstants.kTrapAngle.get());
 		}
 	}
 

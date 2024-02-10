@@ -35,7 +35,7 @@ public class Arm extends SubsystemBase {
 	public void setTurnSpeed(double factor) {
 		if (io.getPositionRads() + factor * ArmConstants.kMaxSpeed.get() > ArmConstants.kMinArmAngle
 				&& io.getPositionRads() + factor * ArmConstants.kMaxSpeed.get() < ArmConstants.kMaxArmAngle) {
-					io.setInputVoltage(factor * ArmConstants.kMaxSpeed.get());
+			io.setInputVoltage(factor * ArmConstants.kMaxSpeed.get());
 		}
 	}
 

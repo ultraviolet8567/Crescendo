@@ -1,7 +1,5 @@
 package frc.robot.subsystems.arm;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
@@ -11,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ArmConstants;
+import org.littletonrobotics.junction.Logger;
 
 public class ArmIOSim implements ArmIO {
 	// CHECK IF GEARING AND JKGMETERSSQUARED ARE RIGHT
@@ -86,7 +85,7 @@ public class ArmIOSim implements ArmIO {
 	}
 
 	// Checks if the arm is past the back limit (could hit back/tip over robot)
-    @Override
+	@Override
 	public boolean armPastBackLimit() {
 		return armSim.hasHitUpperLimit();
 	}

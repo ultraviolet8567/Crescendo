@@ -4,11 +4,16 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CAN;
 
 public class ShooterIOSparkMax implements ShooterIO {
 	public final CANSparkMax shooterTopMotor, shooterBottomMotor;
 	public final RelativeEncoder shooterTopEncoder, shooterBottomEncoder;
+	private final Constraints shooterConstraints;
+	private final ProfiledPIDController shooterPID;
 
 	private double topAppliedVoltage = 0.0;
 	private double bottomAppliedVoltage = 0.0;
@@ -31,6 +36,9 @@ public class ShooterIOSparkMax implements ShooterIO {
 		shooterBottomEncoder = shooterBottomMotor.getEncoder();
 		shooterBottomEncoder.setPositionConversionFactor(1.0 * 2 * Math.PI);
 		shooterBottomEncoder.setVelocityConversionFactor(1.0 * 2 * Math.PI);
+
+		shooterConstraints = new Constraints(ArmConstants.kShooterMaxSpeed.get(), ArmConstants.kShooterMaxAcceleration.get());
+		shooterPID = new ProfiledPIDController(ArmConstants.kShooterP.get(), ArmConstants.kShooterI.get(), ArmConstants.kShooterD.get(),shooterConstraints);
 	}
 
 	@Override
@@ -44,6 +52,26 @@ public class ShooterIOSparkMax implements ShooterIO {
 		inputs.bottomPositionRads = shooterBottomEncoder.getPosition();
 		inputs.bottomAppliedVoltage = shooterBottomMotor.getAppliedOutput();
 		inputs.bottomCurrentAmps = shooterBottomMotor.getOutputCurrent();
+	}
+
+	@Override
+	public double getTopShooterVelocity() {
+		return shooterTopEncoder.getVelocity();
+	}
+
+	@Override
+	public double getBottomShooterVelocity() {
+		return shooterBottomEncoder.getVelocity();
+	}
+
+	@Override
+	public double calculateShooterTopVelocity(double topVel) {
+		return (shooterPID.calculate(getTopShooterVelocity(),topVel));
+	}
+
+	@Override
+	public double calculateShooterBottomVelocity(double bottomVel) {
+		return (shooterPID.calculate(getBottomShooterVelocity(),bottomVel));
 	}
 
 	// Sets the input voltage for the top motor/row of wheels
