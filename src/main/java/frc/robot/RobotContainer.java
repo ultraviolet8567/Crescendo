@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerType;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Climb;
+import frc.robot.commands.OverrideNote;
 import frc.robot.commands.Pickup;
 import frc.robot.commands.SetArmAngle;
 import frc.robot.commands.Shoot;
@@ -113,6 +114,7 @@ public class RobotContainer {
 	public void configureBindings() {
 		new JoystickButton(operatorJoystick, XboxController.Button.kLeftBumper.value).whileTrue(new Pickup(intake));
 		new JoystickButton(operatorJoystick, XboxController.Button.kRightBumper.value).whileTrue(new Shoot(shooter));
+		new JoystickButton(driverJoystick, XboxController.Button.kX.value).whileTrue(new OverrideNote(intake));
 		// new JoystickButton(operatorJoystick,
 		// XboxController.Button.kRightBumper.value).whileTrue();
 

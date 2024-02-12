@@ -15,8 +15,8 @@ public class ShooterIOSparkMax implements ShooterIO {
 	private final Constraints shooterConstraints;
 	private final ProfiledPIDController shooterPID;
 
-	private double topAppliedVoltage = 0.0;
-	private double bottomAppliedVoltage = 0.0;
+	private double topAppliedVoltage = 1.0;
+	private double bottomAppliedVoltage = 1.0;
 
 	public ShooterIOSparkMax() {
 		shooterTopMotor = new CANSparkMax(CAN.kShooterTopPort, MotorType.kBrushless);
@@ -37,8 +37,10 @@ public class ShooterIOSparkMax implements ShooterIO {
 		shooterBottomEncoder.setPositionConversionFactor(1.0 * 2 * Math.PI);
 		shooterBottomEncoder.setVelocityConversionFactor(1.0 * 2 * Math.PI);
 
-		shooterConstraints = new Constraints(ArmConstants.kShooterMaxSpeed.get(), ArmConstants.kShooterMaxAcceleration.get());
-		shooterPID = new ProfiledPIDController(ArmConstants.kShooterP.get(), ArmConstants.kShooterI.get(), ArmConstants.kShooterD.get(),shooterConstraints);
+		shooterConstraints = new Constraints(ArmConstants.kShooterMaxSpeed.get(),
+				ArmConstants.kShooterMaxAcceleration.get());
+		shooterPID = new ProfiledPIDController(ArmConstants.kShooterP.get(), ArmConstants.kShooterI.get(),
+				ArmConstants.kShooterD.get(), shooterConstraints);
 	}
 
 	@Override
@@ -66,12 +68,13 @@ public class ShooterIOSparkMax implements ShooterIO {
 
 	@Override
 	public double calculateShooterTopVelocity(double topVel) {
-		return (shooterPID.calculate(getTopShooterVelocity(),topVel));
+		System.out.println(topVel);
+		return (shooterPID.calculate(getTopShooterVelocity(), topVel));
 	}
 
 	@Override
 	public double calculateShooterBottomVelocity(double bottomVel) {
-		return (shooterPID.calculate(getBottomShooterVelocity(),bottomVel));
+		return (shooterPID.calculate(getBottomShooterVelocity(), bottomVel));
 	}
 
 	// Sets the input voltage for the top motor/row of wheels

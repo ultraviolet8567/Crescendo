@@ -13,7 +13,7 @@ public class Shooter extends SubsystemBase {
 	private final ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
 
 	Intake intake;
-	double targetVel;
+	public double targetVel;
 
 	/*
 	 * Initialize all components here, as well as any one-time logic to be completed
@@ -39,8 +39,12 @@ public class Shooter extends SubsystemBase {
 
 		io.updateInputs(inputs);
 		Logger.processInputs("Shooter", inputs);
-
-		io.setInputVoltage(io.calculateShooterTopVelocity(targetVel),io.calculateShooterBottomVelocity(targetVel));
+		if (Math.abs(targetVel) < 0.1) {
+			io.setInputVoltage(0,0);
+		}
+		else {
+			io.setInputVoltage(io.calculateShooterTopVelocity(targetVel), io.calculateShooterBottomVelocity(targetVel));
+		}
 	}
 
 	/* Define all subsystem-specific methods and enums here */
@@ -51,8 +55,8 @@ public class Shooter extends SubsystemBase {
 		}
 	}
 
-	
 	public void stop() {
-		io.setInputVoltage(0.0, 0.0);
+		System.out.println("stopping");
+		targetVel = 0;
 	}
 }

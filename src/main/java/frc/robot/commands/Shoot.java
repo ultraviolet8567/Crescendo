@@ -8,8 +8,8 @@ import frc.robot.subsystems.shooter.Shooter;
 public class Shoot extends Command {
 	private Shooter shooter;
 
-	public double shooterTopVelocity = 0.0;
-	public double shooterBottomVelocity = 0.0;
+	public double shooterTopVelocity = 2;
+	public double shooterBottomVelocity = 0.5;
 
 	public Shoot(Shooter shooter) {
 		this.shooter = shooter;
