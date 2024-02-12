@@ -4,21 +4,19 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Odometry extends SubsystemBase {
-	/*
-	 * Declare components of subsystem here (motor controllers, encoders, sensors,
-	 * etc.)
-	 */
+	Vision vision;
+	Gyrometer gyro;
 
-	/*
-	 * Initialize all components here, as well as any one-time logic to be completed
-	 * on boot-up
-	 */
-	public Odometry() {
+	public Odometry(Vision vision, Gyrometer gyro) {
+		this.vision = vision;
+		this.gyro = gyro;
 	}
 
 	/* Runs periodically (about once every 20 ms) */
 	@Override
 	public void periodic() {
+		gyro.update();
+		vision.update();
 	}
 
 	/* Define all subsystem-specific methods and enums here */

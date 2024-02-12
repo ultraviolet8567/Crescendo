@@ -13,6 +13,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -23,10 +24,10 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Vision extends SubsystemBase {
-	PhotonCamera camera = new PhotonCamera("OV9281");
-	AprilTagFieldLayout field = Constants.fieldLayout;
-	List<List<Transform3d>> poses;
-	KMeans kmeans;
+	private PhotonCamera camera = new PhotonCamera("OV9281");
+	private AprilTagFieldLayout field = Constants.fieldLayout;
+	private List<List<Transform3d>> poses;
+	private KMeans kmeans;
 
 	public Vision(KMeans kmeans) {
 		this.kmeans = kmeans;
@@ -34,7 +35,12 @@ public class Vision extends SubsystemBase {
 
 	@Override
 	public void periodic() {
+		update();
+	}
+
+	public void update() {
 		var result = camera.getLatestResult();
+
 		if (result.hasTargets()) {
 			List<PhotonTrackedTarget> targets = result.getTargets();
 			List<List<Transform3d>> poses = new ArrayList<List<Transform3d>>();
@@ -92,6 +98,25 @@ public class Vision extends SubsystemBase {
 		return distToTag.getRotation().toRotation2d();
 	}
 
+	public double getShootVelocity(List<PhotonTrackedTarget> tags) {
+		double time = 1.0;
+		int speakerTag = getSpeakerTag();
+
+		List<Transform3d> toTag = new ArrayList<Transform3d>();
+
+		for (PhotonTrackedTarget tag : tags) {
+			toTag.add(orientTagToField(speakerTag, tag.getBestCameraToTarget()));
+			toTag.add(orientTagToField(speakerTag, tag.getAlternateCameraToTarget()));
+		}
+
+		kmeans.clean();
+		kmeans.updatePoints(toTag);
+		Translation3d robot = kmeans.getCentroid().getTranslation();
+
+
+		return robot.getDistance(field.getTagPose(speakerTag).get().getTranslation()) / time;
+	}
+
 	public Transform3d getDistance() {
 		kmeans.updatePoints(unNestList());
 		return kmeans.getCentroid();
@@ -123,7 +148,7 @@ public class Vision extends SubsystemBase {
 		return speakerTag;
 	}
 
-	public List<Transform3d> orientToField(List<List<Transform3d>> poses, int tag) {
+	private List<Transform3d> orientToField(List<List<Transform3d>> poses, int tag) {
 		List<Transform3d> fieldOrientedPoses = new ArrayList<Transform3d>();
 
 		for (List<Transform3d> pose : poses) {
@@ -134,7 +159,7 @@ public class Vision extends SubsystemBase {
 		return fieldOrientedPoses;
 	}
 
-	public Transform3d orientTagToField(int tag, Transform3d distance) {
+	private Transform3d orientTagToField(int tag, Transform3d distance) {
 		return new Transform3d(field.getTagPose(tag).get().getX() + distance.getX(),
 				field.getTagPose(tag).get().getY() + distance.getY(),
 				field.getTagPose(tag).get().getZ() + distance.getZ(),

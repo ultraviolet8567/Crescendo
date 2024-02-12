@@ -27,12 +27,16 @@ public class Gyrometer extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		odometer.update(getHeading(), swerve.getModulePositions());
+		update();
 	}
 
 	// returns pose
 	public Pose2d getPose() {
 		return odometer.getPoseMeters();
+	}
+
+	public void update() {
+		odometer.update(getHeading(), swerve.getModulePositions());
 	}
 
 	// return inverted pose

@@ -6,10 +6,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Gyrometer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.KMeans;
 import frc.robot.subsystems.Odometry;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Test;
 import frc.robot.subsystems.Vision;
 
@@ -23,11 +25,12 @@ public class RobotContainer {
 	private static final Arm arm = new Arm();
 	private static final Climber climber = new Climber();
 	private static final Intake intake = new Intake();
-	private static final Odometry odometry = new Odometry();
 	private static final Shooter shooter = new Shooter();
-	// private static final Swerve swerve = new Swerve();
+	private static final Swerve swerve = new Swerve();
 	private static final KMeans kmeans = new KMeans();
 	private static final Vision vision = new Vision(kmeans);
+	private static final Gyrometer gyro = new Gyrometer(swerve, vision);
+	private static final Odometry odometry = new Odometry(vision, gyro);
 	private static final Test test = new Test(kmeans);
 
 	// alliance color
