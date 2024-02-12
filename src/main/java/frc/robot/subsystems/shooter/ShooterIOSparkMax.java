@@ -68,7 +68,6 @@ public class ShooterIOSparkMax implements ShooterIO {
 
 	@Override
 	public double calculateShooterTopVelocity(double topVel) {
-		System.out.println(topVel);
 		return (shooterPID.calculate(getTopShooterVelocity(), topVel));
 	}
 

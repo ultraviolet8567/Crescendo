@@ -11,9 +11,9 @@ public class ShooterIOSim implements ShooterIO {
 	private final FlywheelSim bottomShooterSim = new FlywheelSim(DCMotor.getNEO(1), 1, 0.1);
 
 	private final Constraints shooterConstraints = new Constraints(ArmConstants.kShooterMaxSpeed.get(),
-			ArmConstants.kShooterMaxAcceleration.get());;
+			ArmConstants.kShooterMaxAcceleration.get());
 	private final ProfiledPIDController shooterPID = new ProfiledPIDController(ArmConstants.kShooterP.get(),
-			ArmConstants.kShooterI.get(), ArmConstants.kShooterD.get(), shooterConstraints);;
+			ArmConstants.kShooterI.get(), ArmConstants.kShooterD.get(), shooterConstraints);
 
 	private double topAppliedVoltage = 0.0;
 	private double bottomAppliedVoltage = 0.0;

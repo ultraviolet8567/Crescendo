@@ -143,7 +143,7 @@ public final class Constants {
 	}
 
 	public static final class ArmConstants {
-		public static final LoggedTunableNumber kIntakeVoltage = new LoggedTunableNumber("Intake Voltage", 7);
+		public static final LoggedTunableNumber kIntakeVoltage = new LoggedTunableNumber("Intake Voltage", 2);
 
 		public static final int kArmEncoderPort = 25;
 		public static final I2C.Port kArmColorSensorPort = I2C.Port.kOnboard;
@@ -163,7 +163,7 @@ public final class Constants {
 		public static final LoggedTunableNumber kAmpAngle = new LoggedTunableNumber("Amp Angle", Math.PI / 3); // temporary
 		public static final LoggedTunableNumber kTrapAngle = new LoggedTunableNumber("Trap Angle", Math.PI / 5); // temporary
 
-		public static final LoggedTunableNumber kP = new LoggedTunableNumber("[P]ID", 0);
+		public static final LoggedTunableNumber kP = new LoggedTunableNumber("[P]ID", 1.0);
 		public static final LoggedTunableNumber kI = new LoggedTunableNumber("P[I]D", 0);
 		public static final LoggedTunableNumber kD = new LoggedTunableNumber("PI[D]", 0);
 		public static final LoggedTunableNumber kArmPIDTolerance = new LoggedTunableNumber("PID Tolerance", 0.5);
@@ -173,9 +173,9 @@ public final class Constants {
 		public static final LoggedTunableNumber kShooterMaxAcceleration = new LoggedTunableNumber(
 				"Shooter Max Acceleration", 1);
 
-		public static final LoggedTunableNumber kShooterP = new LoggedTunableNumber("Shooter: [P]ID", 1);
-		public static final LoggedTunableNumber kShooterI = new LoggedTunableNumber("Shooter: P[I]D", 1);
-		public static final LoggedTunableNumber kShooterD = new LoggedTunableNumber("Shooter: PI[D]", 1);
+		public static final LoggedTunableNumber kShooterP = new LoggedTunableNumber("Shooter: [P]ID", 1.0);
+		public static final LoggedTunableNumber kShooterI = new LoggedTunableNumber("Shooter: P[I]D", 0.0);
+		public static final LoggedTunableNumber kShooterD = new LoggedTunableNumber("Shooter: PI[D]", 0.0);
 		public static final LoggedTunableNumber kShooterPIDTolerance = new LoggedTunableNumber("Shooter PID Tolerance",
 				0.5);
 

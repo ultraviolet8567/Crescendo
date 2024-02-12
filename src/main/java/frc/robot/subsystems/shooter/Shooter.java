@@ -20,8 +20,6 @@ public class Shooter extends SubsystemBase {
 	 * on boot-up
 	 */
 
-	// Add shooter ports!!!!!
-
 	public Shooter(ShooterIO io, Intake intake) {
 		this.io = io;
 		this.intake = intake;
@@ -39,24 +37,27 @@ public class Shooter extends SubsystemBase {
 
 		io.updateInputs(inputs);
 		Logger.processInputs("Shooter", inputs);
-		if (Math.abs(targetVel) < 0.1) {
-			io.setInputVoltage(0,0);
-		}
-		else {
-			io.setInputVoltage(io.calculateShooterTopVelocity(targetVel), io.calculateShooterBottomVelocity(targetVel));
-		}
 	}
 
 	/* Define all subsystem-specific methods and enums here */
 	public void shoot(double vel) {
+		double voltage = 0;
+
+		// Comment out if statement if not testing with intake
 		if (intake.hasNote) {
-			targetVel = vel;
 			intake.hasNote = false;
+			voltage = calculateVoltage(vel);
 		}
+		io.setInputVoltage(voltage, voltage);
+	}
+
+	public double calculateVoltage(double targetVelocity) {
+		return io.calculateShooterTopVelocity(targetVelocity);
 	}
 
 	public void stop() {
 		System.out.println("stopping");
-		targetVel = 0;
+		targetVel = 0.0;
+		io.setInputVoltage(0.0, 0.0);
 	}
 }

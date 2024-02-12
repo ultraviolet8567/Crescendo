@@ -8,16 +8,17 @@ import frc.robot.subsystems.shooter.Shooter;
 public class Shoot extends Command {
 	private Shooter shooter;
 
-	public double shooterTopVelocity = 2;
-	public double shooterBottomVelocity = 0.5;
+	private double targetVelocity;
 
 	public Shoot(Shooter shooter) {
 		this.shooter = shooter;
+
+		targetVelocity = 2;
 	}
 
 	@Override
 	public void execute() {
-		shooter.shoot(shooterTopVelocity);
+		shooter.shoot(targetVelocity);
 		Lights.getInstance().solid(Lights.Section.FULL, Color.kPurple); // Lights thing, just a test for now
 	}
 
