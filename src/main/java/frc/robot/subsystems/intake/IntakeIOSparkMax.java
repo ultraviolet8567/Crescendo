@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import edu.wpi.first.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.Constants.CAN;
 
@@ -32,14 +33,15 @@ public class IntakeIOSparkMax implements IntakeIO {
 	}
 
 	public void setInputVoltage(double volts) {
-		intakeMotor.setVoltage(volts);
-	}
-
-	public void setBrakeMode(boolean brake) {
-		intakeMotor.setIdleMode(brake ? IdleMode.kBrake : IdleMode.kCoast);
+		double appliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+		intakeMotor.setVoltage(appliedVolts);
 	}
 
 	public void stop() {
 		setInputVoltage(0.0);
+	}
+
+	public void setBrakeMode(boolean brake) {
+		intakeMotor.setIdleMode(brake ? IdleMode.kBrake : IdleMode.kCoast);
 	}
 }

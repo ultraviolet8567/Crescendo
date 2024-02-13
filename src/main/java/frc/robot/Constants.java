@@ -21,6 +21,7 @@ public final class Constants {
 	 * <p>
 	 * Odometry - Forward = x+ - Left = y+ - Counterclockwise = z+
 	 */
+
 	public static final Mode currentMode = Mode.SIM;
 
 	public static final ModuleType powerDistributionType = ModuleType.kRev;
@@ -28,6 +29,12 @@ public final class Constants {
 	public static final String logpath = "/media/sda1/";
 
 	public static final Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Red);
+
+	public static final boolean lightsExist = false;
+
+	// Color of note/lack of note + tolerance, subject to change.
+	public static final Color kNoteColor = new Color(255, 127, 80);
+	public static final double kColorConfidenceThreshold = 0.1;
 
 	public static final class OIConstants {
 		public static final ControllerType controllerTypeDriver = ControllerType.XBOX;
@@ -143,20 +150,17 @@ public final class Constants {
 	}
 
 	public static final class ArmConstants {
-		public static final LoggedTunableNumber kIntakeVoltage = new LoggedTunableNumber("Intake Voltage", 2);
-
 		public static final int kArmEncoderPort = 25;
 		public static final I2C.Port kArmColorSensorPort = I2C.Port.kOnboard;
 
-		// Color of note/lack of note + tolerance, subject to change.
-		public static final Color kNoteColor = new Color(255, 127, 80);
-		public static final double kColorConfidenceThreshold = 0.1;
+		// Arm constraints
+		public static final double kMaxArmAngle = 0;
+		public static final double kMinArmAngle = 0;
 
-		// Dummy values
 		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Max Speed", 3.5);
 		public static final LoggedTunableNumber kMaxAcceleration = new LoggedTunableNumber("Max Acceleration", 1);
 
-		// Dummy Automatic Set Point values
+		// Arm presets
 		public static final LoggedTunableNumber kTaxiAngle = new LoggedTunableNumber("Taxi Angle", Math.PI / 4);
 		public static final LoggedTunableNumber kRoombaAngle = new LoggedTunableNumber("Roomba Angle", Math.PI / 12);
 		public static final LoggedTunableNumber kSpeakerAngle = new LoggedTunableNumber("Speaker Angle", 0.24434609527);
@@ -168,20 +172,22 @@ public final class Constants {
 		public static final LoggedTunableNumber kD = new LoggedTunableNumber("PI[D]", 0);
 		public static final LoggedTunableNumber kArmPIDTolerance = new LoggedTunableNumber("PID Tolerance", 0.5);
 
-		// Dummy Shooter values
-		public static final LoggedTunableNumber kShooterMaxSpeed = new LoggedTunableNumber("Shooter Max Speed", 3.5);
-		public static final LoggedTunableNumber kShooterMaxAcceleration = new LoggedTunableNumber(
-				"Shooter Max Acceleration", 1);
+		// Shooter
+		public static final LoggedTunableNumber kShooterDefaultSpeed = new LoggedTunableNumber("Shooter Default Speed",
+				10);
 
 		public static final LoggedTunableNumber kShooterP = new LoggedTunableNumber("Shooter: [P]ID", 1.0);
 		public static final LoggedTunableNumber kShooterI = new LoggedTunableNumber("Shooter: P[I]D", 0.0);
 		public static final LoggedTunableNumber kShooterD = new LoggedTunableNumber("Shooter: PI[D]", 0.0);
 		public static final LoggedTunableNumber kShooterPIDTolerance = new LoggedTunableNumber("Shooter PID Tolerance",
 				0.5);
+		public static final LoggedTunableNumber kShooterS = new LoggedTunableNumber("Shooter: kS", 0.01);
+		public static final LoggedTunableNumber kShooterV = new LoggedTunableNumber("Shooter: kV", 0.01);
 
-		// Another temp value
-		public static final double kMaxArmAngle = 0;
-		public static final double kMinArmAngle = 0;
+		public static final double kShooterReduction = 1.0;
+
+		// Intake
+		public static final LoggedTunableNumber kIntakeVoltage = new LoggedTunableNumber("Intake Voltage", 12);
 
 		public static final double kIntakeReduction = 1.0;
 		public static final double kArmReduction = 1.0; // CALCULATE

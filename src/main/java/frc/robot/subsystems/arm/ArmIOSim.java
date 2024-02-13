@@ -104,7 +104,6 @@ public class ArmIOSim implements ArmIO {
 
 	@Override
 	public void stop() {
-		appliedVoltage = 0.0;
 		setInputVoltage(0.0);
 	}
 
