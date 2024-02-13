@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -10,11 +11,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerType;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Climb;
-import frc.robot.commands.OverrideNote;
 import frc.robot.commands.Pickup;
 import frc.robot.commands.SetArmAngle;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.SwerveTeleOp;
+import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.Odometry;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.Arm;
@@ -48,7 +49,6 @@ public class RobotContainer {
 	private final Odometry odometry;
 	private final Shooter shooter;
 	private final Swerve swerve;
-	// private final Lights lights;
 
 	// Joysticks
 	private static final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
@@ -60,13 +60,15 @@ public class RobotContainer {
 			OIConstants.kOperatorControllerPort);
 
 	public RobotContainer() {
+		// Create the subsystems with real or simulated hardware depending on current
+		// mode
 		switch (Constants.currentMode) {
 			case REAL -> {
 				arm = new Arm(new ArmIOSparkMax());
 				climber = new Climber(new ClimberIOSparkMax());
 				intake = new Intake(new IntakeIOSparkMax());
 				odometry = new Odometry();
-				shooter = new Shooter(new ShooterIOSparkMax(), intake);
+				shooter = new Shooter(new ShooterIOSparkMax());
 				swerve = new Swerve();
 			}
 			case SIM -> {
@@ -74,7 +76,7 @@ public class RobotContainer {
 				climber = new Climber(new ClimberIOSim());
 				intake = new Intake(new IntakeIOSim());
 				odometry = new Odometry();
-				shooter = new Shooter(new ShooterIOSim(), intake);
+				shooter = new Shooter(new ShooterIOSim());
 				swerve = new Swerve();
 			}
 			default -> {
@@ -86,7 +88,7 @@ public class RobotContainer {
 				});
 				odometry = new Odometry();
 				shooter = new Shooter(new ShooterIO() {
-				}, intake);
+				});
 				swerve = new Swerve();
 			}
 		}
@@ -113,10 +115,10 @@ public class RobotContainer {
 
 	public void configureBindings() {
 		new JoystickButton(operatorJoystick, XboxController.Button.kLeftBumper.value).whileTrue(new Pickup(intake));
-		new JoystickButton(operatorJoystick, XboxController.Button.kRightBumper.value).whileTrue(new Shoot(shooter));
-		new JoystickButton(driverJoystick, XboxController.Button.kX.value).whileTrue(new OverrideNote(intake));
-		// new JoystickButton(operatorJoystick,
-		// XboxController.Button.kRightBumper.value).whileTrue();
+		new JoystickButton(operatorJoystick, XboxController.Button.kRightBumper.value)
+				.whileTrue(new Shoot(shooter, intake));
+		new JoystickButton(driverJoystick, XboxController.Button.kX.value)
+				.onTrue(new InstantCommand(() -> Lights.getInstance().hasNote = !Lights.getInstance().hasNote));
 
 		new JoystickButton(operatorJoystick, XboxController.Button.kStart.value)
 				.whileTrue(new Climb(climber, "extend"));
@@ -135,29 +137,18 @@ public class RobotContainer {
 		new POVButton(operatorJoystick, 90).whileTrue(new SetArmAngle(arm, 0, 3));
 		new POVButton(operatorJoystick, 180).whileTrue(new SetArmAngle(arm, 0, 4));
 		new POVButton(operatorJoystick, 270).whileTrue(new SetArmAngle(arm, 0, 5));
+
 		/*
 		 * NOTE: If you wish to use the TRIGGERS, try this code. NOTE: THIS IS UNTESTED
 		 *
-		 * operatorController.leftTrigger().onTrue("Command here");
-		 * operatorController.leftTrigger().whileTrue("Command here");
+		 * operatorController.leftTrigger().onTrue(new Command());
+		 * operatorController.leftTrigger().whileTrue(new Command());
 		 *
-		 * operatorController.rightTrigger().onTrue("Command here");
-		 * operatorController.rightTrigger().whileTrue("Command here");
+		 * operatorController.a().onTrue(new Command());
+		 * operatorController.rightTrigger().whileTrue(new Command());
+		 *
+		 * operatorController.povUp().onTrue(new Command());
 		 */
-
-		// new JoystickButton(operatorJoystick, operatorJoystick.pov).whileTrue(new
-		// SetArmAngle(arm, 0, 1));
-
-		// new JoystickButton(operatorJoystick, dPadUp()).whileTrue(new SetArmAngle(arm,
-		// 0, 1));
-		// new JoystickButton(operatorJoystick, dPadDown()).whileTrue(new
-		// SetArmAngle(arm, 0, 2));
-		// new JoystickButton(operatorJoystick, dPadRight()).whileTrue(new
-		// SetArmAngle(arm, 0, 3));
-		// new JoystickButton(operatorJoystick, dPadLeft()).whileTrue(new
-		// SetArmAngle(arm, 0, 4));
-		//
-
 	}
 
 	public Command getAutonomousCommand() {
@@ -171,29 +162,4 @@ public class RobotContainer {
 	public static Joystick getOperatorJoystick() {
 		return operatorJoystick;
 	}
-
-	// public int dPadUp() {
-	// if (operatorJoystick.getPOV() == 0) {
-	// return 1;
-	// }
-	// return 0;
-	// }
-	// public int dPadRight() {
-	// if (operatorJoystick.getPOV() == 90) {
-	// return 2;
-	// }
-	// return 0;
-	// }
-	// public int dPadDown() {
-	// if (operatorJoystick.getPOV() == 180) {
-	// return 3;
-	// }
-	// return 0;
-	// }
-	// public int dPadLeft() {
-	// if (operatorJoystick.getPOV() == 270) {
-	// return 1;
-	// }
-	// return 0;
-	// }
 }
