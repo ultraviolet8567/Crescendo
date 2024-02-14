@@ -4,6 +4,8 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -16,11 +18,12 @@ public class ArmIOSparkMax implements ArmIO {
 	public final RelativeEncoder arm1Encoder, arm2Encoder;
 	private final Constraints armConstraints;
 	private final ProfiledPIDController armPID;
+	private final ArmFeedforward armFF;
 	private final DutyCycleEncoder armEncoder;
 	public double targetAngle;
 
 	public ArmIOSparkMax() {
-		System.out.println("[Init] Creating SparkIOSparkMax");
+		System.out.println("[Init] Creating ArmIOSparkMax");
 
 		arm1Motor = new CANSparkMax(CAN.kArm1Port, MotorType.kBrushless);
 		arm1Motor.enableVoltageCompensation(12.0);
@@ -44,6 +47,7 @@ public class ArmIOSparkMax implements ArmIO {
 
 		armPID = new ProfiledPIDController(ArmConstants.kP.get(), ArmConstants.kI.get(), ArmConstants.kD.get(),
 				armConstraints);
+		armFF = new ArmFeedforward(0, 0, 0);
 	}
 
 	@Override
@@ -63,13 +67,15 @@ public class ArmIOSparkMax implements ArmIO {
 	@Override
 	public double calculateInputVoltage(double targetAngle) {
 		// Both motors spin the same and in the same direction
-		return (armPID.calculate(armEncoder.getAbsolutePosition(), targetAngle) * 12.0);
+		return (armPID.calculate(armEncoder.getAbsolutePosition(),
+				targetAngle) + armFF.calculate(armEncoder.getAbsolutePosition(), targetAngle));
 	}
 
 	@Override
 	public void setInputVoltage(double volts) {
-		arm1Motor.setVoltage(volts);
-		arm2Motor.setVoltage(volts);
+		double appliedVoltage = MathUtil.clamp(volts, -12.0, 12.0);
+		arm1Motor.setVoltage(appliedVoltage);
+		arm2Motor.setVoltage(appliedVoltage);
 	}
 
 	public void setBrakeMode(boolean brake) {

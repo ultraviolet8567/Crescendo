@@ -142,8 +142,13 @@ public final class Constants {
 	}
 
 	public static final class ArmConstants {
-		public static final int kArmEncoderPort = 25;
+		public static final int kArmEncoderPort = 0;
 		public static final I2C.Port kArmColorSensorPort = I2C.Port.kOnboard;
+
+		// Arm
+		public static final double kArmLength = 0.58;
+		public static final double kArmReduction = 144.0;
+		public static final double kArmJKgMetersSquared = 0.515;
 
 		// Arm constraints
 		public static final double kMaxArmAngle = 0;
@@ -164,6 +169,11 @@ public final class Constants {
 		public static final LoggedTunableNumber kD = new LoggedTunableNumber("PI[D]", 0);
 		public static final LoggedTunableNumber kArmPIDTolerance = new LoggedTunableNumber("PID Tolerance", 0.5);
 
+		public static final LoggedTunableNumber kArmS = new LoggedTunableNumber("Arm: kS", 0.0); // minimum voltage to make motors spin
+		public static final LoggedTunableNumber kArmV = new LoggedTunableNumber("Arm: kV", 2.77);
+		public static final LoggedTunableNumber kArmA = new LoggedTunableNumber("Arm: kA", 0.06);
+		public static final LoggedTunableNumber kArmG = new LoggedTunableNumber("Arm: kG", 1.07);
+
 		// Shooter
 		public static final LoggedTunableNumber kShooterDefaultSpeed = new LoggedTunableNumber("Shooter Default RPM",
 				1000);
@@ -173,8 +183,8 @@ public final class Constants {
 		public static final LoggedTunableNumber kShooterD = new LoggedTunableNumber("Shooter: PI[D]", 0.0);
 		public static final LoggedTunableNumber kShooterPIDTolerance = new LoggedTunableNumber("Shooter PID Tolerance",
 				0.5);
-		public static final LoggedTunableNumber kShooterS = new LoggedTunableNumber("Shooter: kS", 0.009078);
-		public static final LoggedTunableNumber kShooterV = new LoggedTunableNumber("Shooter: kV", 0.00103);
+		public static final LoggedTunableNumber kShooterS = new LoggedTunableNumber("Shooter: kS", 0.009078); // minimum voltage to make motors spin
+		public static final LoggedTunableNumber kShooterV = new LoggedTunableNumber("Shooter: kV", 0.19);
 
 		public static final double kShooterReduction = 1.0;
 
@@ -182,7 +192,6 @@ public final class Constants {
 		public static final LoggedTunableNumber kIntakeVoltage = new LoggedTunableNumber("Intake Voltage", 12);
 
 		public static final double kIntakeReduction = 1.0;
-		public static final double kArmReduction = 1.0; // CALCULATE
 	}
 
 	public static enum Mode {

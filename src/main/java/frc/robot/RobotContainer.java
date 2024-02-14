@@ -6,11 +6,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerType;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.Climb;
+import frc.robot.commands.MoveArm;
 import frc.robot.commands.Pickup;
 import frc.robot.commands.SetArmAngle;
 import frc.robot.commands.Shoot;
@@ -104,6 +103,8 @@ public class RobotContainer {
 				() -> driverJoystick.getRawButton(XboxController.Button.kLeftBumper.value),
 				() -> driverJoystick.getRawButton(XboxController.Button.kRightBumper.value)));
 
+		arm.setDefaultCommand(new MoveArm(arm, () -> -1 * operatorJoystick.getRawAxis(ControllerIO.getRightY())));
+
 		configureBindings();
 	}
 
@@ -120,23 +121,22 @@ public class RobotContainer {
 		new JoystickButton(driverJoystick, XboxController.Button.kX.value)
 				.onTrue(new InstantCommand(() -> Lights.getInstance().hasNote = !Lights.getInstance().hasNote));
 
-		new JoystickButton(operatorJoystick, XboxController.Button.kStart.value)
-				.whileTrue(new Climb(climber, "extend"));
-		new JoystickButton(operatorJoystick, XboxController.Button.kBack.value)
-				.whileTrue(new Climb(climber, "retract"));
+		// new JoystickButton(operatorJoystick, XboxController.Button.kStart.value)
+		// .whileTrue(new Climb(climber, "extend"));
+		// new JoystickButton(operatorJoystick, XboxController.Button.kBack.value)
+		// .whileTrue(new Climb(climber, "retract"));
 
-		// new JoystickButton(operatorJoystick,
-		// XboxController.Button.kY.value).whileTrue(new SetArmAngle(arm, 0, 1));
-		// new JoystickButton(operatorJoystick,
-		// XboxController.Button.kA.value).whileTrue(new SetArmAngle(arm, 0, 2));
-		new JoystickButton(operatorJoystick, XboxController.Button.kRightStick.value)
-				.onTrue(new SetArmAngle(arm, operatorJoystick.getY(), 0));
+		new JoystickButton(operatorJoystick, XboxController.Button.kB.value).onTrue(new SetArmAngle(arm, 1));
+		new JoystickButton(operatorJoystick, XboxController.Button.kA.value).onTrue(new SetArmAngle(arm, 2));
+		new JoystickButton(operatorJoystick, XboxController.Button.kY.value).onTrue(new SetArmAngle(arm, 3));
+		new JoystickButton(operatorJoystick, XboxController.Button.kX.value).onTrue(new SetArmAngle(arm, 4));
+		new JoystickButton(operatorJoystick, XboxController.Button.kStart.value).onTrue(new SetArmAngle(arm, 5));
 
-		new POVButton(operatorJoystick, -1).whileTrue(new SetArmAngle(arm, 0, 1));
-		new POVButton(operatorJoystick, 0).whileTrue(new SetArmAngle(arm, 0, 2));
-		new POVButton(operatorJoystick, 90).whileTrue(new SetArmAngle(arm, 0, 3));
-		new POVButton(operatorJoystick, 180).whileTrue(new SetArmAngle(arm, 0, 4));
-		new POVButton(operatorJoystick, 270).whileTrue(new SetArmAngle(arm, 0, 5));
+		// new POVButton(operatorJoystick, -1).whileTrue(new SetArmAngle(arm, 1));
+		// new POVButton(operatorJoystick, 0).whileTrue(new SetArmAngle(arm, 2));
+		// new POVButton(operatorJoystick, 90).whileTrue(new SetArmAngle(arm, 3));
+		// new POVButton(operatorJoystick, 180).whileTrue(new SetArmAngle(arm, 4));
+		// new POVButton(operatorJoystick, 270).whileTrue(new SetArmAngle(arm, 5));
 
 		/*
 		 * NOTE: If you wish to use the TRIGGERS, try this code. NOTE: THIS IS UNTESTED

@@ -15,9 +15,6 @@ public interface ArmIO {
 	default void updateInputs(ArmIOInputs inputs) {
 	}
 
-	default void initial() {
-	}
-
 	default void update() {
 	}
 
