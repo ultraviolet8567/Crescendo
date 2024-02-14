@@ -43,6 +43,8 @@ public class ShooterIOSparkMax implements ShooterIO {
 
 	@Override
 	public void updateInputs(ShooterIOInputs inputs) {
+		System.out.println("[Init] Creating ShooterIOSparkMax");
+
 		inputs.topVelocityRPM = shooterTopEncoder.getVelocity();
 		inputs.topAppliedVoltage = shooterTopMotor.getAppliedOutput() * shooterTopMotor.getBusVoltage();
 		inputs.topCurrentAmps = shooterTopMotor.getOutputCurrent();
