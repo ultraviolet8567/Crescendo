@@ -21,6 +21,7 @@ public class Shoot extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
+		intake.stop();
 		shooter.stop();
 	}
 }
