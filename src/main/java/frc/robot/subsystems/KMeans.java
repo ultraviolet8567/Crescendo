@@ -18,8 +18,7 @@ public class KMeans extends SubsystemBase {
 
 	// constructor (doesn't do anything)
 	// TODO: change number of ks here?
-	public KMeans() {
-	}
+	public KMeans() {}
 
 	@Override
 	public void periodic() {
@@ -29,7 +28,7 @@ public class KMeans extends SubsystemBase {
 	public void updatePoints(List<Transform3d> points) {
 		clean();
 
-		for (int i = 1; i <= 80; i++) {
+		for (int i = 1; i <= 50; i++) {
 			for (Transform3d point : points) {
 				reassign(point);
 			}

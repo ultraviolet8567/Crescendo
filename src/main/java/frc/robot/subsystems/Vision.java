@@ -6,31 +6,24 @@
  * - robot: positive theta is counter-clockwise, positive x-axis is dir robot is facing, positive y-axis is perpendicular & to the left of robot
 */
 
-// change detected values to field-oriented positions
-
 package frc.robot.subsystems;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import org.photonvision.PhotonCamera;
-import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Vision extends SubsystemBase {
-	private PhotonCamera camera = new PhotonCamera("OV9281");
+	private Camera right, left, back;
 	private AprilTagFieldLayout field = Constants.fieldLayout;
-	private List<List<Transform3d>> poses;
-	private KMeans kmeans;
 
+	// TODO: fill in name & find the transform3ds
 	public Vision(KMeans kmeans) {
-		this.kmeans = kmeans;
+		right = new Camera("", Constants.Cameras.frontRighttoRobot, kmeans, field);
+		left = new Camera("", Constants.Cameras.frontLefttoRobot, kmeans, field);
+		back = new Camera("", Constants.Cameras.backToRobot, kmeans, field);
 	}
 
 	@Override
@@ -38,131 +31,66 @@ public class Vision extends SubsystemBase {
 		update();
 	}
 
-	public void update() {
-		var result = camera.getLatestResult();
-
-		if (result.hasTargets()) {
-			List<PhotonTrackedTarget> targets = result.getTargets();
-			List<List<Transform3d>> poses = new ArrayList<List<Transform3d>>();
-
-			for (PhotonTrackedTarget target : targets) {
-				List<Transform3d> posePair = new ArrayList<Transform3d>();
-				posePair.add(target.getBestCameraToTarget());
-				posePair.add(target.getAlternateCameraToTarget());
-				poses.add(posePair);
-			}
-		}
-	}
-
-	public List<List<Transform3d>> getPoses() {
-		return poses;
-	}
-
-	public List<PhotonTrackedTarget> getTargets() {
-		var result = camera.getLatestResult();
-
-		if (result.hasTargets()) {
-			return result.getTargets();
-		}
-
-		return new ArrayList<PhotonTrackedTarget>();
-	}
-
-	public List<Integer> getIDs() {
-		List<Integer> ids = new ArrayList<Integer>();
-		var result = camera.getLatestResult();
-
-		if (result.hasTargets()) {
-			for (PhotonTrackedTarget target : result.targets) {
-				ids.add(target.getFiducialId());
-			}
-		}
-
-		return ids;
-	}
-
-	public Rotation2d getRotToAlign(List<PhotonTrackedTarget> tags) {
-		int speakerTag = getSpeakerTag();
-
-		List<Transform3d> toTag = new ArrayList<Transform3d>();
-
-		for (PhotonTrackedTarget tag : tags) {
-			toTag.add(orientTagToField(speakerTag, tag.getBestCameraToTarget()));
-			toTag.add(orientTagToField(speakerTag, tag.getAlternateCameraToTarget()));
-		}
-
-		kmeans.clean();
-		kmeans.updatePoints(toTag);
-		Transform3d distToTag = kmeans.getCentroid();
-
-		return distToTag.getRotation().toRotation2d();
-	}
-
-	public double getShootVelocity(List<PhotonTrackedTarget> tags) {
-		double time = 1.0;
-		int speakerTag = getSpeakerTag();
-
-		List<Transform3d> toTag = new ArrayList<Transform3d>();
-
-		for (PhotonTrackedTarget tag : tags) {
-			toTag.add(orientTagToField(speakerTag, tag.getBestCameraToTarget()));
-			toTag.add(orientTagToField(speakerTag, tag.getAlternateCameraToTarget()));
-		}
-
-		kmeans.clean();
-		kmeans.updatePoints(toTag);
-		Translation3d robot = kmeans.getCentroid().getTranslation();
-
-
-		return robot.getDistance(field.getTagPose(speakerTag).get().getTranslation()) / time;
-	}
-
 	public Transform3d getDistance() {
-		kmeans.updatePoints(unNestList());
-		return kmeans.getCentroid();
+		return new Transform3d(
+			average(right.getDistance().getX(), left.getDistance().getX(), back.getDistance().getX()),
+			average(right.getDistance().getY(), left.getDistance().getY(), back.getDistance().getY()),
+			average(right.getDistance().getZ(), left.getDistance().getZ(), back.getDistance().getZ()),
+			average(right.getDistance().getRotation(), left.getDistance().getRotation(), back.getDistance().getRotation())
+		);
 	}
 
-	private List<Transform3d> unNestList() {
-		List<Transform3d> unnested = new ArrayList<Transform3d>();
-
-		for (List<Transform3d> posePair : poses) {
-			unnested.add(posePair.get(0));
-			unnested.add(posePair.get(1));
-		}
-
-		return unnested;
+	public Rotation2d getRotToAlign() {
+		return average(
+			right.getRotToAlign(right.getTargets()), 
+			left.getRotToAlign(left.getTargets()), 
+			back.getRotToAlign(back.getTargets())
+		);
 	}
 
-	public int getSpeakerTag() {
-		Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
-		int speakerTag = 0;
-
-		if (alliance.isPresent()) {
-			if (alliance.get() == DriverStation.Alliance.Red) {
-				speakerTag = 4;
-			} else {
-				speakerTag = 7;
-			}
-		}
-
-		return speakerTag;
+	public double getShootVelocity() {
+		return average(right.getShootVelocity(), left.getShootVelocity(), back.getShootVelocity());
 	}
 
-	private List<Transform3d> orientToField(List<List<Transform3d>> poses, int tag) {
-		List<Transform3d> fieldOrientedPoses = new ArrayList<Transform3d>();
+	// thank you so much stephanie
+	public double[] getShootRad() {
+		Transform3d d = getDistance();
+		double g = -9.80665;
+		double x2 = Math.pow(d.getX(), 2);
+		double thing = (g * x2) / 2 * Math.pow(getShootVelocity(), 2);
 
-		for (List<Transform3d> pose : poses) {
-			fieldOrientedPoses.add(orientTagToField(tag, pose.get(0)));
-			fieldOrientedPoses.add(orientTagToField(tag, pose.get(1)));
-		}
+		double minus = Math.atan(
+			(d.getX()) + Math.sqrt(x2 - (4 * thing * (d.getY() + thing))) / (2 * thing)
+		);
 
-		return fieldOrientedPoses;
+		double plus = Math.atan(
+			(d.getX()) - Math.sqrt(x2 - (4 * thing * (d.getY() + thing))) / (2 * thing)
+		);
+
+		return new double[] {plus, minus};
 	}
 
-	private Transform3d orientTagToField(int tag, Transform3d distance) {
-		return new Transform3d(field.getTagPose(tag).get().getX() + distance.getX(),
-				field.getTagPose(tag).get().getY() + distance.getY(),
-				field.getTagPose(tag).get().getZ() + distance.getZ(),
-				field.getTagPose(tag).get().getRotation().plus(distance.getRotation()));
+	public void update() {
+		right.update();
+		left.update();
+		back.update();
+	}
+
+	private double average(double one, double two, double three) {
+		return (one + two + three) / 3;
+	}
+
+	private Rotation3d average(Rotation3d one, Rotation3d two, Rotation3d three) {
+		return new Rotation3d(
+			average(one.getX(), two.getX(), three.getX()),
+			average(one.getY(), two.getY(), three.getY()),
+			average(one.getZ(), two.getZ(), three.getZ())
+		);
+	}
+
+	private Rotation2d average(Rotation2d one, Rotation2d two, Rotation2d three) {
+		return new Rotation2d(
+			average(one.getRadians(), two.getRadians(), three.getRadians())
+		);
 	}
 }

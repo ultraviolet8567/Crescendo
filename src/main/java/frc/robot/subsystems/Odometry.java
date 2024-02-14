@@ -1,11 +1,16 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Odometry extends SubsystemBase {
-	Vision vision;
-	Gyrometer gyro;
+	private Vision vision;
+	private Gyrometer gyro;
+	private double gyroWeight = 0.6;
+	private double visionWeight = 0.4;
 
 	public Odometry(Vision vision, Gyrometer gyro) {
 		this.vision = vision;
@@ -19,9 +24,32 @@ public class Odometry extends SubsystemBase {
 		vision.update();
 	}
 
-	/* Define all subsystem-specific methods and enums here */
+	// calculate weighted average 
+	public double getAverage() {
+		return add(vision.getDistance(), visionWeight) + add(gyro.getPose(), gyroWeight);
+	}
+
+	public Rotation3d getHeading() {
+		double roll = average(vision.getDistance().getRotation().getX(), gyro.getRotation3d().getX());
+		double pitch = average(vision.getDistance().getRotation().getY(), gyro.getRotation3d().getY());
+		double yaw = average(vision.getDistance().getRotation().getZ(), gyro.getRotation3d().getZ());
+
+		return new Rotation3d(roll, pitch, yaw);
+	}
+
+	private double add(Transform3d t, double value) {
+		return (t.getX() * value) + (t.getY() * value);
+	}
+
+	private double add(Pose2d p, double value) {
+		return (p.getX() * value) + (p.getY() * value);
+	}
+
+	private double average(double one, double two) {
+		return (one + two) / 2;
+	}
 
 	public Rotation2d getRotation2d() {
-		return new Rotation2d(); // Placeholder value until we have odometry data
+		return new Rotation2d(); 
 	}
 }

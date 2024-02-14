@@ -23,7 +23,7 @@ public class YawAlign extends Command {
 
 	@Override
 	public void execute() {
-		turn(vision.getRotToAlign(vision.getTargets()));
+		turn(vision.getRotToAlign());
 	}
 
 	@Override

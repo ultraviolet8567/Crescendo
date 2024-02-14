@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
@@ -59,6 +60,12 @@ public final class Constants {
 		public static final int kFrontRightTurningMotorPort = 22;
 		public static final int kBackLeftTurningMotorPort = 24;
 		public static final int kBackRightTurningMotorPort = 23;
+	}
+
+	public static final class Cameras {
+		public static final Transform3d frontLefttoRobot = new Transform3d();
+		public static final Transform3d frontRighttoRobot = new Transform3d();
+		public static final Transform3d backToRobot = new Transform3d();
 	}
 
 	public static final class ModuleConstants {
