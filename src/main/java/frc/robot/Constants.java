@@ -89,9 +89,9 @@ public final class Constants {
 
 	public static final class DriveConstants {
 		// Distance between right and left wheels:
-		public static final double kTrackWidth = Units.inchesToMeters(34); // TODO: Set to our dimensions
+		public static final double kTrackWidth = Units.inchesToMeters(21);
 		// Distance between front and back wheels:
-		public static final double kWheelBase = Units.inchesToMeters(32); // TODO: Set to our dimensions
+		public static final double kWheelBase = Units.inchesToMeters(21);
 		public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
 				new Translation2d(kWheelBase / 2, kTrackWidth / 2), // Front left (+/+)
 				new Translation2d(kWheelBase / 2, -kTrackWidth / 2), // Front right (+/-)
@@ -119,18 +119,10 @@ public final class Constants {
 		public static final boolean kBackLeftDriveAbsoluteEncoderReversed = false;
 		public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
 
-		public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -1.677; // TODO:
-		// Determine
-		// offset
-		public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -0.804; // TODO:
-		// Determine
-		// offset
-		public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.452; // TODO:
-		// Determine
-		// offset
-		public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.132; // TODO:
-		// Determine
-		// offset
+		public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -1.677;
+		public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -0.804;
+		public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.452;
+		public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.132;
 
 		public static final double kPhysicalMaxSpeedMetersPerSecond = 4.5;
 		public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 3 * Math.PI;
