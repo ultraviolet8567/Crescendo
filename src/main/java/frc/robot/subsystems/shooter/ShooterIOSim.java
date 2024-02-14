@@ -8,8 +8,9 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.Constants.ArmConstants;
 
 public class ShooterIOSim implements ShooterIO {
-	private final FlywheelSim topShooterSim = new FlywheelSim(DCMotor.getNEO(1), 1, 0.1);
-	private final FlywheelSim bottomShooterSim = new FlywheelSim(DCMotor.getNEO(1), 1, 0.1);
+	private final FlywheelSim topShooterSim = new FlywheelSim(DCMotor.getNEO(1), ArmConstants.kShooterReduction, 0.1);
+	private final FlywheelSim bottomShooterSim = new FlywheelSim(DCMotor.getNEO(1), ArmConstants.kShooterReduction,
+			0.1);
 
 	private final PIDController shooterTopPID = new PIDController(ArmConstants.kShooterP.get(),
 			ArmConstants.kShooterI.get(), ArmConstants.kShooterD.get());
@@ -32,11 +33,11 @@ public class ShooterIOSim implements ShooterIO {
 		topShooterSim.update(0.02);
 		bottomShooterSim.update(0.02);
 
-		inputs.topVelocityRadPerSec = topShooterSim.getAngularVelocityRadPerSec();
+		inputs.topVelocityRPM = topShooterSim.getAngularVelocityRPM();
 		inputs.topAppliedVoltage = topAppliedVoltage;
 		inputs.topCurrentAmps = topShooterSim.getCurrentDrawAmps();
 
-		inputs.bottomVelocityRadPerSec = bottomShooterSim.getAngularVelocityRadPerSec();
+		inputs.bottomVelocityRPM = bottomShooterSim.getAngularVelocityRPM();
 		inputs.bottomAppliedVoltage = bottomAppliedVoltage;
 		inputs.bottomCurrentAmps = bottomShooterSim.getCurrentDrawAmps();
 	}
@@ -65,9 +66,9 @@ public class ShooterIOSim implements ShooterIO {
 	// Sets voltage to match the target velocities
 	@Override
 	public void setVelocity(double topTargetVel, double bottomTargetVel) {
-		double topVolts = shooterTopPID.calculate(topShooterSim.getAngularVelocityRadPerSec(), topTargetVel)
+		double topVolts = shooterTopPID.calculate(topShooterSim.getAngularVelocityRPM(), topTargetVel)
 				+ shooterTopFF.calculate(topTargetVel);
-		double bottomVolts = shooterBottomPID.calculate(bottomShooterSim.getAngularVelocityRadPerSec(), bottomTargetVel)
+		double bottomVolts = shooterBottomPID.calculate(bottomShooterSim.getAngularVelocityRPM(), bottomTargetVel)
 				+ shooterBottomFF.calculate(bottomTargetVel);
 
 		setInputVoltage(topVolts, bottomVolts);

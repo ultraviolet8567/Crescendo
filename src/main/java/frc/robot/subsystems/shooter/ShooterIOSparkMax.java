@@ -28,12 +28,10 @@ public class ShooterIOSparkMax implements ShooterIO {
 		shooterBottomMotor.setIdleMode(IdleMode.kBrake);
 
 		shooterTopEncoder = shooterTopMotor.getEncoder();
-		shooterTopEncoder.setPositionConversionFactor(1.0 / ArmConstants.kShooterReduction * 2 * Math.PI);
-		shooterTopEncoder.setVelocityConversionFactor(1.0 / ArmConstants.kShooterReduction * 2 * Math.PI);
+		shooterTopEncoder.setVelocityConversionFactor(1.0 / ArmConstants.kShooterReduction);
 
 		shooterBottomEncoder = shooterBottomMotor.getEncoder();
-		shooterBottomEncoder.setPositionConversionFactor(1.0 * 2 * Math.PI);
-		shooterBottomEncoder.setVelocityConversionFactor(1.0 * 2 * Math.PI);
+		shooterBottomEncoder.setVelocityConversionFactor(1.0 / ArmConstants.kShooterReduction);
 
 		shooterTopPID = new PIDController(ArmConstants.kShooterP.get(), ArmConstants.kShooterI.get(),
 				ArmConstants.kShooterD.get());
@@ -45,11 +43,11 @@ public class ShooterIOSparkMax implements ShooterIO {
 
 	@Override
 	public void updateInputs(ShooterIOInputs inputs) {
-		inputs.topVelocityRadPerSec = shooterTopEncoder.getVelocity();
+		inputs.topVelocityRPM = shooterTopEncoder.getVelocity();
 		inputs.topAppliedVoltage = shooterTopMotor.getAppliedOutput() * shooterTopMotor.getBusVoltage();
 		inputs.topCurrentAmps = shooterTopMotor.getOutputCurrent();
 
-		inputs.bottomVelocityRadPerSec = shooterBottomEncoder.getVelocity();
+		inputs.bottomVelocityRPM = shooterBottomEncoder.getVelocity();
 		inputs.bottomAppliedVoltage = shooterBottomMotor.getAppliedOutput() * shooterBottomMotor.getBusVoltage();
 		inputs.bottomCurrentAmps = shooterBottomMotor.getOutputCurrent();
 	}
@@ -91,6 +89,7 @@ public class ShooterIOSparkMax implements ShooterIO {
 		setInputVoltage(0.0, 0.0);
 	}
 
+	@Override
 	public void setBrakeMode(boolean brake) {
 		shooterTopMotor.setIdleMode(brake ? IdleMode.kBrake : IdleMode.kCoast);
 		shooterBottomMotor.setIdleMode(brake ? IdleMode.kBrake : IdleMode.kCoast);
