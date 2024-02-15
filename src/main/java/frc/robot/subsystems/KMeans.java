@@ -18,7 +18,8 @@ public class KMeans extends SubsystemBase {
 
 	// constructor (doesn't do anything)
 	// TODO: change number of ks here?
-	public KMeans() {}
+	public KMeans() {
+	}
 
 	@Override
 	public void periodic() {
@@ -28,7 +29,7 @@ public class KMeans extends SubsystemBase {
 	public void updatePoints(List<Transform3d> points) {
 		clean();
 
-		for (int i = 1; i <= 50; i++) {
+		for (int i = 1; i <= 80; i++) {
 			for (Transform3d point : points) {
 				reassign(point);
 			}
@@ -121,7 +122,6 @@ public class KMeans extends SubsystemBase {
 	// find distance (roll, pitch, yaw)
 	private double rotationalDistance(Transform3d point, Transform3d centroid) {
 		Rotation3d difference = centroid.getRotation().minus(point.getRotation());
-
 		return Math.pow(difference.getX(), 2) + Math.pow(difference.getY(), 2) + Math.pow(difference.getZ(), 2);
 	}
 

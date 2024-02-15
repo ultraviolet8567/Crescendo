@@ -8,6 +8,9 @@
 
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -17,13 +20,19 @@ import frc.robot.Constants;
 
 public class Vision extends SubsystemBase {
 	private Camera right, left, back;
+	private KMeans kmeans;
+	private Gyrometer gyro;
 	private AprilTagFieldLayout field = Constants.fieldLayout;
+	private double yaw_allowance = 0.5;
+	private double adjustment_allowance = 0.5;
 
 	// TODO: fill in name & find the transform3ds
-	public Vision(KMeans kmeans) {
-		right = new Camera("", Constants.Cameras.frontRighttoRobot, kmeans, field);
-		left = new Camera("", Constants.Cameras.frontLefttoRobot, kmeans, field);
-		back = new Camera("", Constants.Cameras.backToRobot, kmeans, field);
+	public Vision(KMeans kmeans, Gyrometer gyro) {
+		this.kmeans = kmeans;
+		this.gyro = gyro;
+		right = new Camera("", Constants.Cameras.frontRighttoRobot, field);
+		left = new Camera("", Constants.Cameras.frontLefttoRobot, field);
+		back = new Camera("", Constants.Cameras.backToRobot, field);
 	}
 
 	@Override
@@ -32,24 +41,32 @@ public class Vision extends SubsystemBase {
 	}
 
 	public Transform3d getDistance() {
-		return new Transform3d(
-			average(right.getDistance().getX(), left.getDistance().getX(), back.getDistance().getX()),
-			average(right.getDistance().getY(), left.getDistance().getY(), back.getDistance().getY()),
-			average(right.getDistance().getZ(), left.getDistance().getZ(), back.getDistance().getZ()),
-			average(right.getDistance().getRotation(), left.getDistance().getRotation(), back.getDistance().getRotation())
-		);
+		kmeans.updatePoints(getGrandData());
+		return kmeans.getCentroid();
 	}
 
 	public Rotation2d getRotToAlign() {
-		return average(
-			right.getRotToAlign(right.getTargets()), 
-			left.getRotToAlign(left.getTargets()), 
-			back.getRotToAlign(back.getTargets())
+		kmeans.updatePoints(getUnnestedList(
+			right.getSpeakerPoses(right.getTargets()), 
+			left.getSpeakerPoses(left.getTargets()), 
+			back.getSpeakerPoses(back.getTargets()))
 		);
+		
+		return kmeans.getCentroid().getRotation().toRotation2d();
+	}
+	
+	public double getRadtoSpeaker() {
+		return getRotToAlign().getRadians();
 	}
 
 	public double getShootVelocity() {
-		return average(right.getShootVelocity(), left.getShootVelocity(), back.getShootVelocity());
+		kmeans.updatePoints(getUnnestedList(
+			right.getSpeakerPoses(right.getTargets()), 
+			left.getSpeakerPoses(left.getTargets()), 
+			back.getSpeakerPoses(back.getTargets()))
+		);
+
+		return kmeans.getCentroid().getTranslation().getDistance(field.getTagPose(right.getSpeakerTag()).get().getTranslation()) / 1.0;
 	}
 
 	// thank you so much stephanie
@@ -76,21 +93,44 @@ public class Vision extends SubsystemBase {
 		back.update();
 	}
 
-	private double average(double one, double two, double three) {
-		return (one + two + three) / 3;
+	private List<Transform3d> getUnnestedList(List<Transform3d> nested1, List<Transform3d> nested2, List<Transform3d> nested3) {
+		List<Transform3d> unnestedData = new ArrayList<Transform3d>();
+		List<List<Transform3d>> nestedData = new ArrayList<List<Transform3d>>();
+		nestedData.add(nested1);
+		nestedData.add(nested2);
+		nestedData.add(nested3);
+
+		for (List<Transform3d> data : nestedData) {
+			for (Transform3d point : data) {
+				unnestedData.add(point);
+			}
+		}
+		
+		return unnestedData;
 	}
 
-	private Rotation3d average(Rotation3d one, Rotation3d two, Rotation3d three) {
-		return new Rotation3d(
-			average(one.getX(), two.getX(), three.getX()),
-			average(one.getY(), two.getY(), three.getY()),
-			average(one.getZ(), two.getZ(), three.getZ())
-		);
+	private List<Transform3d> getGrandData() {
+		List<Transform3d> bruh = getUnnestedList(right.getUnnestedData(), left.getUnnestedData(), back.getUnnestedData());
+		return adjust(bruh, gyro.getHeading().getRadians());
 	}
 
-	private Rotation2d average(Rotation2d one, Rotation2d two, Rotation2d three) {
-		return new Rotation2d(
-			average(one.getRadians(), two.getRadians(), three.getRadians())
-		);
+	private List<Transform3d> adjust(List<Transform3d> initialList, double yaw) { //if this breaks, convert everything from transform3d
+		List<Transform3d> outList = new ArrayList<Transform3d>();
+		Transform3d current;
+		if (yaw < yaw_allowance || yaw > 2 * Math.PI - yaw_allowance) {
+			for (Transform3d transform : initialList) {
+				current = transform;
+				if (current.getRotation().getZ() > 2 * Math.PI - adjustment_allowance)
+					current = new Transform3d(current.getTranslation(), 
+					new Rotation3d(current.getRotation().getX(), 
+					current.getRotation().getY(), 
+					current.getRotation().getZ() - 2 * Math.PI)); 
+				outList.add(current);
+			}
+		}
+		else {
+			outList = initialList;
+		}
+		return outList;
 	}
 }

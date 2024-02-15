@@ -9,10 +9,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -21,12 +18,10 @@ public class Camera extends SubsystemBase {
 	private Transform3d toRobot;
 	private AprilTagFieldLayout field;
 	private List<List<Transform3d>> poses;
-	private KMeans kmeans;
 
-	public Camera(String name, Transform3d toRobot, KMeans kmeans, AprilTagFieldLayout field) {
+	public Camera(String name, Transform3d toRobot, AprilTagFieldLayout field) {
 		camera = new PhotonCamera(name);
 		this.field = field;
-		this.kmeans = kmeans;
 		this.toRobot = toRobot;
 	}
 
@@ -93,46 +88,12 @@ public class Camera extends SubsystemBase {
 		}
 	}
 
-	public Rotation2d getRotToAlign(List<PhotonTrackedTarget> tags) {
+	public List<Transform3d> getSpeakerPoses(List<PhotonTrackedTarget> tags) {
 		int speakerTag = getSpeakerTag();
-		List<Transform3d> toTag = orientToField(getTagPoses(speakerTag), speakerTag);
-
-		kmeans.clean();
-		kmeans.updatePoints(toTag);
-		Transform3d distToTag = kmeans.getCentroid();
-
-		return distToTag.getRotation().toRotation2d();
+		return orientToField(getTagPoses(speakerTag), speakerTag);
 	}
 
-	public double getShootVelocity() {
-		double time = 1.0;
-		int speakerTag = getSpeakerTag();
-		List<Transform3d> toTag = orientToField(getTagPoses(speakerTag), speakerTag);
-
-		kmeans.clean();
-		kmeans.updatePoints(toTag);
-		Translation3d robot = kmeans.getCentroid().getTranslation();
-
-		return robot.getDistance(field.getTagPose(speakerTag).get().getTranslation()) / time;
-	}
-
-	public double getRadtoTag() {
-		int speakerTag = getSpeakerTag();
-		List<Transform3d> toTag = orientToField(getTagPoses(speakerTag), speakerTag);
-
-		kmeans.clean();
-		kmeans.updatePoints(toTag);
-		Rotation3d rot = kmeans.getCentroid().getRotation();
-
-		return rot.toRotation2d().getRadians();
-	}
-
-	public Transform3d getDistance() {
-		kmeans.updatePoints(unNestList());
-		return kmeans.getCentroid();
-	}
-
-	private List<Transform3d> unNestList() {
+	public List<Transform3d> getUnnestedData() {
 		List<Transform3d> unnested = new ArrayList<Transform3d>();
 
 		for (List<Transform3d> posePair : poses) {
