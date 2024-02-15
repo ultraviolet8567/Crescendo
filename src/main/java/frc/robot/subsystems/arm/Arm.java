@@ -1,13 +1,23 @@
 package frc.robot.subsystems.arm;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ArmConstants;
-import org.littletonrobotics.junction.Logger;
+import static frc.robot.Constants.GainsConstants.*;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.util.LoggedTunableNumber;
+import org.littletonrobotics.junction.Logger;
 
 public class Arm extends SubsystemBase {
+	private static final LoggedTunableNumber kP = new LoggedTunableNumber("Arm/kP", armGains.kP());
+	private static final LoggedTunableNumber kI = new LoggedTunableNumber("Arm/kI", armGains.kI());
+	private static final LoggedTunableNumber kD = new LoggedTunableNumber("Arm/kD", armGains.kD());
+	private static final LoggedTunableNumber kS = new LoggedTunableNumber("Arm/kS", armGains.ffkS());
+	private static final LoggedTunableNumber kV = new LoggedTunableNumber("Arm/kV", armGains.ffkV());
+	private static final LoggedTunableNumber kA = new LoggedTunableNumber("Arm/kA", armGains.ffkA());
+	private static final LoggedTunableNumber kG = new LoggedTunableNumber("Arm/kG", armGains.ffkG());
+
 	private final ArmIO io;
 	private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
 	public int armMode;
@@ -28,6 +38,10 @@ public class Arm extends SubsystemBase {
 
 		Logger.processInputs("Arms", inputs);
 		Logger.recordOutput("ArmMode", armMode);
+
+		LoggedTunableNumber.ifChanged(hashCode(),
+				() -> io.setGains(kP.get(), kI.get(), kD.get(), kS.get(), kV.get(), kA.get(), kG.get()), kP, kI, kD, kS,
+				kV, kA, kG);
 	}
 
 	/* Define all subsystem-specific methods and enums here */

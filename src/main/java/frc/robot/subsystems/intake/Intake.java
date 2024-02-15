@@ -3,9 +3,10 @@ package frc.robot.subsystems.intake;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Lights;
 import org.littletonrobotics.junction.Logger;
 
@@ -27,11 +28,11 @@ public class Intake extends SubsystemBase {
 	public Intake(IntakeIO io) {
 		this.io = io;
 
-		sensor = new ColorSensorV3(ArmConstants.kArmColorSensorPort);
+		sensor = new ColorSensorV3(I2C.Port.kOnboard);
 		matcher = new ColorMatch();
 
 		matcher.addColorMatch(Constants.kNoteColor);
-		// matcher.setConfidenceThreshold(ArmConstants.kColorConfidenceThreshold);
+		matcher.setConfidenceThreshold(Constants.kColorConfidenceThreshold);
 	}
 
 	/* Runs periodically (about once every 20 ms) */
@@ -60,17 +61,17 @@ public class Intake extends SubsystemBase {
 	/* Define all subsystem-specific methods and enums here */
 	public void pickup() {
 		if (!Lights.getInstance().hasNote) {
-			io.setInputVoltage(ArmConstants.kIntakeVoltage.get());
+			io.setInputVoltage(IntakeConstants.kIntakeVoltage.get());
 			noteDetections = 0;
 		}
 	}
 
 	public void drop() {
-		io.setInputVoltage(-ArmConstants.kIntakeVoltage.get());
+		io.setInputVoltage(-IntakeConstants.kIntakeVoltage.get());
 	}
 
 	public void runIndexer() {
-		io.setInputVoltage(ArmConstants.kIntakeVoltage.get());
+		io.setInputVoltage(IntakeConstants.kIntakeVoltage.get());
 	}
 
 	public void stop() {

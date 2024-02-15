@@ -50,6 +50,9 @@ public interface ArmIO {
 	default void stop() {
 	}
 
+	default void setGains(double kP, double kI, double kD, double ffkS, double ffkV, double ffkA, double ffkG) {
+	}
+
 	default void resetAbsoluteEncoders() {
 	}
 

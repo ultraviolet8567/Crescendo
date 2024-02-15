@@ -32,6 +32,9 @@ public interface ShooterIO {
 	default void stop() {
 	}
 
-	public default void setBrakeMode(boolean brake) {
+	default void setGains(double kP, double kI, double kD, double ffkS, double ffkV) {
+	}
+
+	default void setBrakeMode(boolean brake) {
 	}
 }

@@ -1,5 +1,7 @@
 package frc.robot.subsystems.arm;
 
+import static frc.robot.Constants.GainsConstants.*;
+
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
@@ -18,7 +20,7 @@ public class ArmIOSparkMax implements ArmIO {
 	public final RelativeEncoder arm1Encoder, arm2Encoder;
 	private final Constraints armConstraints;
 	private final ProfiledPIDController armPID;
-	private final ArmFeedforward armFF;
+	private ArmFeedforward armFF;
 	private final DutyCycleEncoder armEncoder;
 	public double targetAngle;
 
@@ -45,9 +47,8 @@ public class ArmIOSparkMax implements ArmIO {
 
 		armConstraints = new Constraints(ArmConstants.kMaxSpeed.get(), ArmConstants.kMaxAcceleration.get());
 
-		armPID = new ProfiledPIDController(ArmConstants.kP.get(), ArmConstants.kI.get(), ArmConstants.kD.get(),
-				armConstraints);
-		armFF = new ArmFeedforward(0, 0, 0);
+		armPID = new ProfiledPIDController(armGains.kP(), armGains.kI(), armGains.kD(), armConstraints);
+		armFF = new ArmFeedforward(armGains.ffkS(), armGains.ffkG(), armGains.ffkV(), armGains.ffkA());
 	}
 
 	@Override
@@ -67,8 +68,8 @@ public class ArmIOSparkMax implements ArmIO {
 	@Override
 	public double calculateInputVoltage(double targetAngle) {
 		// Both motors spin the same and in the same direction
-		return (armPID.calculate(armEncoder.getAbsolutePosition(),
-				targetAngle) + armFF.calculate(armEncoder.getAbsolutePosition(), targetAngle));
+		return (armPID.calculate(armEncoder.getAbsolutePosition(), targetAngle)
+				+ armFF.calculate(armEncoder.getAbsolutePosition(), targetAngle));
 	}
 
 	@Override
@@ -86,6 +87,11 @@ public class ArmIOSparkMax implements ArmIO {
 	@Override
 	public void stop() {
 		setInputVoltage(0.0);
+	}
+
+	public void setGains(double kP, double kI, double kD, double ffkS, double ffkV, double ffkA, double ffkG) {
+		armPID.setPID(kP, kI, kD);
+		armFF = new ArmFeedforward(ffkS, ffkG, ffkV, ffkA);
 	}
 
 	@Override

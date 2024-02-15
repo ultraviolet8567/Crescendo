@@ -5,8 +5,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.MathUtil;
-import frc.robot.Constants;
 import frc.robot.Constants.CAN;
+import frc.robot.Constants.IntakeConstants;
 
 public class IntakeIOSparkMax implements IntakeIO {
 	public final CANSparkMax intakeMotor;
@@ -21,7 +21,7 @@ public class IntakeIOSparkMax implements IntakeIO {
 		intakeMotor.setIdleMode(IdleMode.kBrake);
 
 		intakeEncoder = intakeMotor.getEncoder();
-		intakeEncoder.setVelocityConversionFactor(1.0 / Constants.ArmConstants.kIntakeReduction * 2 * Math.PI);
+		intakeEncoder.setVelocityConversionFactor(1.0 / IntakeConstants.kIntakeReduction * 2 * Math.PI);
 	}
 
 	@Override

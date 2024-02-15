@@ -1,25 +1,27 @@
 package frc.robot.subsystems.shooter;
 
+import static frc.robot.Constants.GainsConstants.*;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.ShooterConstants;
 
 public class ShooterIOSim implements ShooterIO {
-	private final FlywheelSim topShooterSim = new FlywheelSim(DCMotor.getNEO(1), ArmConstants.kShooterReduction, 0.1);
-	private final FlywheelSim bottomShooterSim = new FlywheelSim(DCMotor.getNEO(1), ArmConstants.kShooterReduction,
+	private final FlywheelSim topShooterSim = new FlywheelSim(DCMotor.getNEO(1), ShooterConstants.kShooterReduction,
+			0.1);
+	private final FlywheelSim bottomShooterSim = new FlywheelSim(DCMotor.getNEO(1), ShooterConstants.kShooterReduction,
 			0.1);
 
-	private final PIDController shooterTopPID = new PIDController(ArmConstants.kShooterP.get(),
-			ArmConstants.kShooterI.get(), ArmConstants.kShooterD.get());
-	private final PIDController shooterBottomPID = new PIDController(ArmConstants.kShooterP.get(),
-			ArmConstants.kShooterI.get(), ArmConstants.kShooterD.get());
-	private final SimpleMotorFeedforward shooterTopFF = new SimpleMotorFeedforward(ArmConstants.kShooterS.get(),
-			ArmConstants.kShooterV.get());
-	private final SimpleMotorFeedforward shooterBottomFF = new SimpleMotorFeedforward(ArmConstants.kShooterS.get(),
-			ArmConstants.kShooterV.get());
+	private final PIDController shooterTopPID = new PIDController(shooterGains.kP(), shooterGains.kI(),
+			shooterGains.kD());
+	private final PIDController shooterBottomPID = new PIDController(shooterGains.kP(), shooterGains.kI(),
+			shooterGains.kD());
+	private SimpleMotorFeedforward shooterTopFF = new SimpleMotorFeedforward(shooterGains.ffkS(), shooterGains.ffkV());
+	private SimpleMotorFeedforward shooterBottomFF = new SimpleMotorFeedforward(shooterGains.ffkS(),
+			shooterGains.ffkV());
 
 	private double topAppliedVoltage = 0.0;
 	private double bottomAppliedVoltage = 0.0;
@@ -77,5 +79,13 @@ public class ShooterIOSim implements ShooterIO {
 	@Override
 	public void stop() {
 		setInputVoltage(0.0, 0.0);
+	}
+
+	public void setGains(double kP, double kI, double kD, double ffkS, double ffkV) {
+		shooterTopPID.setPID(kP, kI, kD);
+		shooterTopFF = new SimpleMotorFeedforward(ffkS, ffkV);
+
+		shooterBottomPID.setPID(kP, kI, kD);
+		shooterBottomFF = new SimpleMotorFeedforward(ffkS, ffkV);
 	}
 }

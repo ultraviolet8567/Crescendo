@@ -1,5 +1,7 @@
 package frc.robot.subsystems.arm;
 
+import static frc.robot.Constants.GainsConstants.*;
+
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -14,13 +16,14 @@ import org.littletonrobotics.junction.Logger;
 
 public class ArmIOSim implements ArmIO {
 	private final SingleJointedArmSim armSim = new SingleJointedArmSim(DCMotor.getNEO(2), ArmConstants.kArmReduction,
-			ArmConstants.kArmJKgMetersSquared, ArmConstants.kArmLength, ArmConstants.kMinArmAngle, ArmConstants.kMaxArmAngle, true,
-			Math.PI / 2);
+			ArmConstants.kArmJKgMetersSquared, ArmConstants.kArmLength, ArmConstants.kMinArmAngle,
+			ArmConstants.kMaxArmAngle, true, Math.PI / 2);
 	private final Constraints armConstraints = new Constraints(ArmConstants.kMaxSpeed.get(),
 			ArmConstants.kMaxAcceleration.get());
-	private final ProfiledPIDController armPIDController = new ProfiledPIDController(ArmConstants.kP.get(),
-			ArmConstants.kI.get(), ArmConstants.kD.get(), armConstraints);
-	private final ArmFeedforward armFF = new ArmFeedforward(0, 0, 0);
+	private final ProfiledPIDController armPIDController = new ProfiledPIDController(armGains.kP(), armGains.kI(),
+			armGains.kD(), armConstraints);
+	private ArmFeedforward armFF = new ArmFeedforward(armGains.ffkS(), armGains.ffkG(), armGains.ffkV(),
+			armGains.ffkA());
 
 	Mechanism2d arm = new Mechanism2d(2, 2);
 	MechanismRoot2d armRoot = arm.getRoot("Arm Root", 1, 0.5);
@@ -37,7 +40,7 @@ public class ArmIOSim implements ArmIO {
 		armPIDController.disableContinuousInput();
 		armPIDController.setTolerance(ArmConstants.kArmPIDTolerance.get());
 
-		resetPIDControllers();	
+		resetPIDControllers();
 	}
 
 	@Override
@@ -67,8 +70,7 @@ public class ArmIOSim implements ArmIO {
 	// Calculates the voltage to run the motors at
 	@Override
 	public double calculateInputVoltage(double setpoint) {
-		return (armPIDController.calculate(getPositionRads(),
-				setpoint) + armFF.calculate(getPositionRads(), setpoint));
+		return (armPIDController.calculate(getPositionRads(), setpoint) + armFF.calculate(getPositionRads(), setpoint));
 	}
 
 	// Sets the input voltage for a motor
@@ -105,6 +107,11 @@ public class ArmIOSim implements ArmIO {
 	@Override
 	public void stop() {
 		setInputVoltage(0.0);
+	}
+
+	public void setGains(double kP, double kI, double kD, double ffkS, double ffkV, double ffkA, double ffkG) {
+		armPIDController.setPID(kP, kI, kD);
+		armFF = new ArmFeedforward(ffkS, ffkG, ffkV, ffkA);
 	}
 
 	@Override

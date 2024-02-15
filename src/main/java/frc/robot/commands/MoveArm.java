@@ -40,23 +40,23 @@ public class MoveArm extends Command {
 	public void automatic() {
 		if (arm.armMode == 1) {
 			// Taxi Set Point
-			arm.setTargetAngle(ArmConstants.kTaxiAngle.get());
+			arm.setTargetAngle(ArmConstants.kTaxiAngle);
 		} else if (arm.armMode == 2) {
 			// Roomba Set Point
-			arm.setTargetAngle(ArmConstants.kRoombaAngle.get());
+			arm.setTargetAngle(ArmConstants.kRoombaAngle);
 		}
 		// These need Vision
 		else if (arm.armMode == 3) {
 			// Speaker Set Point
-			arm.setTargetAngle(ArmConstants.kSpeakerAngle.get());
+			arm.setTargetAngle(ArmConstants.kSpeakerAngle);
 		} else if (arm.armMode == 4) {
 			// Amp Set Point
-			arm.setTargetAngle(ArmConstants.kAmpAngle.get());
+			arm.setTargetAngle(ArmConstants.kAmpAngle);
 		} else if (arm.armMode == 5) {
 			// Trap Set Point
-			arm.setTargetAngle(ArmConstants.kTrapAngle.get());
+			arm.setTargetAngle(ArmConstants.kTrapAngle);
 		} else {
-			arm.setTargetAngle(ArmConstants.kTaxiAngle.get());
+			arm.setTargetAngle(ArmConstants.kTaxiAngle);
 		}
 	}
 
