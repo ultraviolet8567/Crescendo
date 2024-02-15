@@ -17,9 +17,9 @@ public interface IntakeIO {
 	public default void setInputVoltage(double volts) {
 	}
 
-	public default void setBrakeMode(boolean brake) {
+	public default void stop() {
 	}
 
-	public default void stop() {
+	public default void setBrakeMode(boolean brake) {
 	}
 }

@@ -5,31 +5,13 @@ import org.littletonrobotics.junction.AutoLog;
 public interface ShooterIO {
 	@AutoLog
 	class ShooterIOInputs {
-		public double topVelocityRadPerSec = 0.0;
-		public double topPositionRads = 0.0;
+		public double topVelocityRPM = 0.0;
 		public double topAppliedVoltage = 0.0;
 		public double topCurrentAmps = 0.0;
 
-		public double bottomVelocityRadPerSec = 0.0;
-		public double bottomPositionRads = 0.0;
+		public double bottomVelocityRPM = 0.0;
 		public double bottomAppliedVoltage = 0.0;
 		public double bottomCurrentAmps = 0.0;
-	}
-
-	default double getTopShooterVelocity() {
-		return 0.0;
-	}
-
-	default double getBottomShooterVelocity() {
-		return 0.0;
-	}
-
-	default double calculateShooterTopVelocity(double topVel) {
-		return 0.0;
-	}
-
-	default double calculateShooterBottomVelocity(double bottomVel) {
-		return 0.0;
 	}
 
 	default void updateInputs(ShooterIOInputs inputs) {
@@ -44,6 +26,15 @@ public interface ShooterIO {
 	default void setInputVoltage(double topVolts, double bottomVolts) {
 	}
 
+	default void setVelocity(double topTargetVel, double bottomTargetVel) {
+	}
+
 	default void stop() {
+	}
+
+	default void setGains(double kP, double kI, double kD, double ffkS, double ffkV) {
+	}
+
+	default void setBrakeMode(boolean brake) {
 	}
 }

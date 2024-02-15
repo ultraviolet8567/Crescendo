@@ -15,9 +15,6 @@ public interface ArmIO {
 	default void updateInputs(ArmIOInputs inputs) {
 	}
 
-	default void initial() {
-	}
-
 	default void update() {
 	}
 
@@ -25,8 +22,7 @@ public interface ArmIO {
 		return 0.0;
 	}
 
-	default double calculateInputVoltage(double setpoint) {
-		return 0.0;
+	default void setPosition(double setpoint) {
 	}
 
 	default void setInputVoltage(double volts) {
@@ -51,6 +47,9 @@ public interface ArmIO {
 	}
 
 	default void stop() {
+	}
+
+	default void setGains(double kP, double kI, double kD, double ffkS, double ffkV, double ffkA, double ffkG) {
 	}
 
 	default void resetAbsoluteEncoders() {

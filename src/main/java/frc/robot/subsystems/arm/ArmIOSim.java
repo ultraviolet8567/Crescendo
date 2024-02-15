@@ -1,5 +1,9 @@
 package frc.robot.subsystems.arm;
 
+import static frc.robot.Constants.GainsConstants.*;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
@@ -12,22 +16,33 @@ import frc.robot.Constants.ArmConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class ArmIOSim implements ArmIO {
-	// CHECK IF GEARING AND JKGMETERSSQUARED ARE RIGHT
-	private final SingleJointedArmSim armSim = new SingleJointedArmSim(DCMotor.getNEO(2), 0.1, 0.01, 0.58,
-			ArmConstants.kMinArmAngle, ArmConstants.kMaxArmAngle, true, Math.PI / 2);
+	private final SingleJointedArmSim armSim = new SingleJointedArmSim(DCMotor.getNEO(2), ArmConstants.kArmReduction,
+			ArmConstants.kArmJKgMetersSquared, ArmConstants.kArmLength, ArmConstants.kMinArmAngle,
+			ArmConstants.kMaxArmAngle, true, Math.PI / 2);
 	private final Constraints armConstraints = new Constraints(ArmConstants.kMaxSpeed.get(),
 			ArmConstants.kMaxAcceleration.get());
-	private final ProfiledPIDController armPIDController = new ProfiledPIDController(ArmConstants.kP.get(),
-			ArmConstants.kI.get(), ArmConstants.kD.get(), armConstraints);
+	private final ProfiledPIDController armPIDController = new ProfiledPIDController(armGains.kP(), armGains.kI(),
+			armGains.kD(), armConstraints);
+	private ArmFeedforward armFF = new ArmFeedforward(armGains.ffkS(), armGains.ffkG(), armGains.ffkV(),
+			armGains.ffkA());
 
 	Mechanism2d arm = new Mechanism2d(2, 2);
 	MechanismRoot2d armRoot = arm.getRoot("Arm Root", 1, 0.5);
-	MechanismLigament2d superstructureMech = armRoot.append(new MechanismLigament2d("superstructureMech", 0.2, 90));
+	MechanismLigament2d superstructureMech = armRoot.append(new MechanismLigament2d("Superstructure", 0.2, 90));
 	MechanismLigament2d armMech = superstructureMech.append(new MechanismLigament2d("Arm", 0.58, 90));
 	MechanismLigament2d intakeMech = armMech.append(new MechanismLigament2d("Intake", 0.36, 64.0));
 	MechanismLigament2d shooterMech = armMech.append(new MechanismLigament2d("Shooter", 0.11, 244.0));
 
 	private double appliedVoltage = 0.0;
+
+	public ArmIOSim() {
+		System.out.println("[Init] Creating ArmIOSim");
+
+		armPIDController.disableContinuousInput();
+		armPIDController.setTolerance(ArmConstants.kArmPIDTolerance.get());
+
+		resetPIDControllers();
+	}
 
 	@Override
 	public void updateInputs(ArmIOInputs inputs) {
@@ -36,18 +51,6 @@ public class ArmIOSim implements ArmIO {
 		inputs.positionRads = armSim.getAngleRads();
 		inputs.appliedVoltage = appliedVoltage;
 		inputs.currentAmps = new double[]{armSim.getCurrentDrawAmps()};
-	}
-
-	// An initializing function
-	@Override
-	public void initial() {
-		// Set up PID controllers
-		armPIDController.disableContinuousInput();
-		armPIDController.setTolerance(ArmConstants.kArmPIDTolerance.get());
-
-		// Create Mechanism2D simulation stuff
-
-		resetPIDControllers();
 	}
 
 	@Override
@@ -67,15 +70,18 @@ public class ArmIOSim implements ArmIO {
 
 	// Calculates the voltage to run the motors at
 	@Override
-	public double calculateInputVoltage(double setpoint) {
-		return (armPIDController.calculate(getPositionRads(), setpoint)) * 12;
+	public void setPosition(double setpoint) {
+		double volts = (armPIDController.calculate(getPositionRads(), setpoint)
+			+ armFF.calculate(getPositionRads(), setpoint));
+
+		setInputVoltage(volts);
 	}
 
 	// Sets the input voltage for a motor
 	@Override
 	public void setInputVoltage(double volts) {
-		appliedVoltage = volts;
-		armSim.setInputVoltage(volts);
+		double appliedVoltage = MathUtil.clamp(volts, -12.0, 12.0);
+		armSim.setInputVoltage(appliedVoltage);
 	}
 
 	// Checks if the arm is past the from limit (could hit ground/front of robot)
@@ -104,8 +110,12 @@ public class ArmIOSim implements ArmIO {
 
 	@Override
 	public void stop() {
-		appliedVoltage = 0.0;
 		setInputVoltage(0.0);
+	}
+
+	public void setGains(double kP, double kI, double kD, double ffkS, double ffkV, double ffkA, double ffkG) {
+		armPIDController.setPID(kP, kI, kD);
+		armFF = new ArmFeedforward(ffkS, ffkG, ffkV, ffkA);
 	}
 
 	@Override

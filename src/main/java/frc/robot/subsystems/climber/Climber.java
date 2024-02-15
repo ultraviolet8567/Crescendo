@@ -27,8 +27,7 @@ public class Climber extends SubsystemBase {
 	public void startClimb(String direction) {
 		if (direction.equals("extend")) {
 			io.setInputVoltage(ClimberConstants.kClimbVoltage.get());
-		}
-		if (direction.equals("retract")) {
+		} else if (direction.equals("retract")) {
 			io.setInputVoltage(-ClimberConstants.kClimbVoltage.get());
 		}
 	}

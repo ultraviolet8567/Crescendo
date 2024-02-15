@@ -5,7 +5,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.util.LoggedTunableNumber;
@@ -21,13 +20,21 @@ public final class Constants {
 	 * <p>
 	 * Odometry - Forward = x+ - Left = y+ - Counterclockwise = z+
 	 */
+
 	public static final Mode currentMode = Mode.SIM;
+	public static final RobotType currentRobot = (currentMode == Mode.SIM) ? RobotType.SIMBOT : RobotType.REALBOT;
 
 	public static final ModuleType powerDistributionType = ModuleType.kRev;
 	public static final boolean fieldOriented = false;
 	public static final String logpath = "/media/sda1/";
 
 	public static final Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Red);
+
+	public static final boolean lightsExist = false;
+
+	// Color of note and detection tolerance, subject to change.
+	public static final Color kNoteColor = new Color(255, 127, 80);
+	public static final double kColorConfidenceThreshold = 0.95;
 
 	public static final class OIConstants {
 		public static final ControllerType controllerTypeDriver = ControllerType.XBOX;
@@ -82,9 +89,9 @@ public final class Constants {
 
 	public static final class DriveConstants {
 		// Distance between right and left wheels:
-		public static final double kTrackWidth = Units.inchesToMeters(34); // TODO: Set to our dimensions
+		public static final double kTrackWidth = Units.inchesToMeters(21);
 		// Distance between front and back wheels:
-		public static final double kWheelBase = Units.inchesToMeters(32); // TODO: Set to our dimensions
+		public static final double kWheelBase = Units.inchesToMeters(21);
 		public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
 				new Translation2d(kWheelBase / 2, kTrackWidth / 2), // Front left (+/+)
 				new Translation2d(kWheelBase / 2, -kTrackWidth / 2), // Front right (+/-)
@@ -112,18 +119,10 @@ public final class Constants {
 		public static final boolean kBackLeftDriveAbsoluteEncoderReversed = false;
 		public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
 
-		public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -1.677; // TODO:
-		// Determine
-		// offset
-		public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -0.804; // TODO:
-		// Determine
-		// offset
-		public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.452; // TODO:
-		// Determine
-		// offset
-		public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.132; // TODO:
-		// Determine
-		// offset
+		public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -1.677;
+		public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -0.804;
+		public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.452;
+		public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.132;
 
 		public static final double kPhysicalMaxSpeedMetersPerSecond = 4.5;
 		public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 3 * Math.PI;
@@ -143,57 +142,77 @@ public final class Constants {
 	}
 
 	public static final class ArmConstants {
-		public static final LoggedTunableNumber kIntakeVoltage = new LoggedTunableNumber("Intake Voltage", 7);
+		public static final int kArmEncoderPort = 0;
 
-		public static final int kArmEncoderPort = 25;
-		public static final I2C.Port kArmColorSensorPort = I2C.Port.kOnboard;
+		// Physics
+		public static final double kArmLength = 0.58;
+		public static final double kArmReduction = 144.0;
+		public static final double kArmJKgMetersSquared = 0.515;
 
-		// Color of note/lack of note + tolerance, subject to change.
-		public static final Color kNoteColor = new Color(255, 127, 80);
-		public static final double kColorConfidenceThreshold = 0.1;
-
-		// Dummy values
-		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Max Speed", 3.5);
-		public static final LoggedTunableNumber kMaxAcceleration = new LoggedTunableNumber("Max Acceleration", 1);
-
-		// Dummy Automatic Set Point values
-		public static final LoggedTunableNumber kTaxiAngle = new LoggedTunableNumber("Taxi Angle", Math.PI / 4);
-		public static final LoggedTunableNumber kRoombaAngle = new LoggedTunableNumber("Roomba Angle", Math.PI / 12);
-		public static final LoggedTunableNumber kSpeakerAngle = new LoggedTunableNumber("Speaker Angle", 0.24434609527);
-		public static final LoggedTunableNumber kAmpAngle = new LoggedTunableNumber("Amp Angle", Math.PI / 3); // temporary
-		public static final LoggedTunableNumber kTrapAngle = new LoggedTunableNumber("Trap Angle", Math.PI / 5); // temporary
-
-		public static final LoggedTunableNumber kP = new LoggedTunableNumber("[P]ID", 0);
-		public static final LoggedTunableNumber kI = new LoggedTunableNumber("P[I]D", 0);
-		public static final LoggedTunableNumber kD = new LoggedTunableNumber("PI[D]", 0);
-		public static final LoggedTunableNumber kArmPIDTolerance = new LoggedTunableNumber("PID Tolerance", 0.5);
-
-
-		// Dummy Shooter values
-		public static final LoggedTunableNumber kShooterMaxSpeed = new LoggedTunableNumber("Shooter Max Speed", 3.5);
-		public static final LoggedTunableNumber kShooterMaxAcceleration = new LoggedTunableNumber("Shooter Max Acceleration", 1);
-
-		public static final LoggedTunableNumber kShooterP = new LoggedTunableNumber("Shooter: [P]ID", 0);
-		public static final LoggedTunableNumber kShooterI = new LoggedTunableNumber("Shooter: P[I]D", 0);
-		public static final LoggedTunableNumber kShooterD = new LoggedTunableNumber("Shooter: PI[D]", 0);
-		public static final LoggedTunableNumber kShooterPIDTolerance = new LoggedTunableNumber("Shooter PID Tolerance", 0.5);
-
-		// Another temp value
+		// Constraints
 		public static final double kMaxArmAngle = 0;
 		public static final double kMinArmAngle = 0;
 
+		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Arm/Max Speed", 3.5);
+		public static final LoggedTunableNumber kMaxAcceleration = new LoggedTunableNumber("Arm/Max Acceleration", 1);
+
+		// Arm presets (temporary)
+		public static final double kTaxiAngle = Math.PI / 4;
+		public static final double kRoombaAngle = Math.PI / 12;
+		public static final double kSpeakerAngle = 0.24434609527;
+		public static final double kAmpAngle = Math.PI / 3;
+		public static final double kTrapAngle = Math.PI / 5;
+
+		// Control
+		public static final LoggedTunableNumber kArmPIDTolerance = new LoggedTunableNumber("Arm/PID Tolerance", 0.5);
+	}
+
+	public static final class ShooterConstants {
+		public static final double kShooterReduction = 1.0;
+
+		public static final LoggedTunableNumber kShooterPIDTolerance = new LoggedTunableNumber("Shooter/PID Tolerance",
+				0.5);
+
+		public static final LoggedTunableNumber kAmpRPM = new LoggedTunableNumber("Shooter/Amp RPM", 500);
+		public static final LoggedTunableNumber kSpeakerRPM = new LoggedTunableNumber("Shooter/Speaker RPM", 3000);
+		public static final LoggedTunableNumber kIdleRPM = new LoggedTunableNumber("Shooter/Idle RPM", 1000);
+	}
+
+	public static final class IntakeConstants {
 		public static final double kIntakeReduction = 1.0;
-		public static final double kArmReduction = 1.0; // CALCULATE
+
+		public static final LoggedTunableNumber kIntakeVoltage = new LoggedTunableNumber("Intake/Voltage", 6);
+	}
+
+	public static final class GainsConstants {
+		public static final Gains shooterGains = switch (currentRobot) {
+			case REALBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 0.19, 0.0, 0.0);
+			case SIMBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 0.00103, 0.0, 0.0);
+		};
+		public static final Gains armGains = switch (currentRobot) {
+			case REALBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
+			case SIMBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
+		};
+	}
+
+	public record Gains(double kP, double kI, double kD, double ffkS, double ffkV, double ffkA, double ffkG) {
+	}
+
+	public static enum RobotType {
+		/** Physical robot */
+		REALBOT,
+		/** Simulated robot */
+		SIMBOT
 	}
 
 	public static enum Mode {
-		// Running on a real robot
+		/** Running on a real robot */
 		REAL,
-		// Running a simulator
+		/** Running a simulator */
 		SIM,
-		// In tuning mode
+		/** In tuning mode */
 		TUNING,
-		// Replaying from a log file
+		/** Replaying from a log file */
 		REPLAY
 	}
 

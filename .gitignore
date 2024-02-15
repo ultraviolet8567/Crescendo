@@ -176,7 +176,8 @@ logs/
 
 # Folder that has CTRE Phoenix Sim device config storage
 ctre_sim/
+
+# Files that shouldn't c
 src/main/java/frc/robot/BuildConstants.java
 simgui-ds.json
 simgui.json
-simgui-ds.json

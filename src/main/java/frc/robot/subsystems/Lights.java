@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.Constants;
 import frc.robot.util.VirtualSubsystem;
 import java.util.List;
+import org.littletonrobotics.junction.Logger;
 
 public class Lights extends VirtualSubsystem {
 	private static Lights instance;
@@ -22,7 +23,7 @@ public class Lights extends VirtualSubsystem {
 	// Robot state tracking
 	public int loopCycleCount = 0;
 	public boolean lowBattery = false;
-	public boolean pickUp = false;
+	public boolean hasNote = false;
 	public RobotState state = RobotState.DISABLED;
 
 	// LED IO
@@ -59,61 +60,69 @@ public class Lights extends VirtualSubsystem {
 	private static final double waveAllianceDuration = 2.0;
 
 	private Lights() {
-		System.out.println("[Init] Creating LEDs");
-
 		leds = new AddressableLED(1);
 		buffer = new AddressableLEDBuffer(length);
 
 		leds.setLength(length);
 
-		leds.setData(buffer);
-		leds.start();
+		if (Constants.lightsExist) {
+			System.out.println("[Init] Creating Lights");
+
+			leds.setData(buffer);
+			leds.start();
+		} else {
+			System.out.println("[Init] Lights do not exist");
+		}
 	}
 
 	public void periodic() {
-		// Exit during initial cycles
-		loopCycleCount++;
-		if (loopCycleCount < minLoopCycleCount) {
-			return;
-		}
+		Logger.recordOutput("RobotState/HasNote", hasNote);
 
-		// First branch off depending on what part of the match the robot is in
-
-		// Disabled
-		if (state == RobotState.DISABLED) {
-			// Purple and yellow stripes
-			stripes(Section.FULL, List.of(Color.kPurple, Color.kDarkGoldenrod), stripeLength, stripeDuration);
-		}
-
-		// Autonomous
-		else if (state == RobotState.AUTO) {
-			// Rainbow
-			rainbow(Section.FULL);
-		}
-
-		// Teleop
-		else {
-			// Alliance colors
-			if (Constants.alliance == Alliance.Blue) {
-				stripes(Section.FULL, List.of(Color.kRoyalBlue, Color.kAliceBlue), stripeLength, stripeDuration);
-			} else {
-				stripes(Section.FULL, List.of(Color.kRed, Color.kOrangeRed), stripeLength, stripeDuration);
+		if (Constants.lightsExist) {
+			// Exit during initial cycles
+			loopCycleCount++;
+			if (loopCycleCount < minLoopCycleCount) {
+				return;
 			}
 
-			// Pickup indicator
-			if (pickUp) {
-				solid(Section.FULL, Color.kGreen);
+			// First branch off depending on what part of the match the robot is in
+
+			// Disabled
+			if (state == RobotState.DISABLED) {
+				// Purple and yellow stripes
+				stripes(Section.FULL, List.of(Color.kPurple, Color.kDarkGoldenrod), stripeLength, stripeDuration);
 			}
-		}
 
-		// Indicate low battery in every case
-		lowBattery = (RobotController.getBatteryVoltage() < lowBatteryVoltage);
-		if (lowBattery) {
-			strobe(Section.BOTTOM, Color.kRed);
-		}
+			// Autonomous
+			else if (state == RobotState.AUTO) {
+				// Rainbow
+				rainbow(Section.FULL);
+			}
 
-		// Update LEDs
-		leds.setData(buffer);
+			// Teleop
+			else {
+				// Alliance colors
+				if (Constants.alliance == Alliance.Blue) {
+					stripes(Section.FULL, List.of(Color.kRoyalBlue, Color.kAliceBlue), stripeLength, stripeDuration);
+				} else {
+					stripes(Section.FULL, List.of(Color.kRed, Color.kOrangeRed), stripeLength, stripeDuration);
+				}
+
+				// Pickup indicator
+				if (hasNote) {
+					solid(Section.FULL, Color.kGreen);
+				}
+			}
+
+			// Indicate low battery in every case
+			lowBattery = (RobotController.getBatteryVoltage() < lowBatteryVoltage);
+			if (lowBattery) {
+				strobe(Section.BOTTOM, Color.kRed);
+			}
+
+			// Update LEDs
+			leds.setData(buffer);
+		}
 	}
 
 	public void solid(Section section, Color color) {

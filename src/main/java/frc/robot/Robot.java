@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Lights;
+import frc.robot.subsystems.Lights.RobotState;
 import frc.robot.util.VirtualSubsystem;
 import java.util.Map;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -75,8 +77,7 @@ public class Robot extends LoggedRobot {
 		System.out.println("[Init] Instantiating RobotContainer");
 		m_robotContainer = new RobotContainer();
 
-		// TODO: Uncomment this line once lights are attached to robot
-		// Lights.getInstance();
+		Lights.getInstance();
 
 		timer = Shuffleboard.getTab("Main").add("Time remaining", 0).withWidget(BuiltInWidgets.kNumberBar)
 				.withProperties(Map.of("min", 0, "max", 135)).withPosition(4, 0).withSize(2, 1).getEntry();
@@ -107,8 +108,7 @@ public class Robot extends LoggedRobot {
 	/** This function is called once each time the robot enters Disabled mode. */
 	@Override
 	public void disabledInit() {
-		// TODO: Uncomment this line once lights are attached to robot
-		// Lights.getInstance().state = RobotState.DISABLED;
+		Lights.getInstance().state = RobotState.DISABLED;
 	}
 
 	@Override
@@ -129,8 +129,7 @@ public class Robot extends LoggedRobot {
 		}
 
 		// Set state to auto
-		// TODO: Uncomment this line once lights are attached to robot
-		// Lights.getInstance().state = RobotState.AUTO;
+		Lights.getInstance().state = RobotState.AUTO;
 	}
 
 	/** This function is called periodically during autonomous. */
@@ -145,8 +144,7 @@ public class Robot extends LoggedRobot {
 		}
 
 		// Set state to teleop
-		// TODO: Uncomment this line once lights are attached to robot
-		// Lights.getInstance().state = RobotState.TELEOP;
+		Lights.getInstance().state = RobotState.TELEOP;
 	}
 
 	/** This function is called periodically during operator control. */

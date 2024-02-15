@@ -3,20 +3,20 @@ package frc.robot.subsystems.intake;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.subsystems.Lights;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
 	private final IntakeIO io;
 	private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
 
-	public boolean hasNote = false;
-	public boolean isPicking = false;
-	public boolean isSeeingOrange = false;
-	public boolean wasSeeingOrange = false;
-
-	public int colorPasses = 0;
+	public boolean noteDetected = false;
+	public boolean notePreviouslyDetected = false;
+	public int noteDetections = 0;
 
 	private ColorSensorV3 sensor;
 	private ColorMatch matcher;
@@ -27,11 +27,12 @@ public class Intake extends SubsystemBase {
 	 */
 	public Intake(IntakeIO io) {
 		this.io = io;
-		sensor = new ColorSensorV3(ArmConstants.kArmColorSensorPort);
+
+		sensor = new ColorSensorV3(I2C.Port.kOnboard);
 		matcher = new ColorMatch();
 
-		matcher.addColorMatch(ArmConstants.kNoteColor);
-		// matcher.setConfidenceThreshold(ArmConstants.kColorConfidenceThreshold);
+		matcher.addColorMatch(Constants.kNoteColor);
+		matcher.setConfidenceThreshold(Constants.kColorConfidenceThreshold);
 	}
 
 	/* Runs periodically (about once every 20 ms) */
@@ -40,40 +41,37 @@ public class Intake extends SubsystemBase {
 		io.updateInputs(inputs);
 		Logger.processInputs("Intake", inputs);
 
-		if (isPicking) {
-			ColorMatchResult result = matcher.matchColor(sensor.getColor());
+		// If the sensor sees orange, we have a note in the system
+		ColorMatchResult result = matcher.matchColor(sensor.getColor());
+		Lights.getInstance().hasNote = (result != null);
 
-			if (result == null) {
-				isSeeingOrange = false;
-			} else {
-				isSeeingOrange = true;
-			}
+		// Record when note passes sensor
+		if (!notePreviouslyDetected && Lights.getInstance().hasNote)
+			noteDetections++;
 
-			if (wasSeeingOrange && !isSeeingOrange) {
-				colorPasses += 1;
-			}
-
-			if (colorPasses >= 2) {
-				isPicking = false;
-				hasNote = true;
-				io.stop();
-			}
-
-			wasSeeingOrange = isSeeingOrange;
+		// If the note has passed the sensor twice, note has reached storing position
+		if (noteDetections >= 2) {
+			io.stop();
+			noteDetections = 0;
 		}
+
+		notePreviouslyDetected = Lights.getInstance().hasNote;
 	}
 
 	/* Define all subsystem-specific methods and enums here */
 	public void pickup() {
-		if (!hasNote) {
-			io.setInputVoltage(ArmConstants.kIntakeVoltage.get());
-			isPicking = true;
-			colorPasses = 0;
+		if (!Lights.getInstance().hasNote) {
+			io.setInputVoltage(IntakeConstants.kIntakeVoltage.get());
+			noteDetections = 0;
 		}
 	}
 
 	public void drop() {
-		io.setInputVoltage(-ArmConstants.kIntakeVoltage.get());
+		io.setInputVoltage(-IntakeConstants.kIntakeVoltage.get());
+	}
+
+	public void runIndexer() {
+		io.setInputVoltage(IntakeConstants.kIntakeVoltage.get());
 	}
 
 	public void stop() {
