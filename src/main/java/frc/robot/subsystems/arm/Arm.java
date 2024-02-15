@@ -37,7 +37,7 @@ public class Arm extends SubsystemBase {
 		io.update();
 
 		Logger.processInputs("Arms", inputs);
-		Logger.recordOutput("ArmMode", armMode);
+		Logger.recordOutput("Arm/Mode", armMode);
 
 		LoggedTunableNumber.ifChanged(hashCode(),
 				() -> io.setGains(kP.get(), kI.get(), kD.get(), kS.get(), kV.get(), kA.get(), kG.get()), kP, kI, kD, kS,
@@ -47,7 +47,7 @@ public class Arm extends SubsystemBase {
 	/* Define all subsystem-specific methods and enums here */
 	public void setTargetAngle(double targetAngle) {
 		// if (io.armWithinRange()) {
-		io.setInputVoltage(io.calculateInputVoltage(targetAngle));
+		io.setPosition(targetAngle);
 		// }
 	}
 

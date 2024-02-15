@@ -22,8 +22,7 @@ public interface ArmIO {
 		return 0.0;
 	}
 
-	default double calculateInputVoltage(double setpoint) {
-		return 0.0;
+	default void setPosition(double setpoint) {
 	}
 
 	default void setInputVoltage(double volts) {

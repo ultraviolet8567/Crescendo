@@ -11,7 +11,6 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CAN;
 
@@ -33,7 +32,7 @@ public class ArmIOSparkMax implements ArmIO {
 		arm1Motor.setIdleMode(IdleMode.kBrake);
 
 		arm1Encoder = arm1Motor.getEncoder();
-		arm1Encoder.setVelocityConversionFactor(1.0 / Constants.ArmConstants.kArmReduction * 2 * Math.PI);
+		arm1Encoder.setVelocityConversionFactor(1.0 / ArmConstants.kArmReduction * 2 * Math.PI);
 
 		arm2Motor = new CANSparkMax(CAN.kArm2Port, MotorType.kBrushless);
 		arm2Motor.enableVoltageCompensation(12.0);
@@ -41,7 +40,7 @@ public class ArmIOSparkMax implements ArmIO {
 		arm2Motor.setIdleMode(IdleMode.kBrake);
 
 		arm2Encoder = arm2Motor.getEncoder();
-		arm2Encoder.setVelocityConversionFactor(1.0 / Constants.ArmConstants.kArmReduction * 2 * Math.PI);
+		arm2Encoder.setVelocityConversionFactor(1.0 / ArmConstants.kArmReduction * 2 * Math.PI);
 
 		armEncoder = new DutyCycleEncoder(ArmConstants.kArmEncoderPort);
 
@@ -55,7 +54,7 @@ public class ArmIOSparkMax implements ArmIO {
 	public void updateInputs(ArmIOInputs inputs) {
 		inputs.velocityRadPerSec = arm1Encoder.getVelocity();
 		inputs.appliedVoltage = arm1Motor.getAppliedOutput() * arm1Motor.getBusVoltage();
-		inputs.positionRads = armEncoder.get();
+		inputs.positionRads = armEncoder.getAbsolutePosition();
 		inputs.currentAmps = new double[]{arm1Motor.getOutputCurrent()};
 		inputs.tempCelsius = new double[]{arm1Motor.getMotorTemperature()};
 	}
@@ -66,10 +65,12 @@ public class ArmIOSparkMax implements ArmIO {
 	}
 
 	@Override
-	public double calculateInputVoltage(double targetAngle) {
+	public void setPosition(double setpoint) {
 		// Both motors spin the same and in the same direction
-		return (armPID.calculate(armEncoder.getAbsolutePosition(), targetAngle)
-				+ armFF.calculate(armEncoder.getAbsolutePosition(), targetAngle));
+		double volts = (armPID.calculate(armEncoder.getAbsolutePosition(), setpoint)
+			+ armFF.calculate(armEncoder.getAbsolutePosition(), setpoint));
+
+		setInputVoltage(volts);
 	}
 
 	@Override

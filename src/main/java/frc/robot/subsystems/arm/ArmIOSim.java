@@ -2,6 +2,7 @@ package frc.robot.subsystems.arm;
 
 import static frc.robot.Constants.GainsConstants.*;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -69,15 +70,18 @@ public class ArmIOSim implements ArmIO {
 
 	// Calculates the voltage to run the motors at
 	@Override
-	public double calculateInputVoltage(double setpoint) {
-		return (armPIDController.calculate(getPositionRads(), setpoint) + armFF.calculate(getPositionRads(), setpoint));
+	public void setPosition(double setpoint) {
+		double volts = (armPIDController.calculate(getPositionRads(), setpoint)
+			+ armFF.calculate(getPositionRads(), setpoint));
+
+		setInputVoltage(volts);
 	}
 
 	// Sets the input voltage for a motor
 	@Override
 	public void setInputVoltage(double volts) {
-		appliedVoltage = volts;
-		armSim.setInputVoltage(volts);
+		double appliedVoltage = MathUtil.clamp(volts, -12.0, 12.0);
+		armSim.setInputVoltage(appliedVoltage);
 	}
 
 	// Checks if the arm is past the from limit (could hit ground/front of robot)
