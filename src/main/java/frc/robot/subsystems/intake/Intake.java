@@ -21,6 +21,8 @@ public class Intake extends SubsystemBase {
 	private ColorSensorV3 sensor;
 	private ColorMatch matcher;
 
+	private int[] detectedColor;
+
 	/*
 	 * Initialize all components here, as well as any one-time logic to be completed
 	 * on boot-up
@@ -55,7 +57,11 @@ public class Intake extends SubsystemBase {
 			noteDetections = 0;
 		}
 
+		detectedColor = new int[]{sensor.getRed(), sensor.getGreen(), sensor.getBlue()};
+
 		notePreviouslyDetected = Lights.getInstance().hasNote;
+		Logger.recordOutput("Note Intaked", Lights.getInstance().hasNote);
+		Logger.recordOutput("Detected Color", detectedColor);
 	}
 
 	/* Define all subsystem-specific methods and enums here */

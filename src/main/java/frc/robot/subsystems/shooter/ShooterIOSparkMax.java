@@ -3,8 +3,8 @@ package frc.robot.subsystems.shooter;
 import static frc.robot.Constants.GainsConstants.*;
 
 import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -13,18 +13,20 @@ import frc.robot.Constants.CAN;
 import frc.robot.Constants.ShooterConstants;
 
 public class ShooterIOSparkMax implements ShooterIO {
-	public final CANSparkMax shooterTopMotor, shooterBottomMotor;
+	public final CANSparkFlex shooterTopMotor, shooterBottomMotor;
 	public final RelativeEncoder shooterTopEncoder, shooterBottomEncoder;
 	private final PIDController shooterTopPID, shooterBottomPID;
 	private SimpleMotorFeedforward shooterTopFF, shooterBottomFF;
 
 	public ShooterIOSparkMax() {
-		shooterTopMotor = new CANSparkMax(CAN.kShooterTopPort, MotorType.kBrushless);
+		System.out.println("[Init] Creating ShooterIOSparkMax");
+
+		shooterTopMotor = new CANSparkFlex(CAN.kShooterTopPort, MotorType.kBrushless);
 		shooterTopMotor.enableVoltageCompensation(12.0);
 		shooterTopMotor.setSmartCurrentLimit(40);
 		shooterTopMotor.setIdleMode(IdleMode.kBrake);
 
-		shooterBottomMotor = new CANSparkMax(CAN.kShooterBottomPort, MotorType.kBrushless);
+		shooterBottomMotor = new CANSparkFlex(CAN.kShooterBottomPort, MotorType.kBrushless);
 		shooterBottomMotor.enableVoltageCompensation(12.0);
 		shooterBottomMotor.setSmartCurrentLimit(40);
 		shooterBottomMotor.setIdleMode(IdleMode.kBrake);
@@ -43,8 +45,6 @@ public class ShooterIOSparkMax implements ShooterIO {
 
 	@Override
 	public void updateInputs(ShooterIOInputs inputs) {
-		System.out.println("[Init] Creating ShooterIOSparkMax");
-
 		inputs.topVelocityRPM = shooterTopEncoder.getVelocity();
 		inputs.topAppliedVoltage = shooterTopMotor.getAppliedOutput() * shooterTopMotor.getBusVoltage();
 		inputs.topCurrentAmps = shooterTopMotor.getOutputCurrent();

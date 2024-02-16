@@ -21,7 +21,7 @@ public final class Constants {
 	 * Odometry - Forward = x+ - Left = y+ - Counterclockwise = z+
 	 */
 
-	public static final Mode currentMode = Mode.SIM;
+	public static final Mode currentMode = Mode.REAL;
 	public static final RobotType currentRobot = (currentMode == Mode.SIM) ? RobotType.SIMBOT : RobotType.REALBOT;
 
 	public static final ModuleType powerDistributionType = ModuleType.kRev;
@@ -182,7 +182,7 @@ public final class Constants {
 	public static final class IntakeConstants {
 		public static final double kIntakeReduction = 1.0;
 
-		public static final LoggedTunableNumber kIntakeVoltage = new LoggedTunableNumber("Intake/Voltage", 6);
+		public static final LoggedTunableNumber kIntakeVoltage = new LoggedTunableNumber("Intake/Voltage", 9);
 	}
 
 	public static final class GainsConstants {

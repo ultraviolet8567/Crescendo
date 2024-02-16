@@ -50,9 +50,9 @@ public class Shooter extends SubsystemBase {
 		// if (!intake.noteDetected) {
 		// return;
 		// }
-		
+
 		targetVel = arm.getArmMode()[1];
-		io.setVelocity(targetVel, targetVel);
+		io.setVelocity(-targetVel, -targetVel);
 	}
 
 	public void stop() {
