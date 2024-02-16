@@ -47,11 +47,12 @@ public class Shooter extends SubsystemBase {
 
 	/* Define all subsystem-specific methods and enums here */
 	public void shoot() {
-		if (!intake.noteDetected) {
-			return;
-		}
-
+		// if (!intake.noteDetected) {
+		// return;
+		// }
+		
 		targetVel = arm.getArmMode()[1];
+		io.setVelocity(targetVel, targetVel);
 	}
 
 	public void stop() {

@@ -30,6 +30,7 @@ public class Arm extends SubsystemBase {
 	 */
 	public Arm(ArmIO io) {
 		this.io = io;
+		armMode = ArmMode.MANUAL;
 	}
 
 	/* Runs periodically (about once every 20 ms) */
@@ -75,6 +76,8 @@ public class Arm extends SubsystemBase {
 				return new double[]{ArmConstants.kAmpAngle, ShooterConstants.kAmpRPM.get()};
 			case IDLE :
 				return new double[]{ArmConstants.kTaxiAngle, ShooterConstants.kIdleRPM.get()};
+			case MANUAL :
+				return new double[]{0.0, ShooterConstants.kManualRPM.get()};
 			default :
 				return new double[]{ArmConstants.kTaxiAngle, ShooterConstants.kIdleRPM.get()};
 		}

@@ -176,6 +176,7 @@ public final class Constants {
 		public static final LoggedTunableNumber kAmpRPM = new LoggedTunableNumber("Shooter/Amp RPM", 500);
 		public static final LoggedTunableNumber kSpeakerRPM = new LoggedTunableNumber("Shooter/Speaker RPM", 3000);
 		public static final LoggedTunableNumber kIdleRPM = new LoggedTunableNumber("Shooter/Idle RPM", 1000);
+		public static final LoggedTunableNumber kManualRPM = new LoggedTunableNumber("Shooter/Manual RMM", 1000);
 	}
 
 	public static final class IntakeConstants {
