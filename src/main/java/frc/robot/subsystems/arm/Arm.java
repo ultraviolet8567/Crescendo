@@ -6,6 +6,8 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.ArmMode;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
@@ -20,7 +22,7 @@ public class Arm extends SubsystemBase {
 
 	private final ArmIO io;
 	private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
-	public int armMode;
+	public ArmMode armMode;
 
 	/*
 	 * Initialize all components here, as well as any one-time logic to be completed
@@ -37,7 +39,7 @@ public class Arm extends SubsystemBase {
 		io.update();
 
 		Logger.processInputs("Arms", inputs);
-		Logger.recordOutput("Arm/Mode", armMode);
+		// Logger.recordOutput("Arm/Mode", armMode);
 
 		LoggedTunableNumber.ifChanged(hashCode(),
 				() -> io.setGains(kP.get(), kI.get(), kD.get(), kS.get(), kV.get(), kA.get(), kG.get()), kP, kI, kD, kS,
@@ -57,12 +59,25 @@ public class Arm extends SubsystemBase {
 		// }
 	}
 
-	public void setArmMode(int mode) {
+	public void setArmMode(ArmMode mode) {
 		armMode = mode;
+
+		if (armMode == ArmMode.MANUAL) {
+			resetPIDControllers();
+		}
 	}
 
-	public int getArmMode() {
-		return armMode;
+	public double[] getArmMode() {
+		switch (armMode) {
+			case SPEAKER :
+				return new double[]{ArmConstants.kSpeakerAngle, ShooterConstants.kSpeakerRPM.get()};
+			case AMP :
+				return new double[]{ArmConstants.kAmpAngle, ShooterConstants.kAmpRPM.get()};
+			case IDLE :
+				return new double[]{ArmConstants.kTaxiAngle, ShooterConstants.kIdleRPM.get()};
+			default :
+				return new double[]{ArmConstants.kTaxiAngle, ShooterConstants.kIdleRPM.get()};
+		}
 	}
 
 	public Transform3d getDeltaY() {

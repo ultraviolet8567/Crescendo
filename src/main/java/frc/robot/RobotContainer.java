@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ArmMode;
 import frc.robot.Constants.ControllerType;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.*;
@@ -49,7 +50,7 @@ public class RobotContainer {
 				climber = new Climber(new ClimberIOSparkMax());
 				intake = new Intake(new IntakeIOSparkMax());
 				odometry = new Odometry();
-				shooter = new Shooter(new ShooterIOSparkMax());
+				shooter = new Shooter(new ShooterIOSparkMax(), arm, intake);
 				swerve = new Swerve();
 			}
 			case SIM -> {
@@ -57,7 +58,7 @@ public class RobotContainer {
 				climber = new Climber(new ClimberIOSim());
 				intake = new Intake(new IntakeIOSim());
 				odometry = new Odometry();
-				shooter = new Shooter(new ShooterIOSim());
+				shooter = new Shooter(new ShooterIOSim(), arm, intake);
 				swerve = new Swerve();
 			}
 			default -> {
@@ -69,7 +70,7 @@ public class RobotContainer {
 				});
 				odometry = new Odometry();
 				shooter = new Shooter(new ShooterIO() {
-				});
+				}, arm, intake);
 				swerve = new Swerve();
 			}
 		}
@@ -108,11 +109,14 @@ public class RobotContainer {
 		// new JoystickButton(operatorJoystick, XboxController.Button.kBack.value)
 		// .whileTrue(new Climb(climber, "retract"));
 
-		new JoystickButton(operatorJoystick, XboxController.Button.kB.value).onTrue(new SetArmAngle(arm, 1));
-		new JoystickButton(operatorJoystick, XboxController.Button.kA.value).onTrue(new SetArmAngle(arm, 2));
-		new JoystickButton(operatorJoystick, XboxController.Button.kY.value).onTrue(new SetArmAngle(arm, 3));
-		new JoystickButton(operatorJoystick, XboxController.Button.kX.value).onTrue(new SetArmAngle(arm, 4));
-		new JoystickButton(operatorJoystick, XboxController.Button.kStart.value).onTrue(new SetArmAngle(arm, 5));
+		new JoystickButton(operatorJoystick, XboxController.Button.kB.value).onTrue(new SetArmAngle(arm, ArmMode.IDLE));
+		new JoystickButton(operatorJoystick, XboxController.Button.kA.value)
+				.onTrue(new SetArmAngle(arm, ArmMode.ROOMBA));
+		new JoystickButton(operatorJoystick, XboxController.Button.kY.value)
+				.onTrue(new SetArmAngle(arm, ArmMode.SPEAKER));
+		new JoystickButton(operatorJoystick, XboxController.Button.kX.value).onTrue(new SetArmAngle(arm, ArmMode.AMP));
+		new JoystickButton(operatorJoystick, XboxController.Button.kStart.value)
+				.onTrue(new SetArmAngle(arm, ArmMode.TRAP));
 
 		// new POVButton(operatorJoystick, -1).whileTrue(new SetArmAngle(arm, 1));
 		// new POVButton(operatorJoystick, 0).whileTrue(new SetArmAngle(arm, 2));

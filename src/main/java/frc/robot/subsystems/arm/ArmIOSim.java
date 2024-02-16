@@ -80,7 +80,7 @@ public class ArmIOSim implements ArmIO {
 	// Sets the input voltage for a motor
 	@Override
 	public void setInputVoltage(double volts) {
-		double appliedVoltage = MathUtil.clamp(volts, -12.0, 12.0);
+		appliedVoltage = MathUtil.clamp(volts, -12.0, 12.0);
 		armSim.setInputVoltage(appliedVoltage);
 	}
 

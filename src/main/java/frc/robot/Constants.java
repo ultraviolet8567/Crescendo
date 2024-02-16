@@ -216,6 +216,21 @@ public final class Constants {
 		REPLAY
 	}
 
+	public static enum ArmMode {
+		// Manual
+		MANUAL,
+		// Idle
+		IDLE,
+		// Roomba
+		ROOMBA,
+		// Speaker
+		SPEAKER,
+		// Amp
+		AMP,
+		// Trap
+		TRAP,
+	}
+
 	public static enum ControllerType {
 		XBOX, LOGITECH, JOYSTICK
 	}

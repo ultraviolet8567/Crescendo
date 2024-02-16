@@ -69,6 +69,7 @@ public class ArmIOSparkMax implements ArmIO {
 		// Both motors spin the same and in the same direction
 		double volts = (armPID.calculate(armEncoder.getAbsolutePosition(), setpoint)
 				+ armFF.calculate(armEncoder.getAbsolutePosition(), setpoint));
+		targetAngle = setpoint;
 
 		setInputVoltage(volts);
 	}
