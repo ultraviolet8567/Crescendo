@@ -20,7 +20,8 @@ public class Gyrometer extends SubsystemBase {
 		gyro.reset();
 
 		this.swerve = swerve;
-		odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getHeading(), swerve.getModulePositions(), initialPose);
+		odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getHeading(), swerve.getModulePositions(),
+				initialPose);
 	}
 
 	@Override
@@ -37,11 +38,6 @@ public class Gyrometer extends SubsystemBase {
 		odometer.update(getHeading(), swerve.getModulePositions());
 	}
 
-	// return inverted pose
-	public Pose2d getInvertedPose() {
-		return new Pose2d(-getPose().getX(), -getPose().getY(), getPose().getRotation());
-	}
-
 	// return gyro heading as rotation2d
 	// getRotation2d() is CCW+ for the pigeon2, getAngle is CCW-
 	public Rotation2d getHeading() {
@@ -54,9 +50,9 @@ public class Gyrometer extends SubsystemBase {
 		// return gyro.getRotation3d().unaryMinus(); <-- if we need the negative version
 	}
 
-	// rate in degrees per second, clockwise is positive
+	// rate in degrees per second, negate to make CCW positive
 	public double getRate() {
-		return gyro.getRate();
+		return -gyro.getRate();
 	}
 
 	// reset odometry
