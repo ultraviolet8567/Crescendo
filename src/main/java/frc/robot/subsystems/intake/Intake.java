@@ -14,14 +14,14 @@ public class Intake extends SubsystemBase {
 	private final IntakeIO io;
 	private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
 
-	public boolean noteDetected = false;
-	public boolean notePreviouslyDetected = false;
-	public int noteDetections = 0;
+	private boolean notePreviouslyDetected = false;
+	private int noteDetections = 0;
+	private boolean noteCollected = false;
 
 	private ColorSensorV3 sensor;
 	private ColorMatch matcher;
 
-	private int[] detectedColor;
+	private double[] detectedColor;
 
 	/*
 	 * Initialize all components here, as well as any one-time logic to be completed
@@ -49,26 +49,27 @@ public class Intake extends SubsystemBase {
 
 		// Record when note passes sensor
 		if (!notePreviouslyDetected && Lights.getInstance().hasNote)
-			noteDetections++;
+			io.stop();
 
 		// If the note has passed the sensor twice, note has reached storing position
-		if (noteDetections >= 2) {
-			io.stop();
-			noteDetections = 0;
-		}
+		// if (noteDetections >= 2) {
+		// io.stop();
+		// noteDetections = 0;
+		// noteCollected = true;
+		// }
 
-		detectedColor = new int[]{sensor.getRed(), sensor.getGreen(), sensor.getBlue()};
+		detectedColor = new double[]{sensor.getColor().red, sensor.getColor().green, sensor.getColor().blue};
 
 		notePreviouslyDetected = Lights.getInstance().hasNote;
 		Logger.recordOutput("Note Intaked", Lights.getInstance().hasNote);
-		Logger.recordOutput("Detected Color", detectedColor);
+		Logger.recordOutput("Intake/DetectedColor", detectedColor);
+		Logger.recordOutput("Intake/NoteCollected", noteCollected);
 	}
 
 	/* Define all subsystem-specific methods and enums here */
 	public void pickup() {
 		if (!Lights.getInstance().hasNote) {
 			io.setInputVoltage(IntakeConstants.kIntakeVoltage.get());
-			noteDetections = 0;
 		}
 	}
 

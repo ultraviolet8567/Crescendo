@@ -15,13 +15,16 @@ public class Shoot extends Command {
 
 	@Override
 	public void execute() {
-		intake.runIndexer();
 		shooter.shoot();
+
+		// if (shooter.atSpeed()) {
+		// intake.runIndexer();
+		// }
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		intake.stop();
+		// intake.stop();
 		shooter.stop();
 	}
 }

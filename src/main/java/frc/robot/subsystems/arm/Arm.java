@@ -6,8 +6,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.ArmMode;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
@@ -22,7 +20,8 @@ public class Arm extends SubsystemBase {
 
 	private final ArmIO io;
 	private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
-	public ArmMode armMode;
+
+	private ArmMode armMode;
 
 	/*
 	 * Initialize all components here, as well as any one-time logic to be completed
@@ -45,19 +44,21 @@ public class Arm extends SubsystemBase {
 		LoggedTunableNumber.ifChanged(hashCode(),
 				() -> io.setGains(kP.get(), kI.get(), kD.get(), kS.get(), kV.get(), kA.get(), kG.get()), kP, kI, kD, kS,
 				kV, kA, kG);
+
+		Logger.recordOutput("Arm/Mode", armMode);
 	}
 
 	/* Define all subsystem-specific methods and enums here */
 	public void setTargetAngle(double targetAngle) {
-		// if (io.armWithinRange()) {
-		io.setPosition(targetAngle);
-		// }
+		if (io.armWithinRange()) {
+			io.setPosition(targetAngle);
+		}
 	}
 
 	public void setTurnSpeed(double factor) {
-		// if (io.armWithinRange()) {
-		io.setInputVoltage(factor * ArmConstants.kMaxSpeed.get());
-		// }
+		if (io.armWithinRange()) {
+			io.setInputVoltage(factor * ArmConstants.kManualVoltage.get());
+		}
 	}
 
 	public void setArmMode(ArmMode mode) {
@@ -68,18 +69,24 @@ public class Arm extends SubsystemBase {
 		}
 	}
 
-	public double[] getArmMode() {
+	public ArmMode getArmMode() {
+		return armMode;
+	}
+
+	public double getPresetAngle() {
 		switch (armMode) {
 			case SPEAKER :
-				return new double[]{ArmConstants.kSpeakerAngle, ShooterConstants.kSpeakerRPM.get()};
+				return ArmConstants.kSpeakerAngle;
 			case AMP :
-				return new double[]{ArmConstants.kAmpAngle, ShooterConstants.kAmpRPM.get()};
-			case IDLE :
-				return new double[]{ArmConstants.kTaxiAngle, ShooterConstants.kIdleRPM.get()};
-			case MANUAL :
-				return new double[]{0.0, ShooterConstants.kManualRPM.get()};
+				return ArmConstants.kAmpAngle;
+			case ROOMBA :
+				return ArmConstants.kRoombaAngle;
+			case TAXI :
+				return ArmConstants.kTaxiAngle;
+			case TRAP :
+				return ArmConstants.kTrapAngle;
 			default :
-				return new double[]{ArmConstants.kTaxiAngle, ShooterConstants.kIdleRPM.get()};
+				return ArmConstants.kTaxiAngle;
 		}
 	}
 
@@ -99,4 +106,20 @@ public class Arm extends SubsystemBase {
 	public void resetPIDControllers() {
 		io.resetPIDControllers();
 	}
+
+	public static enum ArmMode {
+		/** Manual control */
+		MANUAL,
+		/** Intaking from ground */
+		ROOMBA,
+		/** Pointing at speaker */
+		SPEAKER,
+		/** Pointing at amp */
+		AMP,
+		/** Pointing at trap */
+		TRAP,
+		/** Stowed in taxi position */
+		TAXI
+	}
+
 }

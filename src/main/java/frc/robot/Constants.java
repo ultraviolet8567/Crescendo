@@ -33,8 +33,8 @@ public final class Constants {
 	public static final boolean lightsExist = false;
 
 	// Color of note and detection tolerance, subject to change.
-	public static final Color kNoteColor = new Color(255, 127, 80);
-	public static final double kColorConfidenceThreshold = 0.95;
+	public static final Color kNoteColor = new Color(138, 94, 23);
+	public static final double kColorConfidenceThreshold = 0.8;
 
 	public static final class OIConstants {
 		public static final ControllerType controllerTypeDriver = ControllerType.XBOX;
@@ -143,6 +143,8 @@ public final class Constants {
 
 	public static final class ArmConstants {
 		public static final int kArmEncoderPort = 0;
+		public static final double kArmEncoderOffset = -2.65016;
+		public static final boolean kArmEncoderReversed = true;
 
 		// Physics
 		public static final double kArmLength = 0.58;
@@ -150,18 +152,20 @@ public final class Constants {
 		public static final double kArmJKgMetersSquared = 0.515;
 
 		// Constraints
-		public static final double kMaxArmAngle = 0;
-		public static final double kMinArmAngle = 0;
+		public static final double kMaxArmAngle = 0.0;
+		public static final double kMinArmAngle = -1.76625;
 
 		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Arm/Max Speed", 3.5);
 		public static final LoggedTunableNumber kMaxAcceleration = new LoggedTunableNumber("Arm/Max Acceleration", 1);
 
-		// Arm presets (temporary)
-		public static final double kTaxiAngle = Math.PI / 4;
-		public static final double kRoombaAngle = Math.PI / 12;
-		public static final double kSpeakerAngle = 0.24434609527;
-		public static final double kAmpAngle = Math.PI / 3;
-		public static final double kTrapAngle = Math.PI / 5;
+		public static final LoggedTunableNumber kManualVoltage = new LoggedTunableNumber("Arm/ManualVoltage", 10);
+
+		// Arm presets
+		public static final double kTaxiAngle = -1.175;
+		public static final double kRoombaAngle = -0.04396;
+		public static final double kSpeakerAngle = -0.13816;
+		public static final double kAmpAngle = -1.620;
+		public static final double kTrapAngle = -0.13816;
 
 		// Control
 		public static final LoggedTunableNumber kArmPIDTolerance = new LoggedTunableNumber("Arm/PID Tolerance", 0.5);
@@ -174,9 +178,9 @@ public final class Constants {
 				0.5);
 
 		public static final LoggedTunableNumber kAmpRPM = new LoggedTunableNumber("Shooter/Amp RPM", 500);
-		public static final LoggedTunableNumber kSpeakerRPM = new LoggedTunableNumber("Shooter/Speaker RPM", 3000);
-		public static final LoggedTunableNumber kIdleRPM = new LoggedTunableNumber("Shooter/Idle RPM", 1000);
-		public static final LoggedTunableNumber kManualRPM = new LoggedTunableNumber("Shooter/Manual RMM", 1000);
+		public static final LoggedTunableNumber kSpeakerRPM = new LoggedTunableNumber("Shooter/Speaker RPM", 6300);
+		public static final LoggedTunableNumber kTrapRPM = new LoggedTunableNumber("Shooter/Manual RMM", 1000);
+		public static final LoggedTunableNumber kIdleRPM = new LoggedTunableNumber("Shooter/Idle RPM", 500);
 	}
 
 	public static final class IntakeConstants {
@@ -187,7 +191,7 @@ public final class Constants {
 
 	public static final class GainsConstants {
 		public static final Gains shooterGains = switch (currentRobot) {
-			case REALBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 0.19, 0.0, 0.0);
+			case REALBOT -> new Gains(0.0006, 0.0, 0.05, 0.33329, 0.00083, 0.0, 0.0);
 			case SIMBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 0.00103, 0.0, 0.0);
 		};
 		public static final Gains armGains = switch (currentRobot) {
@@ -215,21 +219,6 @@ public final class Constants {
 		TUNING,
 		/** Replaying from a log file */
 		REPLAY
-	}
-
-	public static enum ArmMode {
-		// Manual
-		MANUAL,
-		// Idle
-		IDLE,
-		// Roomba
-		ROOMBA,
-		// Speaker
-		SPEAKER,
-		// Amp
-		AMP,
-		// Trap
-		TRAP,
 	}
 
 	public static enum ControllerType {

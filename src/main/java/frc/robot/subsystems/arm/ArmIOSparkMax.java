@@ -13,6 +13,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CAN;
+import org.littletonrobotics.junction.Logger;
 
 public class ArmIOSparkMax implements ArmIO {
 	public final CANSparkMax arm1Motor, arm2Motor;
@@ -54,23 +55,25 @@ public class ArmIOSparkMax implements ArmIO {
 	public void updateInputs(ArmIOInputs inputs) {
 		inputs.velocityRadPerSec = arm1Encoder.getVelocity();
 		inputs.appliedVoltage = arm1Motor.getAppliedOutput() * arm1Motor.getBusVoltage();
-		inputs.positionRads = armEncoder.getAbsolutePosition();
+		inputs.positionRads = getPositionRads();
 		inputs.currentAmps = new double[]{arm1Motor.getOutputCurrent()};
 		inputs.tempCelsius = new double[]{arm1Motor.getMotorTemperature()};
+
+		Logger.recordOutput("Arm/RawEncoderOutput", armEncoder.getAbsolutePosition());
 	}
 
 	@Override
 	public double getPositionRads() {
-		return armEncoder.get();
+		double position = armEncoder.getAbsolutePosition();
+		position *= 2 * Math.PI;
+		position += ArmConstants.kArmEncoderOffset;
+		return position * (ArmConstants.kArmEncoderReversed ? -1 : 1);
 	}
 
 	@Override
 	public void setPosition(double setpoint) {
 		// Both motors spin the same and in the same direction
-		double volts = (armPID.calculate(armEncoder.getAbsolutePosition(), setpoint)
-				+ armFF.calculate(armEncoder.getAbsolutePosition(), setpoint));
-		targetAngle = setpoint;
-
+		double volts = (armPID.calculate(getPositionRads(), setpoint) + armFF.calculate(getPositionRads(), setpoint));
 		setInputVoltage(volts);
 	}
 
@@ -79,6 +82,21 @@ public class ArmIOSparkMax implements ArmIO {
 		double appliedVoltage = MathUtil.clamp(volts, -12.0, 12.0);
 		arm1Motor.setVoltage(appliedVoltage);
 		arm2Motor.setVoltage(appliedVoltage);
+	}
+
+	@Override
+	public boolean armPastFrontLimit() {
+		return getPositionRads() < ArmConstants.kMinArmAngle;
+	}
+
+	@Override
+	public boolean armPastBackLimit() {
+		return getPositionRads() > ArmConstants.kMaxArmAngle;
+	}
+
+	@Override
+	public boolean armWithinRange() {
+		return !(armPastFrontLimit() || armPastBackLimit());
 	}
 
 	public void setBrakeMode(boolean brake) {
