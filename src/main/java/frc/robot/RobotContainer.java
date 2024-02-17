@@ -1,22 +1,27 @@
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.ArmMode;
 import frc.robot.Constants.ControllerType;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.arm.*;
+import frc.robot.subsystems.arm.Arm.ArmMode;
 import frc.robot.subsystems.climber.*;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.shooter.*;
 import frc.robot.util.ControllerIO;
+import java.util.Map;
 
 /**
  * This class is where the bulk of the robot should be declared. The structure
@@ -26,11 +31,12 @@ import frc.robot.util.ControllerIO;
 public class RobotContainer {
 	// Subsystems
 	private final Arm arm;
-	private final Climber climber;
+	// private final Climber climber;
 	private final Intake intake;
 	private final Odometry odometry;
 	private final Shooter shooter;
 	private final Swerve swerve;
+	// private final Gyrometer gyro;
 
 	// Joysticks
 	private static final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
@@ -41,37 +47,42 @@ public class RobotContainer {
 	private static final CommandXboxController operatorController = new CommandXboxController(
 			OIConstants.kOperatorControllerPort);
 
+	// Camera
+	public final UsbCamera camera = CameraServer.startAutomaticCapture(0);
+
 	public RobotContainer() {
 		// Create the subsystems with real or simulated hardware depending on current
 		// mode
 		switch (Constants.currentMode) {
 			case REAL -> {
 				arm = new Arm(new ArmIOSparkMax());
-				climber = new Climber(new ClimberIOSparkMax());
+				// climber = new Climber(new ClimberIOSparkMax());
 				intake = new Intake(new IntakeIOSparkMax());
 				odometry = new Odometry();
-				shooter = new Shooter(new ShooterIOSparkMax(), arm, intake);
+				shooter = new Shooter(new ShooterIOSparkMax(), arm);
 				swerve = new Swerve();
+				// gyro = new Gyrometer(swerve);
 			}
 			case SIM -> {
 				arm = new Arm(new ArmIOSim());
-				climber = new Climber(new ClimberIOSim());
+				// climber = new Climber(new ClimberIOSim());
 				intake = new Intake(new IntakeIOSim());
 				odometry = new Odometry();
-				shooter = new Shooter(new ShooterIOSim(), arm, intake);
+				shooter = new Shooter(new ShooterIOSim(), arm);
 				swerve = new Swerve();
+				// gyro = new Gyrometer(swerve);
 			}
 			default -> {
 				arm = new Arm(new ArmIO() {
 				});
-				climber = new Climber(new ClimberIO() {
-				});
+				// climber = new Climber(new ClimberIO() {});
 				intake = new Intake(new IntakeIO() {
 				});
 				odometry = new Odometry();
 				shooter = new Shooter(new ShooterIO() {
-				}, arm, intake);
+				}, arm);
 				swerve = new Swerve();
+				// gyro = new Gyrometer(swerve);
 			}
 		}
 
@@ -86,7 +97,10 @@ public class RobotContainer {
 				() -> driverJoystick.getRawButton(XboxController.Button.kLeftBumper.value),
 				() -> driverJoystick.getRawButton(XboxController.Button.kRightBumper.value)));
 
-		arm.setDefaultCommand(new MoveArm(arm, () -> -1 * operatorJoystick.getRawAxis(ControllerIO.getRightY())));
+		arm.setDefaultCommand(new MoveArm(arm, () -> operatorJoystick.getRawAxis(ControllerIO.getLeftY())));
+
+		Shuffleboard.getTab("Main").add("Camera", camera).withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4)
+				.withProperties(Map.of("rotation", "HALF"));
 
 		configureBindings();
 	}
@@ -98,31 +112,32 @@ public class RobotContainer {
 	 */
 
 	public void configureBindings() {
+		// new JoystickButton(driverJoystick, XboxController.Button.kStart.value)
+		// .onTrue(new InstantCommand(() -> gyro.reset()));
+
 		new JoystickButton(operatorJoystick, XboxController.Button.kLeftBumper.value).whileTrue(new Pickup(intake));
 		new JoystickButton(operatorJoystick, XboxController.Button.kRightBumper.value)
 				.whileTrue(new Shoot(shooter, intake));
-		new JoystickButton(driverJoystick, XboxController.Button.kX.value)
-				.onTrue(new InstantCommand(() -> Lights.getInstance().hasNote = !Lights.getInstance().hasNote));
+
+		new JoystickButton(operatorJoystick, XboxController.Button.kB.value)
+				.onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.TAXI)));
+		new JoystickButton(operatorJoystick, XboxController.Button.kA.value)
+				.onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.ROOMBA)));
+		new JoystickButton(operatorJoystick, XboxController.Button.kY.value)
+				.onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SPEAKER)));
+		new JoystickButton(operatorJoystick, XboxController.Button.kX.value)
+				.onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.AMP)));
+		// new JoystickButton(operatorJoystick, XboxController.Button.kStart.value)
+		// .onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.TRAP)));
+
+		// new JoystickButton(driverJoystick, XboxController.Button.kX.value)
+		// .onTrue(new InstantCommand(() -> Lights.getInstance().hasNote =
+		// !Lights.getInstance().hasNote));
 
 		// new JoystickButton(operatorJoystick, XboxController.Button.kStart.value)
 		// .whileTrue(new Climb(climber, "extend"));
 		// new JoystickButton(operatorJoystick, XboxController.Button.kBack.value)
 		// .whileTrue(new Climb(climber, "retract"));
-
-		new JoystickButton(operatorJoystick, XboxController.Button.kB.value).onTrue(new SetArmAngle(arm, ArmMode.IDLE));
-		new JoystickButton(operatorJoystick, XboxController.Button.kA.value)
-				.onTrue(new SetArmAngle(arm, ArmMode.ROOMBA));
-		new JoystickButton(operatorJoystick, XboxController.Button.kY.value)
-				.onTrue(new SetArmAngle(arm, ArmMode.SPEAKER));
-		new JoystickButton(operatorJoystick, XboxController.Button.kX.value).onTrue(new SetArmAngle(arm, ArmMode.AMP));
-		new JoystickButton(operatorJoystick, XboxController.Button.kStart.value)
-				.onTrue(new SetArmAngle(arm, ArmMode.TRAP));
-
-		// new POVButton(operatorJoystick, -1).whileTrue(new SetArmAngle(arm, 1));
-		// new POVButton(operatorJoystick, 0).whileTrue(new SetArmAngle(arm, 2));
-		// new POVButton(operatorJoystick, 90).whileTrue(new SetArmAngle(arm, 3));
-		// new POVButton(operatorJoystick, 180).whileTrue(new SetArmAngle(arm, 4));
-		// new POVButton(operatorJoystick, 270).whileTrue(new SetArmAngle(arm, 5));
 
 		/*
 		 * NOTE: If you wish to use the TRIGGERS, try this code. NOTE: THIS IS UNTESTED

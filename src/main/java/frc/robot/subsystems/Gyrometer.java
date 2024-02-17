@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+import org.littletonrobotics.junction.Logger;
 
 public class Gyrometer extends SubsystemBase {
 	private Pigeon2 gyro;
@@ -16,16 +17,18 @@ public class Gyrometer extends SubsystemBase {
 	private static final Pose2d initialPose = new Pose2d();
 
 	public Gyrometer(Swerve swerve) {
+		this.swerve = swerve;
 		gyro = new Pigeon2(31);
 		gyro.reset();
-
-		this.swerve = swerve;
 		odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getHeading(), swerve.getModulePositions(),
 				initialPose);
 	}
 
 	@Override
 	public void periodic() {
+		Logger.recordOutput("Odometry/Pose", getPose());
+		Logger.recordOutput("Odometry/Heading", Math.IEEEremainder(getHeading().getRadians(), 2 * Math.PI));
+
 		update();
 	}
 
@@ -38,7 +41,6 @@ public class Gyrometer extends SubsystemBase {
 		odometer.update(getHeading(), swerve.getModulePositions());
 	}
 
-	// return gyro heading as rotation2d
 	// getRotation2d() is CCW+ for the pigeon2, getAngle is CCW-
 	public Rotation2d getHeading() {
 		return gyro.getRotation2d();
