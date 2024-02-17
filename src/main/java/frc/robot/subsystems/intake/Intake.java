@@ -48,8 +48,10 @@ public class Intake extends SubsystemBase {
 		Lights.getInstance().hasNote = (result != null);
 
 		// Record when note passes sensor
-		if (!notePreviouslyDetected && Lights.getInstance().hasNote)
+		if (!notePreviouslyDetected && Lights.getInstance().hasNote) {
+			noteCollected = true;
 			io.stop();
+		}
 
 		// If the note has passed the sensor twice, note has reached storing position
 		// if (noteDetections >= 2) {

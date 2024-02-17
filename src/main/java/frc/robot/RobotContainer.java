@@ -36,7 +36,7 @@ public class RobotContainer {
 	private final Odometry odometry;
 	private final Shooter shooter;
 	private final Swerve swerve;
-	// private final Gyrometer gyro;
+	private final Gyrometer gyro;
 
 	// Joysticks
 	private static final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
@@ -61,7 +61,7 @@ public class RobotContainer {
 				odometry = new Odometry();
 				shooter = new Shooter(new ShooterIOSparkMax(), arm);
 				swerve = new Swerve();
-				// gyro = new Gyrometer(swerve);
+				gyro = new Gyrometer(swerve);
 			}
 			case SIM -> {
 				arm = new Arm(new ArmIOSim());
@@ -70,7 +70,7 @@ public class RobotContainer {
 				odometry = new Odometry();
 				shooter = new Shooter(new ShooterIOSim(), arm);
 				swerve = new Swerve();
-				// gyro = new Gyrometer(swerve);
+				gyro = new Gyrometer(swerve);
 			}
 			default -> {
 				arm = new Arm(new ArmIO() {
@@ -82,7 +82,7 @@ public class RobotContainer {
 				shooter = new Shooter(new ShooterIO() {
 				}, arm);
 				swerve = new Swerve();
-				// gyro = new Gyrometer(swerve);
+				gyro = new Gyrometer(swerve);
 			}
 		}
 
