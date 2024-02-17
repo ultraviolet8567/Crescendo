@@ -1,17 +1,22 @@
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerType;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -48,6 +53,9 @@ public class RobotContainer {
 
 	// Camera
 	public final UsbCamera camera = CameraServer.startAutomaticCapture(0);
+
+	// Auto chooser
+	public final SendableChooser<Command> autoChooser;
 
 	public RobotContainer() {
 		// Create the subsystems with real or simulated hardware depending on current
@@ -98,10 +106,26 @@ public class RobotContainer {
 
 		arm.setDefaultCommand(new MoveArm(arm, () -> operatorJoystick.getRawAxis(ControllerIO.getLeftY())));
 
+		configureBindings();
+
+		// Post webcam feed to Shuffleboard
 		Shuffleboard.getTab("Main").add("Camera", camera).withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4)
 				.withProperties(Map.of("rotation", "HALF"));
 
-		configureBindings();
+		// Configure the PathPlanner auto-builder
+		AutoBuilder.configureHolonomic(gyro::getPose, gyro::resetPose, swerve::getRobotRelativeSpeeds,
+				swerve::setModuleStates, DriveConstants.kHolonomicConfig, () -> {
+					var alliance = DriverStation.getAlliance();
+					if (alliance.isPresent()) {
+						return alliance.get() == Alliance.Red;
+					}
+					return false;
+				}, swerve);
+
+		// Post auto selector to Shuffleboard
+		autoChooser = AutoBuilder.buildAutoChooser("DoNothing");
+		Shuffleboard.getTab("Main").add("Auto", autoChooser).withWidget(BuiltInWidgets.kComboBoxChooser).withSize(2, 1);
+
 	}
 
 	/**
@@ -153,7 +177,7 @@ public class RobotContainer {
 	}
 
 	public Command getAutonomousCommand() {
-		return new AutoDriveOut(swerve);
+		return autoChooser.getSelected();
 	}
 
 	public static Joystick getDriverJoystick() {

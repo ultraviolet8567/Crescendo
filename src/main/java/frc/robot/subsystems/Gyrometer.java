@@ -57,9 +57,14 @@ public class Gyrometer extends SubsystemBase {
 		return -gyro.getRate();
 	}
 
+	// reset just the pose
+	public void resetPose(Pose2d pose) {
+		odometer.resetPosition(getHeading(), swerve.getModulePositions(), pose);
+	}
+
 	// reset odometry
 	public void reset() {
 		gyro.reset();
-		odometer.resetPosition(getHeading(), swerve.getModulePositions(), initialPose);
+		resetPose(initialPose);
 	}
 }

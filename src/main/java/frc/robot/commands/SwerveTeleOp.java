@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -87,9 +86,7 @@ public class SwerveTeleOp extends Command {
 			chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
 		}
 
-		SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
-
-		swerve.setModuleStates(moduleStates);
+		swerve.setModuleStates(chassisSpeeds);
 	}
 
 	@Override
