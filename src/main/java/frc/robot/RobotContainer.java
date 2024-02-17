@@ -153,7 +153,7 @@ public class RobotContainer {
 	}
 
 	public Command getAutonomousCommand() {
-		return null; // Placeholder until we develop automonous commands
+		return new AutoDriveOut(swerve);
 	}
 
 	public static Joystick getDriverJoystick() {
