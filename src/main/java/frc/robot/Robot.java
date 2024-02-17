@@ -56,17 +56,17 @@ public class Robot extends LoggedRobot {
 		switch (Constants.currentMode) {
 			case TUNING :
 			case REAL :
-				Logger.addDataReceiver(new WPILOGWriter(Constants.logpath));
+				// Logger.addDataReceiver(new WPILOGWriter(Constants.logpath));
 				Logger.addDataReceiver(new NT4Publisher());
 				break;
 			case SIM :
 				Logger.addDataReceiver(new NT4Publisher());
 				break;
 			case REPLAY :
-				setUseTiming(false);
-				String logpath = LogFileUtil.findReplayLog();
-				Logger.setReplaySource(new WPILOGReader(logpath));
-				Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logpath, "_sim")));
+				// setUseTiming(false);
+				// String logpath = LogFileUtil.findReplayLog();
+				// Logger.setReplaySource(new WPILOGReader(logpath));
+				// Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logpath, "_sim")));
 				break;
 		}
 
