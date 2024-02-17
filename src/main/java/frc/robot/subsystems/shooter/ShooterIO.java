@@ -8,10 +8,12 @@ public interface ShooterIO {
 		public double topVelocityRPM = 0.0;
 		public double topAppliedVoltage = 0.0;
 		public double topCurrentAmps = 0.0;
+		public double[] topTempCelsius = new double[]{0.0};
 
 		public double bottomVelocityRPM = 0.0;
 		public double bottomAppliedVoltage = 0.0;
 		public double bottomCurrentAmps = 0.0;
+		public double[] bottomTempCelsius = new double[]{0.0};
 	}
 
 	default void updateInputs(ShooterIOInputs inputs) {

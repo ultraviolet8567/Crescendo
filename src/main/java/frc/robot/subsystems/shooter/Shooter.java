@@ -5,7 +5,6 @@ import static frc.robot.Constants.GainsConstants.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.intake.Intake;
 import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
@@ -17,7 +16,6 @@ public class Shooter extends SubsystemBase {
 	private static final LoggedTunableNumber kV = new LoggedTunableNumber("Shooter/kV", shooterGains.ffkV());
 
 	private final Arm arm;
-	private final Intake intake;
 	private final ShooterIO io;
 	private final ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
 
@@ -27,10 +25,9 @@ public class Shooter extends SubsystemBase {
 	 * Initialize all components here, as well as any one-time logic to be completed
 	 * on boot-up
 	 */
-	public Shooter(ShooterIO io, Arm arm, Intake intake) {
+	public Shooter(ShooterIO io, Arm arm) {
 		this.io = io;
 		this.arm = arm;
-		this.intake = intake;
 	}
 
 	/* Runs periodically (about once every 20 ms) */
@@ -47,12 +44,14 @@ public class Shooter extends SubsystemBase {
 
 	/* Define all subsystem-specific methods and enums here */
 	public void shoot() {
-		// if (!intake.noteDetected) {
-		// return;
-		// }
+		targetVel = switch (arm.getArmMode()) {
+			case SPEAKER -> ShooterConstants.kSpeakerRPM.get();
+			case AMP -> ShooterConstants.kAmpRPM.get();
+			case TRAP -> ShooterConstants.kTrapRPM.get();
+			default -> ShooterConstants.kIdleRPM.get();
+		};
 
-		targetVel = arm.getArmMode()[1];
-		io.setVelocity(-targetVel, -targetVel);
+		io.setVelocity(targetVel, targetVel);
 	}
 
 	public void stop() {

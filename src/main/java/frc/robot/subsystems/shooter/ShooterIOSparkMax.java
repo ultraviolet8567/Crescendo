@@ -2,12 +2,13 @@ package frc.robot.subsystems.shooter;
 
 import static frc.robot.Constants.GainsConstants.*;
 
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import frc.robot.Constants.CAN;
 import frc.robot.Constants.ShooterConstants;
@@ -15,7 +16,7 @@ import frc.robot.Constants.ShooterConstants;
 public class ShooterIOSparkMax implements ShooterIO {
 	public final CANSparkFlex shooterTopMotor, shooterBottomMotor;
 	public final RelativeEncoder shooterTopEncoder, shooterBottomEncoder;
-	private final PIDController shooterTopPID, shooterBottomPID;
+	private final SparkPIDController shooterTopPID, shooterBottomPID;
 	private SimpleMotorFeedforward shooterTopFF, shooterBottomFF;
 
 	public ShooterIOSparkMax() {
@@ -25,11 +26,13 @@ public class ShooterIOSparkMax implements ShooterIO {
 		shooterTopMotor.enableVoltageCompensation(12.0);
 		shooterTopMotor.setSmartCurrentLimit(40);
 		shooterTopMotor.setIdleMode(IdleMode.kBrake);
+		shooterTopMotor.setInverted(true);
 
 		shooterBottomMotor = new CANSparkFlex(CAN.kShooterBottomPort, MotorType.kBrushless);
 		shooterBottomMotor.enableVoltageCompensation(12.0);
 		shooterBottomMotor.setSmartCurrentLimit(40);
 		shooterBottomMotor.setIdleMode(IdleMode.kBrake);
+		shooterBottomMotor.setInverted(true);
 
 		shooterTopEncoder = shooterTopMotor.getEncoder();
 		shooterTopEncoder.setVelocityConversionFactor(1.0 / ShooterConstants.kShooterReduction);
@@ -37,10 +40,12 @@ public class ShooterIOSparkMax implements ShooterIO {
 		shooterBottomEncoder = shooterBottomMotor.getEncoder();
 		shooterBottomEncoder.setVelocityConversionFactor(1.0 / ShooterConstants.kShooterReduction);
 
-		shooterTopPID = new PIDController(shooterGains.kP(), shooterGains.kI(), shooterGains.kD());
-		shooterBottomPID = new PIDController(shooterGains.kP(), shooterGains.kI(), shooterGains.kD());
+		shooterTopPID = shooterTopMotor.getPIDController();
+		shooterBottomPID = shooterBottomMotor.getPIDController();
 		shooterTopFF = new SimpleMotorFeedforward(shooterGains.ffkS(), shooterGains.ffkV());
 		shooterBottomFF = new SimpleMotorFeedforward(shooterGains.ffkS(), shooterGains.ffkV());
+
+		setGains(shooterGains.kP(), shooterGains.kI(), shooterGains.kD(), shooterGains.ffkS(), shooterGains.ffkV());
 	}
 
 	@Override
@@ -48,10 +53,12 @@ public class ShooterIOSparkMax implements ShooterIO {
 		inputs.topVelocityRPM = shooterTopEncoder.getVelocity();
 		inputs.topAppliedVoltage = shooterTopMotor.getAppliedOutput() * shooterTopMotor.getBusVoltage();
 		inputs.topCurrentAmps = shooterTopMotor.getOutputCurrent();
+		inputs.topTempCelsius = new double[]{shooterBottomMotor.getMotorTemperature()};
 
 		inputs.bottomVelocityRPM = shooterBottomEncoder.getVelocity();
 		inputs.bottomAppliedVoltage = shooterBottomMotor.getAppliedOutput() * shooterBottomMotor.getBusVoltage();
 		inputs.bottomCurrentAmps = shooterBottomMotor.getOutputCurrent();
+		inputs.bottomTempCelsius = new double[]{shooterBottomMotor.getMotorTemperature()};
 	}
 
 	// Sets the input voltage for the top motor/row of wheels
@@ -78,12 +85,10 @@ public class ShooterIOSparkMax implements ShooterIO {
 	// Sets voltage to match the target velocities
 	@Override
 	public void setVelocity(double topTargetVel, double bottomTargetVel) {
-		double topVolts = shooterTopPID.calculate(shooterTopEncoder.getVelocity(), topTargetVel)
-				+ shooterTopFF.calculate(topTargetVel);
-		double bottomVolts = shooterBottomPID.calculate(shooterBottomEncoder.getVelocity(), bottomTargetVel)
-				+ shooterBottomFF.calculate(bottomTargetVel);
-
-		setInputVoltage(topVolts, bottomVolts);
+		shooterTopPID.setReference(topTargetVel, CANSparkBase.ControlType.kVelocity, 0,
+				shooterTopFF.calculate(topTargetVel));
+		shooterBottomPID.setReference(bottomTargetVel, CANSparkBase.ControlType.kVelocity, 0,
+				shooterBottomFF.calculate(bottomTargetVel));
 	}
 
 	@Override
@@ -92,10 +97,14 @@ public class ShooterIOSparkMax implements ShooterIO {
 	}
 
 	public void setGains(double kP, double kI, double kD, double ffkS, double ffkV) {
-		shooterTopPID.setPID(kP, kI, kD);
+		shooterTopPID.setP(shooterGains.kP());
+		shooterTopPID.setI(shooterGains.kI());
+		shooterTopPID.setD(shooterGains.kD());
 		shooterTopFF = new SimpleMotorFeedforward(ffkS, ffkV);
 
-		shooterBottomPID.setPID(kP, kI, kD);
+		shooterBottomPID.setP(shooterGains.kP());
+		shooterBottomPID.setI(shooterGains.kI());
+		shooterBottomPID.setD(shooterGains.kD());
 		shooterBottomFF = new SimpleMotorFeedforward(ffkS, ffkV);
 	}
 
