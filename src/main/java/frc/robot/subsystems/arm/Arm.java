@@ -56,8 +56,15 @@ public class Arm extends SubsystemBase {
 	}
 
 	public void setTurnSpeed(double factor) {
+		double voltage = factor * ArmConstants.kManualVoltage.get();
 		if (io.armWithinRange()) {
-			io.setInputVoltage(factor * ArmConstants.kManualVoltage.get());
+			io.setInputVoltage(voltage);
+		} else if (io.armPastBackLimit() && voltage <= 0) {
+			io.setInputVoltage(voltage);
+		} else if (io.armPastFrontLimit() && voltage >= 0) {
+			io.setInputVoltage(voltage);
+		} else {
+			io.setInputVoltage(0.0);
 		}
 	}
 

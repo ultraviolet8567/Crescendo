@@ -17,7 +17,6 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.arm.*;
 import frc.robot.subsystems.arm.Arm.ArmMode;
-import frc.robot.subsystems.climber.*;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.shooter.*;
 import frc.robot.util.ControllerIO;
@@ -36,7 +35,7 @@ public class RobotContainer {
 	private final Odometry odometry;
 	private final Shooter shooter;
 	private final Swerve swerve;
-	// private final Gyrometer gyro;
+	private final Gyrometer gyro;
 
 	// Joysticks
 	private static final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
@@ -61,7 +60,7 @@ public class RobotContainer {
 				odometry = new Odometry();
 				shooter = new Shooter(new ShooterIOSparkMax(), arm);
 				swerve = new Swerve();
-				// gyro = new Gyrometer(swerve);
+				gyro = new Gyrometer(swerve);
 			}
 			case SIM -> {
 				arm = new Arm(new ArmIOSim());
@@ -70,7 +69,7 @@ public class RobotContainer {
 				odometry = new Odometry();
 				shooter = new Shooter(new ShooterIOSim(), arm);
 				swerve = new Swerve();
-				// gyro = new Gyrometer(swerve);
+				gyro = new Gyrometer(swerve);
 			}
 			default -> {
 				arm = new Arm(new ArmIO() {
@@ -82,12 +81,12 @@ public class RobotContainer {
 				shooter = new Shooter(new ShooterIO() {
 				}, arm);
 				swerve = new Swerve();
-				// gyro = new Gyrometer(swerve);
+				gyro = new Gyrometer(swerve);
 			}
 		}
 
 		// Configure default commands for driving and arm movement
-		swerve.setDefaultCommand(new SwerveTeleOp(swerve, odometry,
+		swerve.setDefaultCommand(new SwerveTeleOp(swerve, gyro,
 				() -> ControllerIO.inversionY() * driverJoystick.getRawAxis(ControllerIO.getLeftY()),
 				() -> ControllerIO.inversionX() * driverJoystick.getRawAxis(ControllerIO.getLeftX()),
 				() -> ControllerIO.inversionRot() * driverJoystick.getRawAxis(ControllerIO.getRot()),
@@ -112,10 +111,11 @@ public class RobotContainer {
 	 */
 
 	public void configureBindings() {
-		// new JoystickButton(driverJoystick, XboxController.Button.kStart.value)
-		// .onTrue(new InstantCommand(() -> gyro.reset()));
+		new JoystickButton(driverJoystick, XboxController.Button.kStart.value)
+				.onTrue(new InstantCommand(() -> gyro.reset()));
 
 		new JoystickButton(operatorJoystick, XboxController.Button.kLeftBumper.value).whileTrue(new Pickup(intake));
+		new JoystickButton(operatorJoystick, XboxController.Button.kBack.value).whileTrue(new Drop(intake));
 		new JoystickButton(operatorJoystick, XboxController.Button.kRightBumper.value)
 				.whileTrue(new Shoot(shooter, intake));
 

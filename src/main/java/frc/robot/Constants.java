@@ -25,7 +25,7 @@ public final class Constants {
 	public static final RobotType currentRobot = (currentMode == Mode.SIM) ? RobotType.SIMBOT : RobotType.REALBOT;
 
 	public static final ModuleType powerDistributionType = ModuleType.kRev;
-	public static final boolean fieldOriented = false;
+	public static final boolean fieldOriented = true;
 	public static final String logpath = "/media/sda1/";
 
 	public static final Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Red);
@@ -155,10 +155,10 @@ public final class Constants {
 		public static final double kMaxArmAngle = 0.0;
 		public static final double kMinArmAngle = -1.76625;
 
-		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Arm/Max Speed", 3.5);
+		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Arm/Max Speed", 1);
 		public static final LoggedTunableNumber kMaxAcceleration = new LoggedTunableNumber("Arm/Max Acceleration", 1);
 
-		public static final LoggedTunableNumber kManualVoltage = new LoggedTunableNumber("Arm/ManualVoltage", 10);
+		public static final LoggedTunableNumber kManualVoltage = new LoggedTunableNumber("Arm/ManualVoltage", 8);
 
 		// Arm presets
 		public static final double kTaxiAngle = -1.175;
