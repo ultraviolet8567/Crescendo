@@ -41,9 +41,10 @@ public class Arm extends SubsystemBase {
 		Logger.processInputs("Arms", inputs);
 		// Logger.recordOutput("Arm/Mode", armMode);
 
-		LoggedTunableNumber.ifChanged(hashCode(),
-				() -> io.setGains(kP.get(), kI.get(), kD.get(), kS.get(), kV.get(), kA.get(), kG.get()), kP, kI, kD, kS,
-				kV, kA, kG);
+		// LoggedTunableNumber.ifChanged(hashCode(),
+		// () -> io.setGains(kP.get(), kI.get(), kD.get(), kS.get(), kV.get(), kA.get(),
+		// kG.get()), kP, kI, kD, kS,
+		// kV, kA, kG);
 
 		Logger.recordOutput("Arm/Mode", armMode);
 	}

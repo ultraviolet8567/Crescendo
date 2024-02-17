@@ -38,8 +38,9 @@ public class Shooter extends SubsystemBase {
 
 		Logger.recordOutput("Setpoints/ShooterTargetVelocity", targetVel);
 
-		LoggedTunableNumber.ifChanged(hashCode(), () -> io.setGains(kP.get(), kI.get(), kD.get(), kS.get(), kV.get()),
-				kP, kI, kD, kS, kV);
+		// LoggedTunableNumber.ifChanged(hashCode(), () -> io.setGains(kP.get(),
+		// kI.get(), kD.get(), kS.get(), kV.get()),
+		// kP, kI, kD, kS, kV);
 	}
 
 	/* Define all subsystem-specific methods and enums here */
