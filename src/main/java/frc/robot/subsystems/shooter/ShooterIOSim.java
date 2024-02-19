@@ -10,24 +10,26 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.Constants.ShooterConstants;
 
 public class ShooterIOSim implements ShooterIO {
-	private final FlywheelSim topShooterSim = new FlywheelSim(DCMotor.getNEO(1), ShooterConstants.kShooterReduction,
-			0.1);
-	private final FlywheelSim bottomShooterSim = new FlywheelSim(DCMotor.getNEO(1), ShooterConstants.kShooterReduction,
-			0.1);
+	private final FlywheelSim topShooterSim, bottomShooterSim;
 
-	private final PIDController shooterTopPID = new PIDController(shooterGains.kP(), shooterGains.kI(),
-			shooterGains.kD());
-	private final PIDController shooterBottomPID = new PIDController(shooterGains.kP(), shooterGains.kI(),
-			shooterGains.kD());
-	private SimpleMotorFeedforward shooterTopFF = new SimpleMotorFeedforward(shooterGains.ffkS(), shooterGains.ffkV());
-	private SimpleMotorFeedforward shooterBottomFF = new SimpleMotorFeedforward(shooterGains.ffkS(),
-			shooterGains.ffkV());
+	private final PIDController shooterTopPID, shooterBottomPID;
+	private SimpleMotorFeedforward shooterTopFF, shooterBottomFF;
 
-	private double topAppliedVoltage = 0.0;
-	private double bottomAppliedVoltage = 0.0;
+	private double topAppliedVoltage, bottomAppliedVoltage;
 
 	public ShooterIOSim() {
 		System.out.println("[Init] Creating ShooterIOSim");
+
+		topShooterSim = new FlywheelSim(DCMotor.getNEO(1), ShooterConstants.kShooterReduction, 0.1);
+		bottomShooterSim = new FlywheelSim(DCMotor.getNEO(1), ShooterConstants.kShooterReduction, 0.1);
+		shooterTopPID = new PIDController(shooterGains.kP(), shooterGains.kI(), shooterGains.kD());
+
+		shooterBottomPID = new PIDController(shooterGains.kP(), shooterGains.kI(), shooterGains.kD());
+		shooterTopFF = new SimpleMotorFeedforward(shooterGains.ffkS(), shooterGains.ffkV());
+		shooterBottomFF = new SimpleMotorFeedforward(shooterGains.ffkS(), shooterGains.ffkV());
+
+		topAppliedVoltage = 0.0;
+		bottomAppliedVoltage = 0.0;
 	}
 
 	@Override
@@ -37,43 +39,23 @@ public class ShooterIOSim implements ShooterIO {
 
 		inputs.topVelocityRPM = topShooterSim.getAngularVelocityRPM();
 		inputs.topAppliedVoltage = topAppliedVoltage;
-		inputs.topCurrentAmps = topShooterSim.getCurrentDrawAmps();
+		inputs.topCurrentAmps = new double[]{topShooterSim.getCurrentDrawAmps()};
 
 		inputs.bottomVelocityRPM = bottomShooterSim.getAngularVelocityRPM();
 		inputs.bottomAppliedVoltage = bottomAppliedVoltage;
-		inputs.bottomCurrentAmps = bottomShooterSim.getCurrentDrawAmps();
+		inputs.bottomCurrentAmps = new double[]{bottomShooterSim.getCurrentDrawAmps()};
 	}
 
-	// Sets the input voltage for the top motor/row of wheels
 	@Override
 	public void setTopInputVoltage(double volts) {
 		topAppliedVoltage = MathUtil.clamp(volts, -12.0, 12.0);
 		topShooterSim.setInputVoltage(volts);
 	}
 
-	// Sets the input voltage for the bottom motor/row of wheels
 	@Override
 	public void setBottomInputVoltage(double volts) {
 		bottomAppliedVoltage = MathUtil.clamp(volts, -12.0, 12.0);
 		bottomShooterSim.setInputVoltage(volts);
-	}
-
-	// Sets the input voltage for both motors/rows of wheels
-	@Override
-	public void setInputVoltage(double topVolts, double bottomVolts) {
-		setTopInputVoltage(topVolts);
-		setBottomInputVoltage(bottomVolts);
-	}
-
-	// Sets voltage to match the target velocities
-	@Override
-	public void setVelocity(double topTargetVel, double bottomTargetVel) {
-		double topVolts = shooterTopPID.calculate(topShooterSim.getAngularVelocityRPM(), topTargetVel)
-				+ shooterTopFF.calculate(topTargetVel);
-		double bottomVolts = shooterBottomPID.calculate(bottomShooterSim.getAngularVelocityRPM(), bottomTargetVel)
-				+ shooterBottomFF.calculate(bottomTargetVel);
-
-		setInputVoltage(topVolts, bottomVolts);
 	}
 
 	@Override
@@ -87,5 +69,15 @@ public class ShooterIOSim implements ShooterIO {
 
 		shooterBottomPID.setPID(kP, kI, kD);
 		shooterBottomFF = new SimpleMotorFeedforward(ffkS, ffkV);
+	}
+
+	@Override
+	public void setVelocity(double topTargetVel, double bottomTargetVel) {
+		double topVolts = shooterTopPID.calculate(topShooterSim.getAngularVelocityRPM(), topTargetVel)
+				+ shooterTopFF.calculate(topTargetVel);
+		double bottomVolts = shooterBottomPID.calculate(bottomShooterSim.getAngularVelocityRPM(), bottomTargetVel)
+				+ shooterBottomFF.calculate(bottomTargetVel);
+
+		setInputVoltage(topVolts, bottomVolts);
 	}
 }
