@@ -1,5 +1,8 @@
 package frc.robot;
 
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
@@ -25,7 +28,7 @@ public final class Constants {
 	public static final RobotType currentRobot = (currentMode == Mode.SIM) ? RobotType.SIMBOT : RobotType.REALBOT;
 
 	public static final ModuleType powerDistributionType = ModuleType.kRev;
-	public static final boolean fieldOriented = false;
+	public static final boolean fieldOriented = true;
 	public static final String logpath = "/media/sda1/";
 
 	public static final Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Red);
@@ -132,6 +135,16 @@ public final class Constants {
 				* 0.4;
 		public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
 		public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
+
+		public static final HolonomicPathFollowerConfig kHolonomicConfig = new HolonomicPathFollowerConfig(
+				new PIDConstants(0.25, 0.0, 0.0), // Translation PID constants
+				new PIDConstants(0.25, 0.0, 0.0), // Rotation PID constants
+				kTeleDriveMaxSpeedMetersPerSecond, // Max module speed, in m/s
+				Math.sqrt(Math.pow(kTrackWidth, 2) + Math.pow(kWheelBase, 2)) / 2, // Drive base radius in meters.
+																					// Distance from robot center to
+																					// furthest module.
+				new ReplanningConfig() // Default path replanning config. See the API for the options here
+		);
 	}
 
 	public static final class ClimberConstants {
@@ -155,10 +168,10 @@ public final class Constants {
 		public static final double kMaxArmAngle = 0.0;
 		public static final double kMinArmAngle = -1.76625;
 
-		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Arm/Max Speed", 3.5);
+		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Arm/Max Speed", 1);
 		public static final LoggedTunableNumber kMaxAcceleration = new LoggedTunableNumber("Arm/Max Acceleration", 1);
 
-		public static final LoggedTunableNumber kManualVoltage = new LoggedTunableNumber("Arm/ManualVoltage", 10);
+		public static final LoggedTunableNumber kManualVoltage = new LoggedTunableNumber("Arm/ManualVoltage", 8);
 
 		// Arm presets
 		public static final double kTaxiAngle = -1.175;

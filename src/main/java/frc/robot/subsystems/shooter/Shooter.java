@@ -1,6 +1,6 @@
 package frc.robot.subsystems.shooter;
 
-import static frc.robot.Constants.GainsConstants.*;
+import static frc.robot.Constants.GainsConstants.shooterGains;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
@@ -19,8 +19,6 @@ public class Shooter extends SubsystemBase {
 	private final ShooterIO io;
 	private final ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
 
-	private double targetVel = ShooterConstants.kIdleRPM.get();
-
 	/*
 	 * Initialize all components here, as well as any one-time logic to be completed
 	 * on boot-up
@@ -36,7 +34,7 @@ public class Shooter extends SubsystemBase {
 		io.updateInputs(inputs);
 		Logger.processInputs("Shooter", inputs);
 
-		Logger.recordOutput("Setpoints/ShooterTargetVelocity", targetVel);
+		Logger.recordOutput("Shooter/TargetVelocity", getTargetVelocity());
 
 		LoggedTunableNumber.ifChanged(hashCode(), () -> io.setGains(kP.get(), kI.get(), kD.get(), kS.get(), kV.get()),
 				kP, kI, kD, kS, kV);
@@ -44,14 +42,21 @@ public class Shooter extends SubsystemBase {
 
 	/* Define all subsystem-specific methods and enums here */
 	public void shoot() {
-		targetVel = switch (arm.getArmMode()) {
-			case SPEAKER -> ShooterConstants.kSpeakerRPM.get();
-			case AMP -> ShooterConstants.kAmpRPM.get();
-			case TRAP -> ShooterConstants.kTrapRPM.get();
-			default -> ShooterConstants.kIdleRPM.get();
-		};
-
+		double targetVel = getTargetVelocity();
 		io.setVelocity(targetVel, targetVel);
+	}
+
+	public double getTargetVelocity() {
+		switch (arm.getArmMode()) {
+			case SPEAKER :
+				return ShooterConstants.kSpeakerRPM.get();
+			case AMP :
+				return ShooterConstants.kAmpRPM.get();
+			case TRAP :
+				return ShooterConstants.kTrapRPM.get();
+			default :
+				return ShooterConstants.kIdleRPM.get();
+		}
 	}
 
 	public void stop() {

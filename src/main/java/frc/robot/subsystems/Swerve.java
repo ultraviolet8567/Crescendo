@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -40,8 +41,7 @@ public class Swerve extends SubsystemBase {
 	public void periodic() {
 		// FL angle, FL speed, FR angle, FR speed, BL angle, BL speed, BR angle, BR
 		// speed
-		Logger.recordOutput("Measured/SwerveModuleStates", new SwerveModuleState[]{frontLeft.getState(),
-				frontRight.getState(), backLeft.getState(), backRight.getState()});
+		Logger.recordOutput("Measured/SwerveModuleStates", getModuleStates());
 
 		// FL absolute encoder angle, FR absolute encoder angle, BL absolute encoder
 		// angle, BR absolute
@@ -54,6 +54,20 @@ public class Swerve extends SubsystemBase {
 	public SwerveModulePosition[] getModulePositions() {
 		return new SwerveModulePosition[]{frontLeft.getModulePosition(), frontRight.getModulePosition(),
 				backLeft.getModulePosition(), backRight.getModulePosition()};
+	}
+
+	public ChassisSpeeds getRobotRelativeSpeeds() {
+		return DriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
+	}
+
+	public SwerveModuleState[] getModuleStates() {
+		return new SwerveModuleState[]{frontLeft.getState(), frontRight.getState(), backLeft.getState(),
+				backRight.getState()};
+	}
+
+	public void setModuleStates(ChassisSpeeds chassisSpeeds) {
+		SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+		setModuleStates(moduleStates);
 	}
 
 	public void setModuleStates(SwerveModuleState[] desiredStates) {

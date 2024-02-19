@@ -1,6 +1,6 @@
 package frc.robot.subsystems.arm;
 
-import static frc.robot.Constants.GainsConstants.*;
+import static frc.robot.Constants.GainsConstants.armGains;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -36,41 +36,45 @@ public class Arm extends SubsystemBase {
 	@Override
 	public void periodic() {
 		io.updateInputs(inputs);
-		io.update();
-
 		Logger.processInputs("Arms", inputs);
-		// Logger.recordOutput("Arm/Mode", armMode);
 
+		Logger.recordOutput("Arm/Mode", armMode);
+
+		// Check if the gains configuration has changed
 		LoggedTunableNumber.ifChanged(hashCode(),
 				() -> io.setGains(kP.get(), kI.get(), kD.get(), kS.get(), kV.get(), kA.get(), kG.get()), kP, kI, kD, kS,
 				kV, kA, kG);
 
-		Logger.recordOutput("Arm/Mode", armMode);
 	}
 
-	/* Define all subsystem-specific methods and enums here */
-	public void setTargetAngle(double targetAngle) {
+	// Move arm to exact angle
+	public void setPosition(double targetAngle) {
 		if (io.armWithinRange()) {
 			io.setPosition(targetAngle);
 		}
 	}
 
+	// Manually control arm
 	public void setTurnSpeed(double factor) {
-		if (io.armWithinRange()) {
-			io.setInputVoltage(factor * ArmConstants.kManualVoltage.get());
-		}
-	}
+		double voltage = factor * ArmConstants.kManualVoltage.get();
 
-	public void setArmMode(ArmMode mode) {
-		armMode = mode;
-
-		if (armMode == ArmMode.MANUAL) {
-			resetPIDControllers();
+		// Make sure the arm isn't moving out of operable range
+		if (io.armWithinRange() || io.armPastBackLimit() && voltage <= 0 || io.armPastFrontLimit() && voltage >= 0) {
+			io.setInputVoltage(voltage);
+		} else {
+			io.stop();
 		}
 	}
 
 	public ArmMode getArmMode() {
 		return armMode;
+	}
+
+	public void setArmMode(ArmMode mode) {
+		armMode = mode;
+		if (armMode == ArmMode.MANUAL) {
+			resetPIDControllers();
+		}
 	}
 
 	public double getPresetAngle() {

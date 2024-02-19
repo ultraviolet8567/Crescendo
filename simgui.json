@@ -34,6 +34,7 @@
     },
     "Connections": {
       "open": true
-    }
+    },
+    "visible": true
   }
 }

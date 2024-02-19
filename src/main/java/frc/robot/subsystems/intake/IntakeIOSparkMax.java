@@ -7,6 +7,8 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.Constants.CAN;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.util.SparkConfig;
+import frc.robot.util.SparkConfig.SparkType;
 
 public class IntakeIOSparkMax implements IntakeIO {
 	public final CANSparkMax intakeMotor;
@@ -16,9 +18,7 @@ public class IntakeIOSparkMax implements IntakeIO {
 		System.out.println("[Init] Creating IntakeIOSparkMax");
 
 		intakeMotor = new CANSparkMax(CAN.kIntakePort, MotorType.kBrushless);
-		intakeMotor.enableVoltageCompensation(12.0);
-		intakeMotor.setSmartCurrentLimit(40);
-		intakeMotor.setIdleMode(IdleMode.kBrake);
+		SparkConfig.config(intakeMotor, SparkType.kSparkMax);
 
 		intakeEncoder = intakeMotor.getEncoder();
 		intakeEncoder.setVelocityConversionFactor(1.0 / IntakeConstants.kIntakeReduction * 2 * Math.PI);
