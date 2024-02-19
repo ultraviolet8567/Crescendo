@@ -13,10 +13,10 @@ public class Gyrometer extends SubsystemBase {
 	private static final Pose2d initialPose = new Pose2d(0, 0, new Rotation2d(0));
 
 	private Swerve swerve;
-	
+
 	private Pigeon2 gyro;
 	private SwerveDriveOdometry odometer;
-	
+
 	public Gyrometer(Swerve swerve) {
 		this.swerve = swerve;
 
@@ -53,7 +53,7 @@ public class Gyrometer extends SubsystemBase {
 		// return gyro.getRotation3d().unaryMinus(); <-- if we need the negative version
 	}
 
-	public double getRate() {	
+	public double getRate() {
 		// Rate of rotation (degrees/sec), negate for CCW+
 		return -gyro.getRate();
 	}

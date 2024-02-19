@@ -42,7 +42,8 @@ public class RobotContainer {
 	// Joysticks
 	private static final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
 	private static final Joystick operatorJoystick = new Joystick(OIConstants.kOperatorControllerPort);
-	// private static final CommandXboxController operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
+	// private static final CommandXboxController operatorController = new
+	// CommandXboxController(OIConstants.kOperatorControllerPort);
 
 	// Camera
 	public final UsbCamera camera = CameraServer.startAutomaticCapture(0);
@@ -140,14 +141,17 @@ public class RobotContainer {
 				.onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.ROOMBA)));
 		new JoystickButton(operatorJoystick, XboxController.Button.kX.value)
 				.onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.AMP)));
-		// new JoystickButton(operatorJoystick, XboxController.Button.kStart.value).onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.TRAP)));
+		// new JoystickButton(operatorJoystick,
+		// XboxController.Button.kStart.value).onTrue(new InstantCommand(() ->
+		// arm.setArmMode(ArmMode.TRAP)));
 
 		new JoystickButton(operatorJoystick, XboxController.Button.kBack.value).whileTrue(new Drop(intake));
 
 		// Overrides
 		new JoystickButton(driverJoystick, XboxController.Button.kStart.value)
 				.onTrue(new InstantCommand(() -> gyro.reset()));
-		new JoystickButton(driverJoystick, XboxController.Button.kBack.value).onTrue(new InstantCommand(() -> Lights.getInstance().hasNote = !Lights.getInstance().hasNote));
+		new JoystickButton(driverJoystick, XboxController.Button.kBack.value)
+				.onTrue(new InstantCommand(() -> Lights.getInstance().hasNote = !Lights.getInstance().hasNote));
 
 		// new JoystickButton(operatorJoystick, XboxController.Button.kStart.value)
 		// .whileTrue(new Climb(climber, "extend"));

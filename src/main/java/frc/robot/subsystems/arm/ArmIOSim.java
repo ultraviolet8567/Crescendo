@@ -1,6 +1,6 @@
 package frc.robot.subsystems.arm;
 
-import static frc.robot.Constants.GainsConstants.*;
+import static frc.robot.Constants.GainsConstants.armGains;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;

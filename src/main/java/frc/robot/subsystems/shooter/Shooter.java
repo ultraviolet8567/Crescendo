@@ -1,6 +1,6 @@
 package frc.robot.subsystems.shooter;
 
-import static frc.robot.Constants.GainsConstants.*;
+import static frc.robot.Constants.GainsConstants.shooterGains;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
@@ -36,8 +36,7 @@ public class Shooter extends SubsystemBase {
 
 		Logger.recordOutput("Shooter/TargetVelocity", getTargetVelocity());
 
-		LoggedTunableNumber.ifChanged(hashCode(),
-				() -> io.setGains(kP.get(), kI.get(), kD.get(), kS.get(), kV.get()),
+		LoggedTunableNumber.ifChanged(hashCode(), () -> io.setGains(kP.get(), kI.get(), kD.get(), kS.get(), kV.get()),
 				kP, kI, kD, kS, kV);
 	}
 
