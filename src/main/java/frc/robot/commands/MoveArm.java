@@ -38,7 +38,7 @@ public class MoveArm extends Command {
 	}
 
 	public void automatic() {
-		arm.setTargetAngle(arm.getPresetAngle());
+		arm.setPosition(arm.getPresetAngle());
 	}
 
 }

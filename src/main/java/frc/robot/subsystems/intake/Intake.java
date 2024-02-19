@@ -15,13 +15,10 @@ public class Intake extends SubsystemBase {
 	private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
 
 	private boolean notePreviouslyDetected = false;
-	private int noteDetections = 0;
 	private boolean noteCollected = false;
 
 	private ColorSensorV3 sensor;
 	private ColorMatch matcher;
-
-	private double[] detectedColor;
 
 	/*
 	 * Initialize all components here, as well as any one-time logic to be completed
@@ -32,7 +29,6 @@ public class Intake extends SubsystemBase {
 
 		sensor = new ColorSensorV3(I2C.Port.kOnboard);
 		matcher = new ColorMatch();
-
 		matcher.addColorMatch(Constants.kNoteColor);
 		matcher.setConfidenceThreshold(Constants.kColorConfidenceThreshold);
 	}
@@ -43,30 +39,22 @@ public class Intake extends SubsystemBase {
 		io.updateInputs(inputs);
 		Logger.processInputs("Intake", inputs);
 
+		Logger.recordOutput("HoldingNote", Lights.getInstance().hasNote);
+		Logger.recordOutput("Intake/DetectedColor",
+				new double[]{sensor.getColor().red, sensor.getColor().green, sensor.getColor().blue});
+		Logger.recordOutput("Intake/NoteCollected", noteCollected);
+
 		// If the sensor sees orange, we have a note in the system
 		ColorMatchResult result = matcher.matchColor(sensor.getColor());
 		Lights.getInstance().hasNote = (result != null);
 
-		// Record when note passes sensor
+		// Stop intake when note collected
 		if (!notePreviouslyDetected && Lights.getInstance().hasNote)
 			io.stop();
 
-		// If the note has passed the sensor twice, note has reached storing position
-		// if (noteDetections >= 2) {
-		// io.stop();
-		// noteDetections = 0;
-		// noteCollected = true;
-		// }
-
-		detectedColor = new double[]{sensor.getColor().red, sensor.getColor().green, sensor.getColor().blue};
-
 		notePreviouslyDetected = Lights.getInstance().hasNote;
-		Logger.recordOutput("Note Intaked", Lights.getInstance().hasNote);
-		Logger.recordOutput("Intake/DetectedColor", detectedColor);
-		Logger.recordOutput("Intake/NoteCollected", noteCollected);
 	}
 
-	/* Define all subsystem-specific methods and enums here */
 	public void pickup() {
 		if (!Lights.getInstance().hasNote) {
 			io.setInputVoltage(IntakeConstants.kIntakeVoltage.get());

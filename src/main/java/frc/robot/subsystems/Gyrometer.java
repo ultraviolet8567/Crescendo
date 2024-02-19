@@ -10,16 +10,19 @@ import frc.robot.Constants.DriveConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class Gyrometer extends SubsystemBase {
-	private Pigeon2 gyro;
-	private Swerve swerve;
-	private SwerveDriveOdometry odometer;
-	// pose2d will need to be updated with the estimated pose of the robot
-	private static final Pose2d initialPose = new Pose2d();
+	private static final Pose2d initialPose = new Pose2d(0, 0, new Rotation2d(0));
 
+	private Swerve swerve;
+	
+	private Pigeon2 gyro;
+	private SwerveDriveOdometry odometer;
+	
 	public Gyrometer(Swerve swerve) {
 		this.swerve = swerve;
+
 		gyro = new Pigeon2(31);
 		gyro.reset();
+
 		odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getHeading(), swerve.getModulePositions(),
 				initialPose);
 	}
@@ -32,7 +35,6 @@ public class Gyrometer extends SubsystemBase {
 		update();
 	}
 
-	// returns pose
 	public Pose2d getPose() {
 		return odometer.getPoseMeters();
 	}
@@ -41,28 +43,25 @@ public class Gyrometer extends SubsystemBase {
 		odometer.update(getHeading(), swerve.getModulePositions());
 	}
 
-	// getRotation2d() is CCW+ for the pigeon2, getAngle is CCW-
 	public Rotation2d getHeading() {
+		// getRotation2d() is CCW+ for the Pigeon, getAngle is CCW-
 		return gyro.getRotation2d();
 	}
 
-	// return gyro heading as rotation3d
 	public Rotation3d getRotation3d() {
 		return gyro.getRotation3d();
 		// return gyro.getRotation3d().unaryMinus(); <-- if we need the negative version
 	}
 
-	// rate in degrees per second, negate to make CCW positive
-	public double getRate() {
+	public double getRate() {	
+		// Rate of rotation (degrees/sec), negate for CCW+
 		return -gyro.getRate();
 	}
 
-	// reset just the pose
 	public void resetPose(Pose2d pose) {
 		odometer.resetPosition(getHeading(), swerve.getModulePositions(), pose);
 	}
 
-	// reset odometry
 	public void reset() {
 		gyro.reset();
 		resetPose(initialPose);

@@ -36,49 +36,45 @@ public class Arm extends SubsystemBase {
 	@Override
 	public void periodic() {
 		io.updateInputs(inputs);
-		io.update();
-
 		Logger.processInputs("Arms", inputs);
-		// Logger.recordOutput("Arm/Mode", armMode);
-
-		// LoggedTunableNumber.ifChanged(hashCode(),
-		// () -> io.setGains(kP.get(), kI.get(), kD.get(), kS.get(), kV.get(), kA.get(),
-		// kG.get()), kP, kI, kD, kS,
-		// kV, kA, kG);
 
 		Logger.recordOutput("Arm/Mode", armMode);
+
+		// Check if the gains configuration has changed
+		LoggedTunableNumber.ifChanged(hashCode(),
+				() -> io.setGains(kP.get(), kI.get(), kD.get(), kS.get(), kV.get(), kA.get(), kG.get()), kP, kI, kD, kS,
+				kV, kA, kG);
+
 	}
 
-	/* Define all subsystem-specific methods and enums here */
-	public void setTargetAngle(double targetAngle) {
+	// Move arm to exact angle
+	public void setPosition(double targetAngle) {
 		if (io.armWithinRange()) {
 			io.setPosition(targetAngle);
 		}
 	}
 
+	// Manually control arm
 	public void setTurnSpeed(double factor) {
 		double voltage = factor * ArmConstants.kManualVoltage.get();
-		if (io.armWithinRange()) {
-			io.setInputVoltage(voltage);
-		} else if (io.armPastBackLimit() && voltage <= 0) {
-			io.setInputVoltage(voltage);
-		} else if (io.armPastFrontLimit() && voltage >= 0) {
+
+		// Make sure the arm isn't moving out of operable range
+		if (io.armWithinRange() || io.armPastBackLimit() && voltage <= 0 || io.armPastFrontLimit() && voltage >= 0) {
 			io.setInputVoltage(voltage);
 		} else {
-			io.setInputVoltage(0.0);
-		}
-	}
-
-	public void setArmMode(ArmMode mode) {
-		armMode = mode;
-
-		if (armMode == ArmMode.MANUAL) {
-			resetPIDControllers();
+			io.stop();
 		}
 	}
 
 	public ArmMode getArmMode() {
 		return armMode;
+	}
+
+	public void setArmMode(ArmMode mode) {
+		armMode = mode;
+		if (armMode == ArmMode.MANUAL) {
+			resetPIDControllers();
+		}
 	}
 
 	public double getPresetAngle() {

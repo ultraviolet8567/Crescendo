@@ -15,14 +15,13 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
  */
 public class LoggedTunableNumber implements DoubleSupplier {
 	private static final String tableKey = "TunableNumbers";
+	private static final boolean tuningMode = Constants.currentMode == Mode.TUNING;
 
 	private final String key;
 	private boolean hasDefault = false;
 	private double defaultValue;
 	private LoggedDashboardNumber dashboardNumber;
 	private Map<Integer, Double> lastHasChangedValues = new HashMap<>();
-
-	private boolean tuningMode = false;
 
 	/**
 	 * Create a new LoggedTunableNumber
@@ -32,7 +31,6 @@ public class LoggedTunableNumber implements DoubleSupplier {
 	 */
 	public LoggedTunableNumber(String dashboardKey) {
 		this.key = tableKey + "/" + dashboardKey;
-		tuningMode = Constants.currentMode == Mode.TUNING;
 	}
 
 	/**
@@ -114,8 +112,10 @@ public class LoggedTunableNumber implements DoubleSupplier {
 	 *            All tunable numbers to check
 	 */
 	public static void ifChanged(int id, Consumer<double[]> action, LoggedTunableNumber... tunableNumbers) {
-		if (Arrays.stream(tunableNumbers).anyMatch(tunableNumber -> tunableNumber.hasChanged(id))) {
-			action.accept(Arrays.stream(tunableNumbers).mapToDouble(LoggedTunableNumber::get).toArray());
+		if (tuningMode) {
+			if (Arrays.stream(tunableNumbers).anyMatch(tunableNumber -> tunableNumber.hasChanged(id))) {
+				action.accept(Arrays.stream(tunableNumbers).mapToDouble(LoggedTunableNumber::get).toArray());
+			}
 		}
 	}
 
