@@ -49,7 +49,7 @@ public class Intake extends SubsystemBase {
 		Lights.getInstance().hasNote = (result != null);
 
 		// Stop intake when note collected
-		if (!notePreviouslyDetected && Lights.getInstance().hasNote)
+		if (!notePreviouslyDetected && Lights.getInstance().hasNote) {
 			io.stop();
 		}
 

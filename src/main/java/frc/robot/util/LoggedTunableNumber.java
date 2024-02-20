@@ -1,7 +1,6 @@
 package frc.robot.util;
 
 import frc.robot.Constants;
-import frc.robot.Constants.Mode;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +14,6 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
  */
 public class LoggedTunableNumber implements DoubleSupplier {
 	private static final String tableKey = "TunableNumbers";
-	private static final boolean tuningMode = Constants.currentMode == Mode.TUNING;
 
 	private final String key;
 	private boolean hasDefault = false;
@@ -56,7 +54,7 @@ public class LoggedTunableNumber implements DoubleSupplier {
 		if (!hasDefault) {
 			hasDefault = true;
 			this.defaultValue = defaultValue;
-			if (tuningMode) {
+			if (Constants.tuningMode) {
 				dashboardNumber = new LoggedDashboardNumber(key, defaultValue);
 			}
 		}
@@ -71,7 +69,7 @@ public class LoggedTunableNumber implements DoubleSupplier {
 		if (!hasDefault) {
 			return 0.0;
 		} else {
-			return tuningMode ? dashboardNumber.get() : defaultValue;
+			return Constants.tuningMode ? dashboardNumber.get() : defaultValue;
 		}
 	}
 
@@ -86,7 +84,7 @@ public class LoggedTunableNumber implements DoubleSupplier {
 	 *         called, false otherwise.
 	 */
 	public boolean hasChanged(int id) {
-		if (!tuningMode)
+		if (!Constants.tuningMode)
 			return false;
 		double currentValue = get();
 		Double lastValue = lastHasChangedValues.get(id);
@@ -112,7 +110,7 @@ public class LoggedTunableNumber implements DoubleSupplier {
 	 *            All tunable numbers to check
 	 */
 	public static void ifChanged(int id, Consumer<double[]> action, LoggedTunableNumber... tunableNumbers) {
-		if (tuningMode) {
+		if (Constants.tuningMode) {
 			if (Arrays.stream(tunableNumbers).anyMatch(tunableNumber -> tunableNumber.hasChanged(id))) {
 				action.accept(Arrays.stream(tunableNumbers).mapToDouble(LoggedTunableNumber::get).toArray());
 			}

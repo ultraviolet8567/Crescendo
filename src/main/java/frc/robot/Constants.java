@@ -9,6 +9,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.util.LoggedTunableNumber;
 
@@ -24,12 +25,12 @@ public final class Constants {
 	 * Odometry - Forward = x+ - Left = y+ - Counterclockwise = z+
 	 */
 
-	public static final Mode currentMode = Mode.REAL;
-	public static final RobotType currentRobot = (currentMode == Mode.SIM) ? RobotType.SIMBOT : RobotType.REALBOT;
+	public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
+	public static final RobotType currentRobot = (currentMode == Mode.REAL) ? RobotType.REALBOT : RobotType.SIMBOT;
+	public static final boolean tuningMode = true;
 
 	public static final ModuleType powerDistributionType = ModuleType.kRev;
 	public static final boolean fieldOriented = true;
-	public static final String logpath = "/media/sda1/";
 
 	public static final Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Red);
 
@@ -228,8 +229,6 @@ public final class Constants {
 		REAL,
 		/** Running a simulator */
 		SIM,
-		/** In tuning mode */
-		TUNING,
 		/** Replaying from a log file */
 		REPLAY
 	}
