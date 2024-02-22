@@ -8,6 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN;
 import frc.robot.Constants.DriveConstants;
+import org.littletonrobotics.junction.Logger;
 
 public class Swerve extends SubsystemBase {
 	private final SwerveModule frontLeft, frontRight, backLeft, backRight;
@@ -38,11 +39,15 @@ public class Swerve extends SubsystemBase {
 	}
 
 	public void periodic() {
-		// FL angle, FL speed, FR angle, FR speed, BL angle, BL speed, BR angle, BR speed
+		// FL angle, FL speed, FR angle, FR speed, BL angle, BL speed, BR angle, BR
+		// speed
 		Logger.recordOutput("Measured/SwerveModuleStates", getModuleStates());
 
-		// FL absolute encoder angle, FR absolute encoder angle, BL absolute encoder angle, BR absolute encoder angle
-		Logger.recordOutput("AbsoluteEncoders/Swerve", new double[]{frontLeft.getAbsoluteEncoderAngle(), frontRight.getAbsoluteEncoderAngle(), backLeft.getAbsoluteEncoderAngle(), backRight.getAbsoluteEncoderAngle()});
+		// FL absolute encoder angle, FR absolute encoder angle, BL absolute encoder
+		// angle, BR absolute encoder angle
+		Logger.recordOutput("AbsoluteEncoders/Swerve",
+				new double[]{frontLeft.getAbsoluteEncoderAngle(), frontRight.getAbsoluteEncoderAngle(),
+						backLeft.getAbsoluteEncoderAngle(), backRight.getAbsoluteEncoderAngle()});
 	}
 
 	public SwerveModulePosition[] getModulePositions() {

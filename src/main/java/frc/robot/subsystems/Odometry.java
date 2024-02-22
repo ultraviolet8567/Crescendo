@@ -1,4 +1,4 @@
-// package frc.robot.subsystems;
+package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -24,7 +24,7 @@ public class Odometry extends SubsystemBase {
 		vision.update();
 	}
 
-	// calculate weighted average 
+	// calculate weighted average
 	public double getAverage() {
 		return add(vision.getDistance(), visionWeight) + add(gyro.getPose(), gyroWeight);
 	}
@@ -50,6 +50,6 @@ public class Odometry extends SubsystemBase {
 	}
 
 	public Rotation2d getRotation2d() {
-		return new Rotation2d(); 
+		return new Rotation2d();
 	}
 }

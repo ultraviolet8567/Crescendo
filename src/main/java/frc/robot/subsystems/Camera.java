@@ -1,17 +1,15 @@
 package frc.robot.subsystems;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.photonvision.PhotonCamera;
-import org.photonvision.targeting.PhotonTrackedTarget;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Camera extends SubsystemBase {
 	private PhotonCamera camera;
@@ -74,7 +72,7 @@ public class Camera extends SubsystemBase {
 
 		if (result.hasTargets()) {
 			List<PhotonTrackedTarget> targets = result.getTargets();
-			
+
 			for (PhotonTrackedTarget target : targets) {
 				if (target.getFiducialId() == tag) {
 					list.add(target.getBestCameraToTarget());
