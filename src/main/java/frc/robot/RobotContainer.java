@@ -34,7 +34,6 @@ public class RobotContainer {
 	private final KMeans kmeans;
 	private final Vision vision;
 	private final Odometry odometry;
-	private final Test test;
 	private final Arm arm;
 	// private final Climber climber;
 	private final Intake intake;
@@ -92,9 +91,8 @@ public class RobotContainer {
 		}
 
 		kmeans = new KMeans();
-		vision = new Vision(kmeans, gyro);
+		vision = new Vision(kmeans);
 		odometry = new Odometry(vision, gyro);
-		test = new Test(kmeans);
 
 		// Configure default commands for driving and arm movement
 		swerve.setDefaultCommand(new SwerveTeleOp(swerve, gyro,

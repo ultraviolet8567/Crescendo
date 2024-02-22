@@ -6,6 +6,8 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
@@ -84,9 +86,12 @@ public final class Constants {
 	}
 
 	public static final class Cameras {
-		public static final Transform3d frontLefttoRobot = new Transform3d();
-		public static final Transform3d frontRighttoRobot = new Transform3d();
-		public static final Transform3d backToRobot = new Transform3d();
+		public static final Transform3d frontLefttoRobot = new Transform3d(new Translation3d(Units.inchesToMeters(10.5),Units.inchesToMeters(9), Units.inchesToMeters(4.5)),
+																		new Rotation3d(Math.PI, Math.PI/6, Math.PI/3));
+		public static final Transform3d frontRighttoRobot = new Transform3d(new Translation3d(Units.inchesToMeters(9.5), Units.inchesToMeters(-9.5), Units.inchesToMeters(4.5)),
+																		new Rotation3d(Math.PI, Math.PI/6, -Math.PI/3));
+		public static final Transform3d backToRobot = new Transform3d(new Translation3d(Units.inchesToMeters(-12),Units.inchesToMeters(-8), Units.inchesToMeters(4.5)),
+																		new Rotation3d(Math.PI, Math.PI/6, Math.PI));
 	}
 
 	public static final class ModuleConstants {
