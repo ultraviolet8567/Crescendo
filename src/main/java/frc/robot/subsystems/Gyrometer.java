@@ -13,18 +13,22 @@ public class Gyrometer extends SubsystemBase {
 	private static final Pose2d initialPose = new Pose2d(0, 0, new Rotation2d(0));
 
 	private Swerve swerve;
+  private Vision vision;
 
 	private Pigeon2 gyro;
 	private SwerveDriveOdometry odometer;
 
-	public Gyrometer(Swerve swerve) {
+	public Gyrometer(Swerve swerve, Vision vision) {
 		this.swerve = swerve;
+    this.vision = vision;
 
 		gyro = new Pigeon2(31);
 		gyro.reset();
 
-		odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getHeading(), swerve.getModulePositions(),
-				initialPose);
+		// odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getHeading(), swerve.getModulePositions(), initialPose);
+    odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getHeading(), swerve.getModulePositions(),
+				new Pose2d(vision.getDistance().getTranslation().toTranslation2d(),
+						vision.getDistance().getRotation().toRotation2d()));
 	}
 
 	@Override
@@ -43,6 +47,11 @@ public class Gyrometer extends SubsystemBase {
 		odometer.update(getHeading(), swerve.getModulePositions());
 	}
 
+	// return inverted pose
+	public Pose2d getInvertedPose() {
+		return new Pose2d(-getPose().getX(), -getPose().getY(), getPose().getRotation());
+	}
+  
 	public Rotation2d getHeading() {
 		// getRotation2d() is CCW+ for the Pigeon, getAngle is CCW-
 		return gyro.getRotation2d();
@@ -52,14 +61,17 @@ public class Gyrometer extends SubsystemBase {
 		return gyro.getRotation3d();
 		// return gyro.getRotation3d().unaryMinus(); <-- if we need the negative version
 	}
-
+  
 	public double getRate() {
 		// Rate of rotation (degrees/sec), negate for CCW+
 		return -gyro.getRate();
 	}
 
 	public void resetPose(Pose2d pose) {
-		odometer.resetPosition(getHeading(), swerve.getModulePositions(), pose);
+		// odometer.resetPosition(getHeading(), swerve.getModulePositions(), pose);
+    odometer.resetPosition(getHeading(), swerve.getModulePositions(),
+				new Pose2d(vision.getDistance().getTranslation().toTranslation2d(),
+						vision.getDistance().getRotation().toRotation2d()));
 	}
 
 	public void reset() {

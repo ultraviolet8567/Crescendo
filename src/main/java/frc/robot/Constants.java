@@ -1,5 +1,8 @@
 package frc.robot;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Transform3d;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -34,6 +37,8 @@ public final class Constants {
 
 	public static final Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Red);
 
+	public static final AprilTagFields field = AprilTagFields.k2024Crescendo;
+	public static final AprilTagFieldLayout fieldLayout = field.loadAprilTagLayoutField();
 	public static final boolean lightsExist = false;
 
 	// Color of note and detection tolerance, subject to change.
@@ -76,6 +81,12 @@ public final class Constants {
 		public static final int kFrontRightTurningMotorPort = 22;
 		public static final int kBackLeftTurningMotorPort = 23;
 		public static final int kBackRightTurningMotorPort = 24;
+	}
+
+	public static final class Cameras {
+		public static final Transform3d frontLefttoRobot = new Transform3d();
+		public static final Transform3d frontRighttoRobot = new Transform3d();
+		public static final Transform3d backToRobot = new Transform3d();
 	}
 
 	public static final class ModuleConstants {

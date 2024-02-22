@@ -31,6 +31,12 @@ import java.util.Map;
  */
 public class RobotContainer {
 	// Subsystems
+	private static final KMeans kmeans = new KMeans();
+	private static final Vision vision = new Vision(kmeans);
+	private static final Odometry odometry = new Odometry(vision, gyro);
+	private static final Test test = new Test(kmeans);
+
+	// alliance color
 	private final Arm arm;
 	// private final Climber climber;
 	private final Intake intake;
@@ -62,7 +68,7 @@ public class RobotContainer {
 				// odometry = new Odometry();
 				shooter = new Shooter(new ShooterIOSparkMax(), arm);
 				swerve = new Swerve();
-				gyro = new Gyrometer(swerve);
+				gyro = new Gyrometer(swerve, vision);
 			}
 			case SIM -> {
 				arm = new Arm(new ArmIOSim());
@@ -71,7 +77,7 @@ public class RobotContainer {
 				// odometry = new Odometry();
 				shooter = new Shooter(new ShooterIOSim(), arm);
 				swerve = new Swerve();
-				gyro = new Gyrometer(swerve);
+				gyro = new Gyrometer(swerve, vision);
 			}
 			default -> {
 				arm = new Arm(new ArmIO() {
@@ -83,7 +89,7 @@ public class RobotContainer {
 				shooter = new Shooter(new ShooterIO() {
 				}, arm);
 				swerve = new Swerve();
-				gyro = new Gyrometer(swerve);
+				gyro = new Gyrometer(swerve, vision);
 			}
 		}
 
