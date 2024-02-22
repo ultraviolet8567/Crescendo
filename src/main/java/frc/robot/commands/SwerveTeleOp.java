@@ -2,27 +2,26 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Odometry;
+import frc.robot.subsystems.Gyrometer;
 import frc.robot.subsystems.Swerve;
 import java.util.function.Supplier;
 
 public class SwerveTeleOp extends Command {
 	private final Swerve swerve;
-	private final Odometry odometry;
+	private final Gyrometer odometry;
 	private final Supplier<Double> xSpdFunction, ySpdFunction, turningSpdFunction;
 	private final Supplier<Boolean> rotationOnFunction, leftBumper, rightBumper;
 	private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
 
 	// First supplier is the forward velocity, then its horizontal velocity, then
 	// rotational velocity
-	public SwerveTeleOp(Swerve swerve, Odometry odometry, Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction,
+	public SwerveTeleOp(Swerve swerve, Gyrometer odometry, Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction,
 			Supplier<Double> turningSpdFunction, Supplier<Boolean> rotationOnFunction, Supplier<Boolean> leftBumper,
 			Supplier<Boolean> rightBumper) {
 		this.swerve = swerve;
@@ -82,15 +81,12 @@ public class SwerveTeleOp extends Command {
 
 		ChassisSpeeds chassisSpeeds;
 		if (Constants.fieldOriented) {
-			chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turningSpeed,
-					odometry.getRotation2d());
+			chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turningSpeed, odometry.getHeading());
 		} else {
 			chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
 		}
 
-		SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
-
-		swerve.setModuleStates(moduleStates);
+		swerve.setModuleStates(chassisSpeeds);
 	}
 
 	@Override

@@ -7,30 +7,38 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+import org.littletonrobotics.junction.Logger;
 
 public class Gyrometer extends SubsystemBase {
-	private Pigeon2 gyro;
+	private static final Pose2d initialPose = new Pose2d(0, 0, new Rotation2d(0));
+
 	private Swerve swerve;
-	private Vision vision;
+  private Vision vision;
+
+	private Pigeon2 gyro;
 	private SwerveDriveOdometry odometer;
 
 	public Gyrometer(Swerve swerve, Vision vision) {
+		this.swerve = swerve;
+    this.vision = vision;
+
 		gyro = new Pigeon2(31);
 		gyro.reset();
 
-		this.swerve = swerve;
-		this.vision = vision;
-		odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getHeading(), swerve.getModulePositions(),
+		// odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getHeading(), swerve.getModulePositions(), initialPose);
+    odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getHeading(), swerve.getModulePositions(),
 				new Pose2d(vision.getDistance().getTranslation().toTranslation2d(),
 						vision.getDistance().getRotation().toRotation2d()));
 	}
 
 	@Override
 	public void periodic() {
+		Logger.recordOutput("Odometry/Pose", getPose());
+		Logger.recordOutput("Odometry/Heading", Math.IEEEremainder(getHeading().getRadians(), 2 * Math.PI));
+
 		update();
 	}
 
-	// returns pose
 	public Pose2d getPose() {
 		return odometer.getPoseMeters();
 	}
@@ -43,29 +51,31 @@ public class Gyrometer extends SubsystemBase {
 	public Pose2d getInvertedPose() {
 		return new Pose2d(-getPose().getX(), -getPose().getY(), getPose().getRotation());
 	}
-
-	// return gyro heading as rotation2d
-	// getRotation2d() is CCW+ for the pigeon2, getAngle is CCW-
+  
 	public Rotation2d getHeading() {
+		// getRotation2d() is CCW+ for the Pigeon, getAngle is CCW-
 		return gyro.getRotation2d();
 	}
 
-	// return gyro heading as rotation3d
 	public Rotation3d getRotation3d() {
 		return gyro.getRotation3d();
 		// return gyro.getRotation3d().unaryMinus(); <-- if we need the negative version
 	}
-
-	// rate in degrees per second, clockwise is positive
+  
 	public double getRate() {
-		return gyro.getRate();
+		// Rate of rotation (degrees/sec), negate for CCW+
+		return -gyro.getRate();
 	}
 
-	// reset odometry
-	public void reset() {
-		gyro.reset();
-		odometer.resetPosition(getHeading(), swerve.getModulePositions(),
+	public void resetPose(Pose2d pose) {
+		// odometer.resetPosition(getHeading(), swerve.getModulePositions(), pose);
+    odometer.resetPosition(getHeading(), swerve.getModulePositions(),
 				new Pose2d(vision.getDistance().getTranslation().toTranslation2d(),
 						vision.getDistance().getRotation().toRotation2d()));
+	}
+
+	public void reset() {
+		gyro.reset();
+		resetPose(initialPose);
 	}
 }
