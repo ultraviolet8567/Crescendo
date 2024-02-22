@@ -31,12 +31,10 @@ import java.util.Map;
  */
 public class RobotContainer {
 	// Subsystems
-	private static final KMeans kmeans = new KMeans();
-	private static final Vision vision = new Vision(kmeans);
-	private static final Odometry odometry = new Odometry(vision, gyro);
-	private static final Test test = new Test(kmeans);
-
-	// alliance color
+	private final KMeans kmeans;
+	private final Vision vision;
+	private final Odometry odometry;
+	private final Test test;
 	private final Arm arm;
 	// private final Climber climber;
 	private final Intake intake;
@@ -68,7 +66,7 @@ public class RobotContainer {
 				// odometry = new Odometry();
 				shooter = new Shooter(new ShooterIOSparkMax(), arm);
 				swerve = new Swerve();
-				gyro = new Gyrometer(swerve, vision);
+				gyro = new Gyrometer(swerve);
 			}
 			case SIM -> {
 				arm = new Arm(new ArmIOSim());
@@ -77,7 +75,7 @@ public class RobotContainer {
 				// odometry = new Odometry();
 				shooter = new Shooter(new ShooterIOSim(), arm);
 				swerve = new Swerve();
-				gyro = new Gyrometer(swerve, vision);
+				gyro = new Gyrometer(swerve);
 			}
 			default -> {
 				arm = new Arm(new ArmIO() {
@@ -89,9 +87,14 @@ public class RobotContainer {
 				shooter = new Shooter(new ShooterIO() {
 				}, arm);
 				swerve = new Swerve();
-				gyro = new Gyrometer(swerve, vision);
+				gyro = new Gyrometer(swerve);
 			}
 		}
+
+		kmeans = new KMeans();
+		vision = new Vision(kmeans, gyro);
+		odometry = new Odometry(vision, gyro);
+		test = new Test(kmeans);
 
 		// Configure default commands for driving and arm movement
 		swerve.setDefaultCommand(new SwerveTeleOp(swerve, gyro,
