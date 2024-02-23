@@ -20,7 +20,7 @@ public class Vision extends SubsystemBase {
 	private Camera right, left, back;
 	private KMeans kmeans;
 	private AprilTagFieldLayout field = Constants.fieldLayout;
-	
+
 	public Vision(KMeans kmeans) {
 		this.kmeans = kmeans;
 		right = new Camera("frontRight", Constants.Cameras.frontRighttoRobot, field);

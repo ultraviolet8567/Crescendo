@@ -5,10 +5,10 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -20,14 +20,11 @@ import frc.robot.util.LoggedTunableNumber;
 
 public final class Constants {
 	/**
-	 * General info Controller axis range: -1 to 1 Motor max: 5676 rot/min = 14.5
-	 * ft/s = 4.5 m/s Speed cap: 5000 rot/min
+	 * Controller joystick range: -1 to 1 NEO max: 5676 RPM Vortex max: 6326 RPM
+	 * Swerve top speed = 14.5 ft/s = 4.5 m/s
 	 *
-	 * <p>
-	 * Gyro: - Forward = ? - Left = ? - Counterclockwise = ?
-	 *
-	 * <p>
-	 * Odometry - Forward = x+ - Left = y+ - Counterclockwise = z+
+	 * Gyro: - Forward = ? - Left = ? - Counterclockwise = ? Odometry - Forward = x+
+	 * - Left = y+ - Counterclockwise = z+
 	 */
 
 	public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
@@ -36,12 +33,13 @@ public final class Constants {
 
 	public static final ModuleType powerDistributionType = ModuleType.kRev;
 	public static final boolean fieldOriented = true;
+	public static final boolean lightsExist = false;
 
-	public static final Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Red);
+	public static final Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
 
+	// AprilTags
 	public static final AprilTagFields field = AprilTagFields.k2024Crescendo;
 	public static final AprilTagFieldLayout fieldLayout = field.loadAprilTagLayoutField();
-	public static final boolean lightsExist = false;
 
 	// Color of note and detection tolerance, subject to change.
 	public static final Color kNoteColor = new Color(138, 94, 23);
@@ -58,19 +56,14 @@ public final class Constants {
 	}
 
 	public static final class CAN {
-		// TODO: Update to proper wiring once motors are connected
-		public static final int kArmPort = 1;
-		public static final int kLeftClimberPort = 2;
-		public static final int kRightClimberPort = 3;
-		public static final int kIntakePort = 4;
-		public static final int kLeftFlywheelPort = 5;
-		public static final int kRightFlywheelPort = 6;
+		// public static final int kLeftClimberPort = 2;
+		// public static final int kRightClimberPort = 3;
 
-		// Temp values for now
+		public static final int kIntakePort = 4;
+
 		public static final int kShooterTopPort = 7;
 		public static final int kShooterBottomPort = 8;
 
-		// Temp values for now
 		public static final int kArm1Port = 9;
 		public static final int kArm2Port = 10;
 
@@ -86,12 +79,15 @@ public final class Constants {
 	}
 
 	public static final class Cameras {
-		public static final Transform3d frontLefttoRobot = new Transform3d(new Translation3d(Units.inchesToMeters(10.5),Units.inchesToMeters(9), Units.inchesToMeters(4.5)),
-																		new Rotation3d(Math.PI, Math.PI/6, Math.PI/3));
-		public static final Transform3d frontRighttoRobot = new Transform3d(new Translation3d(Units.inchesToMeters(9.5), Units.inchesToMeters(-9.5), Units.inchesToMeters(4.5)),
-																		new Rotation3d(Math.PI, Math.PI/6, -Math.PI/3));
-		public static final Transform3d backToRobot = new Transform3d(new Translation3d(Units.inchesToMeters(-12),Units.inchesToMeters(-8), Units.inchesToMeters(4.5)),
-																		new Rotation3d(Math.PI, Math.PI/6, Math.PI));
+		public static final Transform3d frontLefttoRobot = new Transform3d(
+				new Translation3d(Units.inchesToMeters(10.5), Units.inchesToMeters(9), Units.inchesToMeters(4.5)),
+				new Rotation3d(Math.PI, Math.PI / 6, Math.PI / 3));
+		public static final Transform3d frontRighttoRobot = new Transform3d(
+				new Translation3d(Units.inchesToMeters(9.5), Units.inchesToMeters(-9.5), Units.inchesToMeters(4.5)),
+				new Rotation3d(Math.PI, Math.PI / 6, -Math.PI / 3));
+		public static final Transform3d backToRobot = new Transform3d(
+				new Translation3d(Units.inchesToMeters(-12), Units.inchesToMeters(-8), Units.inchesToMeters(4.5)),
+				new Rotation3d(Math.PI, Math.PI / 6, Math.PI));
 	}
 
 	public static final class ModuleConstants {
@@ -157,11 +153,8 @@ public final class Constants {
 				new PIDConstants(0.25, 0.0, 0.0), // Translation PID constants
 				new PIDConstants(0.25, 0.0, 0.0), // Rotation PID constants
 				kTeleDriveMaxSpeedMetersPerSecond, // Max module speed, in m/s
-				Math.sqrt(Math.pow(kTrackWidth, 2) + Math.pow(kWheelBase, 2)) / 2, // Drive base radius in meters.
-																					// Distance from robot center to
-																					// furthest module.
-				new ReplanningConfig() // Default path replanning config. See the API for the options here
-		);
+				// Drive base radius in meters. Distance from robot center to furthest module.
+				Math.sqrt(Math.pow(kTrackWidth, 2) + Math.pow(kWheelBase, 2)) / 2, new ReplanningConfig());
 	}
 
 	public static final class ClimberConstants {
@@ -187,7 +180,6 @@ public final class Constants {
 
 		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Arm/Max Speed", 1);
 		public static final LoggedTunableNumber kMaxAcceleration = new LoggedTunableNumber("Arm/Max Acceleration", 1);
-
 		public static final LoggedTunableNumber kManualVoltage = new LoggedTunableNumber("Arm/ManualVoltage", 8);
 
 		// Arm presets
@@ -252,5 +244,4 @@ public final class Constants {
 	public static enum ControllerType {
 		XBOX, LOGITECH, JOYSTICK
 	}
-
 }

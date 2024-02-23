@@ -31,16 +31,15 @@ import java.util.Map;
  */
 public class RobotContainer {
 	// Subsystems
-	private final KMeans kmeans;
-	private final Vision vision;
-	private final Odometry odometry;
 	private final Arm arm;
 	// private final Climber climber;
+	private final Gyrometer gyro;
 	private final Intake intake;
-	// private final Odometry odometry;
+	private final KMeans kmeans;
+	private final Odometry odometry;
 	private final Shooter shooter;
 	private final Swerve swerve;
-	private final Gyrometer gyro;
+	private final Vision vision;
 
 	// Joysticks
 	private static final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
@@ -55,26 +54,19 @@ public class RobotContainer {
 	public final SendableChooser<Command> autoChooser;
 
 	public RobotContainer() {
-		// Create the subsystems with real or simulated hardware depending on current
-		// mode
+		// Create subsystems with real or simulated hardware depending on current mode
 		switch (Constants.currentMode) {
 			case REAL -> {
 				arm = new Arm(new ArmIOSparkMax());
 				// climber = new Climber(new ClimberIOSparkMax());
 				intake = new Intake(new IntakeIOSparkMax());
-				// odometry = new Odometry();
 				shooter = new Shooter(new ShooterIOSparkMax(), arm);
-				swerve = new Swerve();
-				gyro = new Gyrometer(swerve);
 			}
 			case SIM -> {
 				arm = new Arm(new ArmIOSim());
 				// climber = new Climber(new ClimberIOSim());
 				intake = new Intake(new IntakeIOSim());
-				// odometry = new Odometry();
 				shooter = new Shooter(new ShooterIOSim(), arm);
-				swerve = new Swerve();
-				gyro = new Gyrometer(swerve);
 			}
 			default -> {
 				arm = new Arm(new ArmIO() {
@@ -82,16 +74,15 @@ public class RobotContainer {
 				// climber = new Climber(new ClimberIO() {});
 				intake = new Intake(new IntakeIO() {
 				});
-				// odometry = new Odometry();
 				shooter = new Shooter(new ShooterIO() {
 				}, arm);
-				swerve = new Swerve();
-				gyro = new Gyrometer(swerve);
 			}
 		}
 
 		kmeans = new KMeans();
 		vision = new Vision(kmeans);
+		swerve = new Swerve();
+		gyro = new Gyrometer(swerve);
 		odometry = new Odometry(vision, gyro);
 
 		// Configure default commands for driving and arm movement
@@ -125,7 +116,7 @@ public class RobotContainer {
 				}, swerve);
 
 		// Post auto selector to Shuffleboard
-		autoChooser = AutoBuilder.buildAutoChooser("DoNothing");
+		autoChooser = AutoBuilder.buildAutoChooser();
 		Shuffleboard.getTab("Main").add("Auto", autoChooser).withWidget(BuiltInWidgets.kComboBoxChooser).withSize(2, 1);
 
 	}
