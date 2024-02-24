@@ -3,6 +3,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.util.PixelFormat;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
@@ -54,6 +55,11 @@ public class RobotContainer {
 	public final SendableChooser<Command> autoChooser;
 
 	public RobotContainer() {
+		// intake camera limitations
+		camera.setFPS(30);
+		camera.setResolution(320, 240);
+		camera.setPixelFormat(PixelFormat.kGray);
+		
 		// Create subsystems with real or simulated hardware depending on current mode
 		switch (Constants.currentMode) {
 			case REAL -> {
