@@ -31,6 +31,7 @@ public class Vision extends SubsystemBase {
 	@Override
 	public void periodic() {
 		update();
+		back.getPoses();
 	}
 
 	public Transform3d getDistance() {

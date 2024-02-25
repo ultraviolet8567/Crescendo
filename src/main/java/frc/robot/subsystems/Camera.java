@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Camera extends SubsystemBase {
@@ -16,19 +17,23 @@ public class Camera extends SubsystemBase {
 	private Transform3d toRobot;
 	private AprilTagFieldLayout field;
 	private List<List<Transform3d>> poses;
+	private PhotonPipelineResult result;
 
 	public Camera(String name, Transform3d toRobot, AprilTagFieldLayout field) {
 		camera = new PhotonCamera(name);
+		poses = new ArrayList<List<Transform3d>>();
 		this.field = field;
 		this.toRobot = toRobot;
 	}
 
 	public void update() {
-		var result = camera.getLatestResult();
+		result = camera.getLatestResult();
+		if (!poses.isEmpty()) {
+			poses.clear();
+		}
 
 		if (result.hasTargets()) {
 			List<PhotonTrackedTarget> targets = result.getTargets();
-			List<List<Transform3d>> poses = new ArrayList<List<Transform3d>>();
 
 			for (PhotonTrackedTarget target : targets) {
 				List<Transform3d> posePair = new ArrayList<Transform3d>();
@@ -36,42 +41,38 @@ public class Camera extends SubsystemBase {
 				posePair.add(target.getAlternateCameraToTarget());
 				poses.add(posePair);
 			}
+
+			System.out.println(poses.get(0));
 		}
 	}
 
 	public List<List<Transform3d>> getPoses() {
+		System.out.println(poses);
 		return poses;
 	}
 
 	public List<PhotonTrackedTarget> getTargets() {
-		var result = camera.getLatestResult();
-
 		if (result.hasTargets()) {
 			return result.getTargets();
-		}
-
-		return new ArrayList<PhotonTrackedTarget>();
+		} else
+			return null;
 	}
 
 	public List<Integer> getIDs() {
-		List<Integer> ids = new ArrayList<Integer>();
-		var result = camera.getLatestResult();
-
 		if (result.hasTargets()) {
+			List<Integer> ids = new ArrayList<Integer>();
 			for (PhotonTrackedTarget target : result.targets) {
 				ids.add(target.getFiducialId());
 			}
-		}
-
-		return ids;
+			return ids;
+		} else
+			return null;
 	}
 
 	private List<Transform3d> getTagPoses(int tag) {
-		var result = camera.getLatestResult();
-		List<Transform3d> list = new ArrayList<Transform3d>();
-
 		if (result.hasTargets()) {
 			List<PhotonTrackedTarget> targets = result.getTargets();
+			List<Transform3d> list = new ArrayList<Transform3d>();
 
 			for (PhotonTrackedTarget target : targets) {
 				if (target.getFiducialId() == tag) {
@@ -81,9 +82,8 @@ public class Camera extends SubsystemBase {
 			}
 
 			return list;
-		} else {
-			return list;
-		}
+		} else
+			return null;
 	}
 
 	public List<Transform3d> getSpeakerPoses(List<PhotonTrackedTarget> tags) {
