@@ -178,7 +178,7 @@ public final class Constants {
 		public static final double kMaxArmAngle = 0.0;
 		public static final double kMinArmAngle = -1.76625;
 
-		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Arm/Max Speed", 1);
+		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Arm/Max Speed", 3.5);
 		public static final LoggedTunableNumber kMaxAcceleration = new LoggedTunableNumber("Arm/Max Acceleration", 1);
 		public static final LoggedTunableNumber kManualVoltage = new LoggedTunableNumber("Arm/ManualVoltage", 8);
 
@@ -190,7 +190,7 @@ public final class Constants {
 		public static final double kTrapAngle = -0.13816;
 
 		// Control
-		public static final LoggedTunableNumber kArmPIDTolerance = new LoggedTunableNumber("Arm/PID Tolerance", 0.5);
+		public static final LoggedTunableNumber kArmPIDTolerance = new LoggedTunableNumber("Arm/PID Tolerance", 0.0001);
 	}
 
 	public static final class ShooterConstants {
@@ -217,7 +217,7 @@ public final class Constants {
 			case SIMBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 0.00103, 0.0, 0.0);
 		};
 		public static final Gains armGains = switch (currentRobot) {
-			case REALBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
+			case REALBOT -> new Gains(1.25, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
 			case SIMBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
 		};
 	}
