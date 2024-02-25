@@ -59,7 +59,7 @@ public class RobotContainer {
 		camera.setFPS(30);
 		camera.setResolution(320, 240);
 		camera.setPixelFormat(PixelFormat.kGray);
-		
+
 		// Create subsystems with real or simulated hardware depending on current mode
 		switch (Constants.currentMode) {
 			case REAL -> {

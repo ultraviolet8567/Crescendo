@@ -50,6 +50,7 @@ public class ArmIOSparkMax implements ArmIO {
 
 		armPID = new ProfiledPIDController(armGains.kP(), armGains.kI(), armGains.kD(),
 				new Constraints(ArmConstants.kMaxSpeed.get(), ArmConstants.kMaxAcceleration.get()));
+		armPID.setTolerance(ArmConstants.kArmPIDTolerance.get());
 		armFF = new ArmFeedforward(armGains.ffkS(), armGains.ffkG(), armGains.ffkV(), armGains.ffkA());
 
 		// Mechanism visualizer
@@ -111,7 +112,10 @@ public class ArmIOSparkMax implements ArmIO {
 
 	@Override
 	public void setPosition(double setpoint) {
-		double volts = armPID.calculate(getPositionRads(), setpoint) + armFF.calculate(getPositionRads(), setpoint);
+		double volts = armPID.calculate(getPositionRads(),
+				setpoint) /* + armFF.calculate(getPositionRads(), setpoint) */;
+		Logger.recordOutput("Arm/PID", armPID.calculate(getPositionRads(), setpoint));
+		Logger.recordOutput("Arm/FF", armFF.calculate(getPositionRads(), setpoint));
 		setInputVoltage(volts);
 	}
 
