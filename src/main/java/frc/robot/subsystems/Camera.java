@@ -16,18 +16,19 @@ public class Camera extends SubsystemBase {
 	private PhotonCamera camera;
 	private Transform3d toRobot;
 	private AprilTagFieldLayout field;
-	private List<List<Transform3d>> poses;
+	private List<Transform3d> poses;
 	private PhotonPipelineResult result;
 
 	public Camera(String name, Transform3d toRobot, AprilTagFieldLayout field) {
 		camera = new PhotonCamera(name);
-		poses = new ArrayList<List<Transform3d>>();
+		poses = new ArrayList<Transform3d>();
 		this.field = field;
 		this.toRobot = toRobot;
 	}
 
 	public void update() {
 		result = camera.getLatestResult();
+
 		if (!poses.isEmpty()) {
 			poses.clear();
 		}
@@ -36,18 +37,13 @@ public class Camera extends SubsystemBase {
 			List<PhotonTrackedTarget> targets = result.getTargets();
 
 			for (PhotonTrackedTarget target : targets) {
-				List<Transform3d> posePair = new ArrayList<Transform3d>();
-				posePair.add(target.getBestCameraToTarget());
-				posePair.add(target.getAlternateCameraToTarget());
-				poses.add(posePair);
+				poses.add(target.getBestCameraToTarget());
+				poses.add(target.getAlternateCameraToTarget());
 			}
-
-			System.out.println(poses.get(0));
 		}
 	}
 
-	public List<List<Transform3d>> getPoses() {
-		System.out.println(poses);
+	public List<Transform3d> getPoses() {
 		return poses;
 	}
 
@@ -91,17 +87,6 @@ public class Camera extends SubsystemBase {
 		return orientToField(getTagPoses(speakerTag), speakerTag);
 	}
 
-	public List<Transform3d> getUnnestedData() {
-		List<Transform3d> unnested = new ArrayList<Transform3d>();
-
-		for (List<Transform3d> posePair : poses) {
-			unnested.add(posePair.get(0));
-			unnested.add(posePair.get(1));
-		}
-
-		return unnested;
-	}
-
 	public int getSpeakerTag() {
 		Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
 		int speakerTag = 0;
@@ -117,16 +102,12 @@ public class Camera extends SubsystemBase {
 		return speakerTag;
 	}
 
-	private Transform3d orientToField(Transform3d toTarget, int tag) {
-		Pose3d onField = field.getTagPose(tag).get().plus(toTarget.inverse()).plus(toRobot);
-		return new Transform3d(onField.getX(), onField.getY(), onField.getX(), onField.getRotation());
-	}
-
 	private List<Transform3d> orientToField(List<Transform3d> toTarget, int tag) {
 		List<Transform3d> onField = new ArrayList<Transform3d>();
 
 		for (Transform3d dist : toTarget) {
-			onField.add(orientToField(dist, tag));
+			Pose3d orField = field.getTagPose(tag).get().plus(dist.inverse()).plus(toRobot);
+			onField.add(new Transform3d(orField.getX(), orField.getY(), orField.getX(), orField.getRotation()));
 		}
 
 		return onField;

@@ -1,7 +1,4 @@
 /**
- * things that we could do now:
- * horizontal alignment (swerve)
- * id (which side of the field we're on) affects calculations --> will differ based on field-based/robot-based
  * - field: positive theta is counter-clockwise, positive x-axis is away from alliance wall, positive y-axis is perpendicular & to the left of positive x
  * - robot: positive theta is counter-clockwise, positive x-axis is dir robot is facing, positive y-axis is perpendicular & to the left of robot
 */
@@ -31,14 +28,16 @@ public class Vision extends SubsystemBase {
 	@Override
 	public void periodic() {
 		update();
-		back.getPoses();
+		System.out.println(back.getPoses());
 	}
 
-	public Transform3d getDistance() {
-		kmeans.updatePoints(getUnnestedList(right.getUnnestedData(), left.getUnnestedData(), back.getUnnestedData()));
+	// get robot pose
+	public Transform3d getPose() {
+		kmeans.updatePoints(getUnnestedList(right.getPoses(), left.getPoses(), back.getPoses()));
 		return kmeans.getCentroid();
 	}
 
+	// get yaw to align to tag (rotation2d)
 	public Rotation2d getRotToAlign() {
 		kmeans.updatePoints(getUnnestedList(right.getSpeakerPoses(right.getTargets()),
 				left.getSpeakerPoses(left.getTargets()), back.getSpeakerPoses(back.getTargets())));
@@ -46,10 +45,12 @@ public class Vision extends SubsystemBase {
 		return kmeans.getCentroid().getRotation().toRotation2d();
 	}
 
+	// get value to align to tag (radians)
 	public double getRadtoSpeaker() {
 		return getRotToAlign().getRadians();
 	}
 
+	// get shoot velocity
 	public double getShootVelocity() {
 		kmeans.updatePoints(getUnnestedList(right.getSpeakerPoses(right.getTargets()),
 				left.getSpeakerPoses(left.getTargets()), back.getSpeakerPoses(back.getTargets())));
@@ -60,24 +61,25 @@ public class Vision extends SubsystemBase {
 
 	// thank you so much stephanie
 	public double[] getShootRad() {
-		Transform3d d = getDistance();
+		Transform3d d = getPose();
 		double g = -9.80665;
 		double x2 = Math.pow(d.getX(), 2);
 		double thing = (g * x2) / 2 * Math.pow(getShootVelocity(), 2);
 
 		double minus = Math.atan((d.getX()) + Math.sqrt(x2 - (4 * thing * (d.getY() + thing))) / (2 * thing));
-
 		double plus = Math.atan((d.getX()) - Math.sqrt(x2 - (4 * thing * (d.getY() + thing))) / (2 * thing));
 
-		return new double[]{plus, minus};
+		return new double[] {plus, minus};
 	}
 
+	// update all the cameras
 	public void update() {
 		right.update();
 		left.update();
 		back.update();
 	}
 
+	// unnest lists
 	private List<Transform3d> getUnnestedList(List<Transform3d> nested1, List<Transform3d> nested2,
 			List<Transform3d> nested3) {
 		List<Transform3d> unnestedData = new ArrayList<Transform3d>();

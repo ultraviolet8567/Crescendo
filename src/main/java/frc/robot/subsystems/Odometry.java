@@ -26,13 +26,13 @@ public class Odometry extends SubsystemBase {
 
 	// calculate weighted average
 	public double getAverage() {
-		return add(vision.getDistance(), visionWeight) + add(gyro.getPose(), gyroWeight);
+		return add(vision.getPose(), visionWeight) + add(gyro.getPose(), gyroWeight);
 	}
 
 	public Rotation3d getHeading() {
-		double roll = average(vision.getDistance().getRotation().getX(), gyro.getRotation3d().getX());
-		double pitch = average(vision.getDistance().getRotation().getY(), gyro.getRotation3d().getY());
-		double yaw = average(vision.getDistance().getRotation().getZ(), gyro.getRotation3d().getZ());
+		double roll = average(vision.getPose().getRotation().getX(), gyro.getRotation3d().getX());
+		double pitch = average(vision.getPose().getRotation().getY(), gyro.getRotation3d().getY());
+		double yaw = average(vision.getPose().getRotation().getZ(), gyro.getRotation3d().getZ());
 
 		return new Rotation3d(roll, pitch, yaw);
 	}
