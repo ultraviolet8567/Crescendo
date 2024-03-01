@@ -39,6 +39,7 @@ public class Vision extends SubsystemBase {
 
 	// get yaw to align to tag (rotation2d)
 	public Rotation2d getRotToAlign() {
+		kmeans.updatePoints(getUnnestedList(right.getPoses(), left.getPoses(), back.getPoses()));
 		return kmeans.getCentroid().getRotation().toRotation2d();
 	}
 
@@ -50,7 +51,6 @@ public class Vision extends SubsystemBase {
 	// get shoot velocity
 	public double getShootVelocity() {
 		kmeans.updatePoints(getUnnestedList(right.getPoses(), left.getPoses(), back.getPoses()));
-
 		return kmeans.getCentroid().getTranslation()
 				.getDistance(field.getTagPose(right.getSpeakerTag()).get().getTranslation()) / 1.0;
 	}
