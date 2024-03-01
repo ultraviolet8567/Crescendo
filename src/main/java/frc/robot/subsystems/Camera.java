@@ -34,11 +34,12 @@ public class Camera extends SubsystemBase {
 		}
 
 		if (result.hasTargets()) {
-			List<PhotonTrackedTarget> targets = result.getTargets();
-
-			for (PhotonTrackedTarget target : targets) {
-				poses.add(target.getBestCameraToTarget());
-				poses.add(target.getAlternateCameraToTarget());
+			for (PhotonTrackedTarget target : result.getTargets()) {
+				if (target.getPoseAmbiguity() < 0.2) {
+					poses.add(target.getBestCameraToTarget());
+					System.out.println(target.getBestCameraToTarget());
+					poses.add(target.getAlternateCameraToTarget());
+				}
 			}
 		}
 	}
