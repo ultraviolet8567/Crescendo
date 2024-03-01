@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.4408703461281565,
-        "y": 7.004798511021523
+        "x": 2.0,
+        "y": 7.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4408703461281562,
-        "y": 7.004798511021523
+        "x": 3.0,
+        "y": 7.0
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.282549875641061,
-        "y": 7.004798511021523
+        "x": 8.29,
+        "y": 7.42
       },
       "prevControl": {
-        "x": 3.2825498756410614,
-        "y": 7.004798511021523
+        "x": 7.289999999999999,
+        "y": 7.42
       },
       "nextControl": null,
       "isLocked": false,
@@ -43,9 +43,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Shootx4Blue",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -144.22,
     "velocity": 0
   },
   "useDefaultConstraints": true

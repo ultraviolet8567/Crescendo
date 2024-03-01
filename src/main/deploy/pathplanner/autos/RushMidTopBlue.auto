@@ -1,0 +1,97 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.75,
+      "y": 6.72
+    },
+    "rotation": -120.48000000000002
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MoveTowardsSecondNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Pickup"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GetSecondNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MoveTowardsThirdNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Pickup"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GetAndShootThird"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Pickup"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GetFourthNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GoToMid"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
