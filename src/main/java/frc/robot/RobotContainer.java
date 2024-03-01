@@ -1,6 +1,8 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.util.PixelFormat;
@@ -156,6 +158,9 @@ public class RobotContainer {
 				.onTrue(new InstantCommand(() -> gyro.reset()));
 		new JoystickButton(driverJoystick, XboxController.Button.kBack.value)
 				.onTrue(new InstantCommand(() -> Lights.getInstance().hasNote = !Lights.getInstance().hasNote));
+
+		NamedCommands.registerCommand("Shoot", new Shoot(shooter, intake));
+		NamedCommands.registerCommand("Pickup", new Pickup(intake));
 
 		// new JoystickButton(operatorJoystick, XboxController.Button.kStart.value)
 		// .whileTrue(new Climb(climber, "extend"));
