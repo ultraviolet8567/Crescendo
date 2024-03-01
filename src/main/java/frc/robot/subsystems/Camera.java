@@ -19,7 +19,8 @@ public class Camera extends SubsystemBase {
 	private List<Transform3d> distances;
 	private PhotonPipelineResult result;
 
-	// constructor, toRobot is the position of the camera if robot's center is origin
+	// constructor, toRobot is the position of the camera if robot's center is
+	// origin
 	public Camera(String name, Transform3d toRobot, AprilTagFieldLayout field) {
 		camera = new PhotonCamera(name);
 		distances = new ArrayList<Transform3d>();
@@ -57,8 +58,10 @@ public class Camera extends SubsystemBase {
 
 		if (result.hasTargets()) {
 			for (PhotonTrackedTarget target : result.getTargets()) {
-				poses.add(field.getTagPose(target.getFiducialId()).get().plus(target.getBestCameraToTarget().inverse()).plus(toRobot));
-				poses.add(field.getTagPose(target.getFiducialId()).get().plus(target.getAlternateCameraToTarget().inverse()).plus(toRobot));
+				poses.add(field.getTagPose(target.getFiducialId()).get().plus(target.getBestCameraToTarget().inverse())
+						.plus(toRobot));
+				poses.add(field.getTagPose(target.getFiducialId()).get()
+						.plus(target.getAlternateCameraToTarget().inverse()).plus(toRobot));
 			}
 		}
 
