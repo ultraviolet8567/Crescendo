@@ -20,7 +20,7 @@ public class Intake extends SubsystemBase {
 	private GenericEntry noteIndicator;
 
 	private boolean notePreviouslyDetected = false;
-	private boolean noteCollected = false;
+	private boolean noteDetected = false;
 
 	private ColorSensorV3 sensor;
 	private ColorMatch matcher;
@@ -52,28 +52,29 @@ public class Intake extends SubsystemBase {
 		Logger.recordOutput("HoldingNote", Lights.getInstance().hasNote);
 		Logger.recordOutput("Intake/DetectedColor",
 				new double[]{sensor.getColor().red, sensor.getColor().green, sensor.getColor().blue});
-		Logger.recordOutput("Intake/NoteCollected", noteCollected);
 
 		// If the sensor sees orange, we have a note in the system
 		ColorMatchResult result = matcher.matchColor(sensor.getColor());
-		Lights.getInstance().hasNote = (result != null);
+		noteDetected = (result != null);
 
-		// Stop intake when note collected
-		if (!notePreviouslyDetected && Lights.getInstance().hasNote) {
-			io.stop();
+		if (!notePreviouslyDetected && noteDetected) {
+			Lights.getInstance().hasNote = true;
 		}
 
-		notePreviouslyDetected = Lights.getInstance().hasNote;
+		notePreviouslyDetected = noteDetected;
 	}
 
 	public void pickup() {
 		if (!Lights.getInstance().hasNote) {
 			io.setInputVoltage(IntakeConstants.kIntakeVoltage.get());
+		} else {
+			io.setInputVoltage(0.0);
 		}
 	}
 
 	public void drop() {
 		io.setInputVoltage(-IntakeConstants.kIntakeVoltage.get());
+		Lights.getInstance().hasNote = false;
 	}
 
 	public void runIndexer() {

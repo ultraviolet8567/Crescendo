@@ -69,7 +69,7 @@ public class Vision extends SubsystemBase {
 		double minus = Math.atan((d.getX()) + Math.sqrt(x2 - (4 * thing * (d.getY() + thing))) / (2 * thing));
 		double plus = Math.atan((d.getX()) - Math.sqrt(x2 - (4 * thing * (d.getY() + thing))) / (2 * thing));
 
-		return new double[] {plus, minus};
+		return new double[]{plus, minus};
 	}
 
 	// update all the cameras

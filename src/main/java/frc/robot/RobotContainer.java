@@ -134,8 +134,7 @@ public class RobotContainer {
 	 */
 	public void configureBindings() {
 		new JoystickButton(operatorJoystick, XboxController.Button.kLeftBumper.value).whileTrue(new Pickup(intake));
-		new JoystickButton(operatorJoystick, XboxController.Button.kRightBumper.value)
-				.whileTrue(new Shoot(shooter, intake));
+		new JoystickButton(operatorJoystick, XboxController.Button.kRightBumper.value).whileTrue(new Shoot(shooter));
 
 		new JoystickButton(operatorJoystick, XboxController.Button.kY.value)
 				.onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SPEAKER)));
