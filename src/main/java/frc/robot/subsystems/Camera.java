@@ -16,37 +16,59 @@ public class Camera extends SubsystemBase {
 	private PhotonCamera camera;
 	private Transform3d toRobot;
 	private AprilTagFieldLayout field;
-	private List<Transform3d> poses;
+	private List<Transform3d> distances;
 	private PhotonPipelineResult result;
 
+	// constructor, toRobot is the position of the camera if robot's center is
+	// origin
 	public Camera(String name, Transform3d toRobot, AprilTagFieldLayout field) {
 		camera = new PhotonCamera(name);
-		poses = new ArrayList<Transform3d>();
+		distances = new ArrayList<Transform3d>();
 		this.field = field;
 		this.toRobot = toRobot;
 	}
 
+	// update data
 	public void update() {
 		result = camera.getLatestResult();
 
-		if (!poses.isEmpty()) {
-			poses.clear();
+		if (!distances.isEmpty()) {
+			distances.clear();
 		}
 
 		if (result.hasTargets()) {
-			List<PhotonTrackedTarget> targets = result.getTargets();
-
-			for (PhotonTrackedTarget target : targets) {
-				poses.add(target.getBestCameraToTarget());
-				poses.add(target.getAlternateCameraToTarget());
+			for (PhotonTrackedTarget target : result.getTargets()) {
+				if (target.getPoseAmbiguity() < 0.2) {
+					distances.add(target.getBestCameraToTarget());
+					System.out.println(target.getBestCameraToTarget());
+					distances.add(target.getAlternateCameraToTarget());
+				}
 			}
 		}
 	}
 
-	public List<Transform3d> getPoses() {
+	// get list of distances
+	public List<Transform3d> getDistances() {
+		return distances;
+	}
+
+	// get robot poses
+	public List<Pose3d> getPoses() {
+		List<Pose3d> poses = new ArrayList<Pose3d>();
+
+		if (result.hasTargets()) {
+			for (PhotonTrackedTarget target : result.getTargets()) {
+				poses.add(field.getTagPose(target.getFiducialId()).get().plus(target.getBestCameraToTarget().inverse())
+						.plus(toRobot));
+				poses.add(field.getTagPose(target.getFiducialId()).get()
+						.plus(target.getAlternateCameraToTarget().inverse()).plus(toRobot));
+			}
+		}
+
 		return poses;
 	}
 
+	// get list of detected targets
 	public List<PhotonTrackedTarget> getTargets() {
 		if (result.hasTargets()) {
 			return result.getTargets();
@@ -54,10 +76,11 @@ public class Camera extends SubsystemBase {
 			return null;
 	}
 
+	// get list of ids detected
 	public List<Integer> getIDs() {
 		if (result.hasTargets()) {
 			List<Integer> ids = new ArrayList<Integer>();
-			for (PhotonTrackedTarget target : result.targets) {
+			for (PhotonTrackedTarget target : result.getTargets()) {
 				ids.add(target.getFiducialId());
 			}
 			return ids;
@@ -65,28 +88,7 @@ public class Camera extends SubsystemBase {
 			return null;
 	}
 
-	private List<Transform3d> getTagPoses(int tag) {
-		if (result.hasTargets()) {
-			List<PhotonTrackedTarget> targets = result.getTargets();
-			List<Transform3d> list = new ArrayList<Transform3d>();
-
-			for (PhotonTrackedTarget target : targets) {
-				if (target.getFiducialId() == tag) {
-					list.add(target.getBestCameraToTarget());
-					list.add(target.getAlternateCameraToTarget());
-				}
-			}
-
-			return list;
-		} else
-			return null;
-	}
-
-	public List<Transform3d> getSpeakerPoses(List<PhotonTrackedTarget> tags) {
-		int speakerTag = getSpeakerTag();
-		return orientToField(getTagPoses(speakerTag), speakerTag);
-	}
-
+	// what side are we on
 	public int getSpeakerTag() {
 		Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
 		int speakerTag = 0;
@@ -100,16 +102,5 @@ public class Camera extends SubsystemBase {
 		}
 
 		return speakerTag;
-	}
-
-	private List<Transform3d> orientToField(List<Transform3d> toTarget, int tag) {
-		List<Transform3d> onField = new ArrayList<Transform3d>();
-
-		for (Transform3d dist : toTarget) {
-			Pose3d orField = field.getTagPose(tag).get().plus(dist.inverse()).plus(toRobot);
-			onField.add(new Transform3d(orField.getX(), orField.getY(), orField.getX(), orField.getRotation()));
-		}
-
-		return onField;
 	}
 }

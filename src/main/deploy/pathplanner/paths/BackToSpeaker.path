@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.4408703461281565,
-        "y": 7.004798511021523
+        "x": 8.293678213604645,
+        "y": 7.43
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4408703461281562,
-        "y": 7.004798511021523
+        "x": 6.806401972290393,
+        "y": 6.867879845802487
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.282549875641061,
-        "y": 7.004798511021523
+        "x": 4.64,
+        "y": 6.34
       },
       "prevControl": {
-        "x": 3.2825498756410614,
-        "y": 7.004798511021523
+        "x": 6.607420539691293,
+        "y": 6.831855134922823
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": -164.00641590227008,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Shootx4Blue",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

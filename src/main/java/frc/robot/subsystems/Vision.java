@@ -6,6 +6,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,7 +29,6 @@ public class Vision extends SubsystemBase {
 	@Override
 	public void periodic() {
 		update();
-		System.out.println(back.getPoses());
 	}
 
 	// get robot pose
@@ -39,9 +39,7 @@ public class Vision extends SubsystemBase {
 
 	// get yaw to align to tag (rotation2d)
 	public Rotation2d getRotToAlign() {
-		kmeans.updatePoints(getUnnestedList(right.getSpeakerPoses(right.getTargets()),
-				left.getSpeakerPoses(left.getTargets()), back.getSpeakerPoses(back.getTargets())));
-
+		kmeans.updatePoints(getUnnestedListforDistances(right.getDistances(), left.getDistances(), back.getDistances()));
 		return kmeans.getCentroid().getRotation().toRotation2d();
 	}
 
@@ -52,9 +50,7 @@ public class Vision extends SubsystemBase {
 
 	// get shoot velocity
 	public double getShootVelocity() {
-		kmeans.updatePoints(getUnnestedList(right.getSpeakerPoses(right.getTargets()),
-				left.getSpeakerPoses(left.getTargets()), back.getSpeakerPoses(back.getTargets())));
-
+		kmeans.updatePoints(getUnnestedList(right.getPoses(), left.getPoses(), back.getPoses()));
 		return kmeans.getCentroid().getTranslation()
 				.getDistance(field.getTagPose(right.getSpeakerTag()).get().getTranslation()) / 1.0;
 	}
@@ -80,7 +76,24 @@ public class Vision extends SubsystemBase {
 	}
 
 	// unnest lists
-	private List<Transform3d> getUnnestedList(List<Transform3d> nested1, List<Transform3d> nested2,
+	private List<Transform3d> getUnnestedList(List<Pose3d> nested1, List<Pose3d> nested2, List<Pose3d> nested3) {
+		List<Transform3d> unnestedData = new ArrayList<Transform3d>();
+		List<List<Pose3d>> nestedData = new ArrayList<List<Pose3d>>();
+		nestedData.add(nested1);
+		nestedData.add(nested2);
+		nestedData.add(nested3);
+
+		for (List<Pose3d> data : nestedData) {
+			for (Pose3d point : data) {
+				unnestedData.add(new Transform3d(point.getX(), point.getY(), point.getZ(), point.getRotation()));
+			}
+		}
+
+		return unnestedData;
+	}
+
+	// unnest list (transform3d)
+	private List<Transform3d> getUnnestedListforDistances(List<Transform3d> nested1, List<Transform3d> nested2,
 			List<Transform3d> nested3) {
 		List<Transform3d> unnestedData = new ArrayList<Transform3d>();
 		List<List<Transform3d>> nestedData = new ArrayList<List<Transform3d>>();

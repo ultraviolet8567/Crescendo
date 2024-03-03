@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.4408703461281565,
-        "y": 7.004798511021523
+        "x": 0.75,
+        "y": 6.72
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4408703461281562,
-        "y": 7.004798511021523
+        "x": 2.498094996189994,
+        "y": 5.7721615443230885
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.282549875641061,
-        "y": 7.004798511021523
+        "x": 7.58,
+        "y": 7.1
       },
       "prevControl": {
-        "x": 3.2825498756410614,
-        "y": 7.004798511021523
+        "x": 6.494640082122312,
+        "y": 6.379707461908811
       },
       "nextControl": null,
       "isLocked": false,
@@ -38,15 +38,15 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 0,
+    "velocity": 2.7,
+    "rotation": 24.179107146689052,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "RushMidBlue",
   "previewStartingState": {
-    "rotation": 0,
-    "velocity": 0
+    "rotation": -120.48000000000002,
+    "velocity": 0.0
   },
   "useDefaultConstraints": true
 }
