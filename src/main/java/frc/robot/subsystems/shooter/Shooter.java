@@ -4,7 +4,6 @@ import static frc.robot.Constants.GainsConstants.shooterGains;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
@@ -45,7 +44,6 @@ public class Shooter extends SubsystemBase {
 	public void shoot() {
 		double targetVel = getTargetVelocity();
 		io.setVelocity(targetVel, targetVel);
-		Lights.getInstance().hasNote = false;
 	}
 
 	public double getTargetVelocity() {

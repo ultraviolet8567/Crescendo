@@ -39,7 +39,8 @@ public class Vision extends SubsystemBase {
 
 	// get yaw to align to tag (rotation2d)
 	public Rotation2d getRotToAlign() {
-		kmeans.updatePoints(getUnnestedListforDistances(right.getDistances(), left.getDistances(), back.getDistances()));
+		kmeans.updatePoints(
+				getUnnestedListforDistances(right.getDistances(), left.getDistances(), back.getDistances()));
 		return kmeans.getCentroid().getRotation().toRotation2d();
 	}
 

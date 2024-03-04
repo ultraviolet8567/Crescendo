@@ -135,10 +135,10 @@ public final class Constants {
 		public static final boolean kBackLeftDriveAbsoluteEncoderReversed = false;
 		public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
 
-		public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -1.677;
-		public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -0.804;
-		public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.452;
-		public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.132;
+		public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -1.677 - 0.005;
+		public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -0.804 + 0.069;
+		public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.452 - 0.01;
+		public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.132 - 0.064;
 
 		public static final double kPhysicalMaxSpeedMetersPerSecond = 4.5;
 		public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 3 * Math.PI;
@@ -217,7 +217,7 @@ public final class Constants {
 			case SIMBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 0.00103, 0.0, 0.0);
 		};
 		public static final Gains armGains = switch (currentRobot) {
-			case REALBOT -> new Gains(1.25, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
+			case REALBOT -> new Gains(1.5, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
 			case SIMBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
 		};
 	}
