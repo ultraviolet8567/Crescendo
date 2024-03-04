@@ -20,7 +20,7 @@ public class Intake extends SubsystemBase {
 	private GenericEntry noteIndicator;
 
 	private boolean notePreviouslyDetected = false;
-	private boolean noteDetected = false;
+	public boolean noteDetected = false;
 
 	private ColorSensorV3 sensor;
 	private ColorMatch matcher;
