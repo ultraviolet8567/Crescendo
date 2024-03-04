@@ -1,10 +1,16 @@
 package frc.robot.subsystems.arm;
 
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Volts;
 import static frc.robot.Constants.GainsConstants.armGains;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
@@ -22,6 +28,7 @@ public class Arm extends SubsystemBase {
 	private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
 
 	private ArmMode armMode;
+	private SysIdRoutine routine;
 
 	/*
 	 * Initialize all components here, as well as any one-time logic to be completed
@@ -30,6 +37,13 @@ public class Arm extends SubsystemBase {
 	public Arm(ArmIO io) {
 		this.io = io;
 		armMode = ArmMode.MANUAL;
+
+		routine = new SysIdRoutine(new SysIdRoutine.Config(),
+				new SysIdRoutine.Mechanism((Measure<Voltage> volts) -> io.setInputVoltage(volts.in(Volts)),
+						log -> log.motor("arm").voltage(Volts.of(inputs.appliedVoltage))
+								.angularPosition(Radians.of(inputs.positionRads))
+								.angularVelocity(RadiansPerSecond.of(inputs.velocityRadPerSec)),
+						this));
 	}
 
 	/* Runs periodically (about once every 20 ms) */
@@ -128,4 +142,7 @@ public class Arm extends SubsystemBase {
 		TAXI
 	}
 
+	public SysIdRoutine routine() {
+		return routine;
+	}
 }

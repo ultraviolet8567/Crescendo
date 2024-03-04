@@ -81,6 +81,7 @@ public class ArmIOSparkMax implements ArmIO {
 		double appliedVoltage = MathUtil.clamp(volts, -12.0, 12.0);
 
 		// Both motors spin the same and in the same direction
+		Logger.recordOutput("Arm/Test/Voltage", appliedVoltage);
 		arm1Motor.setVoltage(appliedVoltage);
 		arm2Motor.setVoltage(appliedVoltage);
 	}
