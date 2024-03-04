@@ -2,6 +2,8 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
@@ -46,16 +48,15 @@ public class RobotContainer {
 	// CommandXboxController(OIConstants.kOperatorControllerPort);
 
 	// Camera
-	// public final UsbCamera camera = CameraServer.startAutomaticCapture(0);
+	public final UsbCamera camera = CameraServer.startAutomaticCapture(0);
 
 	// Auto chooser
 	public final SendableChooser<Command> autoChooser;
 
 	public RobotContainer() {
 		// intake camera limitations
-		// camera.setFPS(30);
-		// camera.setResolution(320, 240);
-		// camera.setPixelFormat(PixelFormat.kGray);
+		camera.setFPS(30);
+		camera.setResolution(320, 240);
 
 		// Create subsystems with real or simulated hardware depending on current mode
 		switch (Constants.currentMode) {
@@ -105,9 +106,7 @@ public class RobotContainer {
 		configureBindings();
 
 		// Post webcam feed to Shuffleboard
-		// Shuffleboard.getTab("Main").add("Camera",
-		// camera).withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4)
-		// .withProperties(Map.of("rotation", "HALF"));
+		Shuffleboard.getTab("Main").add("Camera", camera).withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4);
 
 		// Configure the PathPlanner auto-builder
 		AutoBuilder.configureHolonomic(gyro::getPose, gyro::resetPose, swerve::getRobotRelativeSpeeds,
@@ -142,6 +141,14 @@ public class RobotContainer {
 				.onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.ROOMBA)));
 		new JoystickButton(operatorJoystick, XboxController.Button.kX.value)
 				.onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.AMP)));
+		// new JoystickButton(operatorJoystick, XboxController.Button.kY.value)
+		// .whileTrue(arm.routine().dynamic(Direction.kForward));
+		// new JoystickButton(operatorJoystick, XboxController.Button.kB.value)
+		// .whileTrue(arm.routine().quasistatic(Direction.kForward));
+		// new JoystickButton(operatorJoystick, XboxController.Button.kA.value)
+		// .whileTrue(arm.routine().dynamic(Direction.kReverse));
+		// new JoystickButton(operatorJoystick, XboxController.Button.kX.value)
+		// .whileTrue(arm.routine().quasistatic(Direction.kReverse));
 		// new JoystickButton(operatorJoystick,
 		// XboxController.Button.kStart.value).onTrue(new InstantCommand(() ->
 		// arm.setArmMode(ArmMode.TRAP)));

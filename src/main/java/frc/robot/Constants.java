@@ -212,12 +212,18 @@ public final class Constants {
 	}
 
 	public static final class GainsConstants {
-		public static final Gains shooterGains = switch (currentRobot) {
-			case REALBOT -> new Gains(0.0006, 0.0, 0.05, 0.33329, 0.00083, 0.0, 0.0);
+		public static final Gains shooterTopGains = switch (currentRobot) {
+			case REALBOT -> new Gains(0.00000065361, 0.0, 0.0, 0.0091151, 0.0018015, 0.0, 0.0);
 			case SIMBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 0.00103, 0.0, 0.0);
 		};
+		public static final Gains shooterBottomGains = switch (currentRobot) {
+			case REALBOT -> new Gains(0.000001136, 0.0, 0.0, 0.06427, 0.0018144, 0.0, 0.0);
+			case SIMBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 0.00103, 0.0, 0.0);
+		};
+
 		public static final Gains armGains = switch (currentRobot) {
-			case REALBOT -> new Gains(3, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
+			// case REALBOT -> new Gains(3, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
+			case REALBOT -> new Gains(3.596, 0.0, 0.0, 1.1283, 0.14542, 0.06, 1.07);
 			case SIMBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
 		};
 	}

@@ -6,6 +6,18 @@
   "transitory": {
     "Shuffleboard": {
       "open": true
+    },
+    "SmartDashboard": {
+      "TunableNumbers": {
+        "Shooter": {
+          "Top": {
+            "open": true
+          },
+          "open": true
+        },
+        "open": true
+      },
+      "open": true
     }
   }
 }

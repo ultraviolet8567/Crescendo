@@ -1,6 +1,6 @@
 package frc.robot.subsystems.shooter;
 
-import static frc.robot.Constants.GainsConstants.shooterGains;
+import static frc.robot.Constants.GainsConstants.shooterTopGains;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -22,11 +22,11 @@ public class ShooterIOSim implements ShooterIO {
 
 		topShooterSim = new FlywheelSim(DCMotor.getNEO(1), ShooterConstants.kShooterReduction, 0.1);
 		bottomShooterSim = new FlywheelSim(DCMotor.getNEO(1), ShooterConstants.kShooterReduction, 0.1);
-		shooterTopPID = new PIDController(shooterGains.kP(), shooterGains.kI(), shooterGains.kD());
+		shooterTopPID = new PIDController(shooterTopGains.kP(), shooterTopGains.kI(), shooterTopGains.kD());
 
-		shooterBottomPID = new PIDController(shooterGains.kP(), shooterGains.kI(), shooterGains.kD());
-		shooterTopFF = new SimpleMotorFeedforward(shooterGains.ffkS(), shooterGains.ffkV());
-		shooterBottomFF = new SimpleMotorFeedforward(shooterGains.ffkS(), shooterGains.ffkV());
+		shooterBottomPID = new PIDController(shooterTopGains.kP(), shooterTopGains.kI(), shooterTopGains.kD());
+		shooterTopFF = new SimpleMotorFeedforward(shooterTopGains.ffkS(), shooterTopGains.ffkV());
+		shooterBottomFF = new SimpleMotorFeedforward(shooterTopGains.ffkS(), shooterTopGains.ffkV());
 
 		topAppliedVoltage = 0.0;
 		bottomAppliedVoltage = 0.0;

@@ -14,6 +14,9 @@ public interface ShooterIO {
 		public double bottomAppliedVoltage = 0.0;
 		public double[] bottomCurrentAmps = new double[]{0.0};
 		public double[] bottomTempCelsius = new double[]{0.0};
+
+		public double topRotations = 0.0;
+		public double bottomRotations = 0.0;
 	}
 
 	default void updateInputs(ShooterIOInputs inputs) {

@@ -1,6 +1,6 @@
 package frc.robot.subsystems.shooter;
 
-import static frc.robot.Constants.GainsConstants.shooterGains;
+import static frc.robot.Constants.GainsConstants.*;
 
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -41,7 +41,8 @@ public class ShooterIOSparkMax implements ShooterIO {
 		shooterTopPID = shooterTopMotor.getPIDController();
 		shooterBottomPID = shooterBottomMotor.getPIDController();
 
-		setGains(shooterGains.kP(), shooterGains.kI(), shooterGains.kD(), shooterGains.ffkS(), shooterGains.ffkV());
+		setGains(shooterTopGains.kP(), shooterTopGains.kI(), shooterTopGains.kD(), shooterTopGains.ffkS(),
+				shooterTopGains.ffkV());
 	}
 
 	@Override
@@ -55,6 +56,9 @@ public class ShooterIOSparkMax implements ShooterIO {
 		inputs.bottomAppliedVoltage = shooterBottomMotor.getAppliedOutput() * shooterBottomMotor.getBusVoltage();
 		inputs.bottomCurrentAmps = new double[]{shooterBottomMotor.getOutputCurrent()};
 		inputs.bottomTempCelsius = new double[]{shooterBottomMotor.getMotorTemperature()};
+
+		inputs.topRotations = shooterTopEncoder.getPosition();
+		inputs.bottomRotations = shooterBottomEncoder.getPosition();
 	}
 
 	@Override
@@ -81,15 +85,15 @@ public class ShooterIOSparkMax implements ShooterIO {
 	}
 
 	public void setGains(double kP, double kI, double kD, double ffkS, double ffkV) {
-		shooterTopPID.setP(shooterGains.kP());
-		shooterTopPID.setI(shooterGains.kI());
-		shooterTopPID.setD(shooterGains.kD());
-		shooterTopFF = new SimpleMotorFeedforward(ffkS, ffkV);
+		shooterTopPID.setP(shooterTopGains.kP());
+		shooterTopPID.setI(shooterTopGains.kI());
+		shooterTopPID.setD(shooterTopGains.kD());
+		shooterTopFF = new SimpleMotorFeedforward(shooterTopGains.ffkS(), shooterTopGains.ffkV());
 
-		shooterBottomPID.setP(shooterGains.kP());
-		shooterBottomPID.setI(shooterGains.kI());
-		shooterBottomPID.setD(shooterGains.kD());
-		shooterBottomFF = new SimpleMotorFeedforward(ffkS, ffkV);
+		shooterBottomPID.setP(shooterBottomGains.kP());
+		shooterBottomPID.setI(shooterBottomGains.kI());
+		shooterBottomPID.setD(shooterBottomGains.kD());
+		shooterBottomFF = new SimpleMotorFeedforward(shooterBottomGains.ffkS(), shooterBottomGains.ffkV());
 	}
 
 	@Override
