@@ -84,15 +84,15 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "MoveToMid"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Pickup"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MoveToMid"
           }
         }
       ]
