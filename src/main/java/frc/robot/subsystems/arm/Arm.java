@@ -39,6 +39,7 @@ public class Arm extends SubsystemBase {
 		Logger.processInputs("Arms", inputs);
 
 		Logger.recordOutput("Arm/Mode", armMode);
+		Logger.recordOutput("Arm/Setpoint", getPresetAngle());
 
 		// Check if the gains configuration has changed
 		LoggedTunableNumber.ifChanged(hashCode(),

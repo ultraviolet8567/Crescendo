@@ -2,9 +2,6 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.util.PixelFormat;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
@@ -24,7 +21,6 @@ import frc.robot.subsystems.arm.Arm.ArmMode;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.shooter.*;
 import frc.robot.util.ControllerIO;
-import java.util.Map;
 
 /**
  * This class is where the bulk of the robot should be declared. The structure
@@ -38,10 +34,10 @@ public class RobotContainer {
 	private final Gyrometer gyro;
 	private final Intake intake;
 	private final KMeans kmeans;
-	private final Odometry odometry;
+	// private final Odometry odometry;
 	private final Shooter shooter;
 	private final Swerve swerve;
-	private final Vision vision;
+	// private final Vision vision;
 
 	// Joysticks
 	private static final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
@@ -50,16 +46,16 @@ public class RobotContainer {
 	// CommandXboxController(OIConstants.kOperatorControllerPort);
 
 	// Camera
-	public final UsbCamera camera = CameraServer.startAutomaticCapture(0);
+	// public final UsbCamera camera = CameraServer.startAutomaticCapture(0);
 
 	// Auto chooser
 	public final SendableChooser<Command> autoChooser;
 
 	public RobotContainer() {
 		// intake camera limitations
-		camera.setFPS(30);
-		camera.setResolution(320, 240);
-		camera.setPixelFormat(PixelFormat.kGray);
+		// camera.setFPS(30);
+		// camera.setResolution(320, 240);
+		// camera.setPixelFormat(PixelFormat.kGray);
 
 		// Create subsystems with real or simulated hardware depending on current mode
 		switch (Constants.currentMode) {
@@ -87,10 +83,10 @@ public class RobotContainer {
 		}
 
 		kmeans = new KMeans();
-		vision = new Vision(kmeans);
+		// vision = new Vision(kmeans);
 		swerve = new Swerve();
 		gyro = new Gyrometer(swerve);
-		odometry = new Odometry(vision, gyro);
+		// odometry = new Odometry(vision, gyro);
 
 		// Configure default commands for driving and arm movement
 		swerve.setDefaultCommand(new SwerveTeleOp(swerve, gyro,
@@ -109,8 +105,9 @@ public class RobotContainer {
 		configureBindings();
 
 		// Post webcam feed to Shuffleboard
-		Shuffleboard.getTab("Main").add("Camera", camera).withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4)
-				.withProperties(Map.of("rotation", "HALF"));
+		// Shuffleboard.getTab("Main").add("Camera",
+		// camera).withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4)
+		// .withProperties(Map.of("rotation", "HALF"));
 
 		// Configure the PathPlanner auto-builder
 		AutoBuilder.configureHolonomic(gyro::getPose, gyro::resetPose, swerve::getRobotRelativeSpeeds,

@@ -26,11 +26,11 @@ public class ShooterIOSparkMax implements ShooterIO {
 
 		shooterTopMotor = new CANSparkFlex(CAN.kShooterTopPort, MotorType.kBrushless);
 		SparkConfig.config(shooterTopMotor, SparkType.kSparkFlex);
-		shooterTopMotor.setInverted(true);
+		shooterTopMotor.setInverted(false);
 
 		shooterBottomMotor = new CANSparkFlex(CAN.kShooterBottomPort, MotorType.kBrushless);
 		SparkConfig.config(shooterTopMotor, SparkType.kSparkFlex);
-		shooterBottomMotor.setInverted(true);
+		shooterBottomMotor.setInverted(false);
 
 		shooterTopEncoder = shooterTopMotor.getEncoder();
 		shooterTopEncoder.setVelocityConversionFactor(1.0 / ShooterConstants.kShooterReduction);

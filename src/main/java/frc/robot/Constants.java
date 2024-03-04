@@ -151,7 +151,7 @@ public final class Constants {
 
 		public static final HolonomicPathFollowerConfig kHolonomicConfig = new HolonomicPathFollowerConfig(
 				new PIDConstants(0.25, 0.0, 0.0), // Translation PID constants
-				new PIDConstants(0.25, 0.0, 0.0), // Rotation PID constants
+				new PIDConstants(0.5, 0.0, 0.0), // Rotation PID constants
 				kTeleDriveMaxSpeedMetersPerSecond, // Max module speed, in m/s
 				// Drive base radius in meters. Distance from robot center to furthest module.
 				Math.sqrt(Math.pow(kTrackWidth, 2) + Math.pow(kWheelBase, 2)) / 2, new ReplanningConfig());
@@ -175,7 +175,7 @@ public final class Constants {
 		public static final double kArmJKgMetersSquared = 0.515;
 
 		// Constraints
-		public static final double kMaxArmAngle = 0.0;
+		public static final double kMaxArmAngle = -0.084;
 		public static final double kMinArmAngle = -1.76625;
 
 		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Arm/Max Speed", 3.5);
@@ -184,8 +184,8 @@ public final class Constants {
 
 		// Arm presets
 		public static final double kTaxiAngle = -1.175;
-		public static final double kRoombaAngle = -0.04396;
-		public static final double kSpeakerAngle = -0.13816;
+		public static final double kRoombaAngle = -0.084;
+		public static final double kSpeakerAngle = -0.31;
 		public static final double kAmpAngle = -1.620;
 		public static final double kTrapAngle = -0.13816;
 
@@ -200,8 +200,8 @@ public final class Constants {
 				0.5);
 
 		public static final LoggedTunableNumber kAmpRPM = new LoggedTunableNumber("Shooter/Amp RPM", 500);
-		public static final LoggedTunableNumber kSpeakerRPM = new LoggedTunableNumber("Shooter/Speaker RPM", 6300);
-		public static final LoggedTunableNumber kTrapRPM = new LoggedTunableNumber("Shooter/Manual RMM", 1000);
+		public static final LoggedTunableNumber kSpeakerRPM = new LoggedTunableNumber("Shooter/Speaker RPM", 4500);
+		public static final LoggedTunableNumber kTrapRPM = new LoggedTunableNumber("Shooter/Manual RPM", 1000);
 		public static final LoggedTunableNumber kIdleRPM = new LoggedTunableNumber("Shooter/Idle RPM", 500);
 	}
 
@@ -217,7 +217,7 @@ public final class Constants {
 			case SIMBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 0.00103, 0.0, 0.0);
 		};
 		public static final Gains armGains = switch (currentRobot) {
-			case REALBOT -> new Gains(1.5, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
+			case REALBOT -> new Gains(3, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
 			case SIMBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
 		};
 	}
