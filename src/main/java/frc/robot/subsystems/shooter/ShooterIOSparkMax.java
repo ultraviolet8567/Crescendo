@@ -42,8 +42,8 @@ public class ShooterIOSparkMax implements ShooterIO {
 		shooterBottomPID = shooterBottomMotor.getPIDController();
 
 		setGains(shooterTopGains.kP(), shooterTopGains.kI(), shooterTopGains.kD(), shooterTopGains.ffkS(),
-				shooterTopGains.ffkV(), shooterBottomGains.kP(), shooterBottomGains.kI(), shooterBottomGains.kD(), shooterBottomGains.ffkS(),
-				shooterBottomGains.ffkV());
+				shooterTopGains.ffkV(), shooterBottomGains.kP(), shooterBottomGains.kI(), shooterBottomGains.kD(),
+				shooterBottomGains.ffkS(), shooterBottomGains.ffkV());
 	}
 
 	@Override
@@ -86,7 +86,8 @@ public class ShooterIOSparkMax implements ShooterIO {
 	}
 
 	@Override
-	public void setGains(double tkP, double tkI, double tkD, double tffkS, double tffkV, double bkP, double bkI, double bkD, double bffkS, double bffkV) {
+	public void setGains(double tkP, double tkI, double tkD, double tffkS, double tffkV, double bkP, double bkI,
+			double bkD, double bffkS, double bffkV) {
 		shooterTopPID.setP(tkP);
 		shooterTopPID.setI(tkI);
 		shooterTopPID.setD(tkI);

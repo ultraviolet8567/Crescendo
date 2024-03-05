@@ -1,7 +1,6 @@
 package frc.robot.subsystems.intake;
 
 import com.revrobotics.ColorMatch;
-import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.I2C;
@@ -55,8 +54,9 @@ public class Intake extends SubsystemBase {
 		Logger.recordOutput("Intake/Proximity", sensor.getProximity());
 
 		// If the sensor sees orange, we have a note in the system
-		ColorMatchResult result = matcher.matchColor(sensor.getColor());
-		noteDetected = (result != null);
+		// ColorMatchResult result = matcher.matchColor(sensor.getColor());
+		// noteDetected = (result != null);
+		noteDetected = sensor.getProximity() >= IntakeConstants.kProximityThreshold;
 
 		Lights.getInstance().hasNote = noteDetected;
 		// if (!notePreviouslyDetected && noteDetected) {

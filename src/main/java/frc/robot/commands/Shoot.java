@@ -1,11 +1,10 @@
 package frc.robot.commands;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Shoot extends Command {
 	private Shooter shooter;
@@ -25,7 +24,7 @@ public class Shoot extends Command {
 	@Override
 	public void execute() {
 		shooter.shoot();
-		
+
 		// 87% buffer if the shooter flywheels never actually reach their target
 		// velocity
 		if (shooter.atVelocity()) {

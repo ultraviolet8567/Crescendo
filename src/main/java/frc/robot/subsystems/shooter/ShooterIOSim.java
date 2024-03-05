@@ -64,7 +64,8 @@ public class ShooterIOSim implements ShooterIO {
 	}
 
 	@Override
-	public void setGains(double tkP, double tkI, double tkD, double tffkS, double tffkV, double bkP, double bkI, double bkD, double bffkS, double bffkV) {
+	public void setGains(double tkP, double tkI, double tkD, double tffkS, double tffkV, double bkP, double bkI,
+			double bkD, double bffkS, double bffkV) {
 		shooterTopPID.setPID(tkP, tkI, tkD);
 		shooterTopFF = new SimpleMotorFeedforward(tffkS, tffkV);
 
