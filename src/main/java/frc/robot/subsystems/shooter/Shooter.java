@@ -25,21 +25,16 @@ public class Shooter extends SubsystemBase {
 	private static final LoggedTunableNumber BottomkV = new LoggedTunableNumber("Shooter/Bottom/kV", shooterBottomGains.ffkV());
 
 	private final Arm arm;
-	private final Intake intake;
 	private final ShooterIO io;
 	private final ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
-	Timer timer = new Timer();
-
-	private SysIdRoutine routine;
 
 	/*
 	 * Initialize all components here, as well as any one-time logic to be completed
 	 * on boot-up
 	 */
-	public Shooter(ShooterIO io, Arm arm, Intake intake) {
+	public Shooter(ShooterIO io, Arm arm) {
 		this.io = io;
 		this.arm = arm;
-		this.intake = intake;
 	}
 
 	/* Runs periodically (about once every 20 ms) */
@@ -58,20 +53,10 @@ public class Shooter extends SubsystemBase {
 	public void shoot() {
 		double targetVel = getTargetVelocity();
 		io.setVelocity(targetVel, targetVel);
-		// 87% buffer if the shooter flywheels never actually reach their target
-		// velocity
-		if (inputs.topVelocityRPM >= 0.87 * targetVel && inputs.bottomVelocityRPM >= 0.87 * targetVel) {
-			intake.runIndexer();
-			if (!intake.noteDetected) {
-				timer.schedule(new TimerTask() {
-					@Override
-					public void run() {
-						io.stop();
-					}
-				}, 1000);
-			}
-		}
+	}
 
+	public boolean atVelocity() {
+		return inputs.topVelocityRPM >= ShooterConstants.kVelocityThreshold * getTargetVelocity() && inputs.bottomVelocityRPM >= ShooterConstants.kVelocityThreshold * getTargetVelocity();
 	}
 
 	public double getTargetVelocity() {
