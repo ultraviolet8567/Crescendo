@@ -13,11 +13,16 @@ import java.util.TimerTask;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
-	private static final LoggedTunableNumber kP = new LoggedTunableNumber("Shooter/Top/kP", shooterTopGains.kP());
-	private static final LoggedTunableNumber kI = new LoggedTunableNumber("Shooter/Top/kI", shooterTopGains.kI());
-	private static final LoggedTunableNumber kD = new LoggedTunableNumber("Shooter/Top/kD", shooterTopGains.kD());
-	private static final LoggedTunableNumber kS = new LoggedTunableNumber("Shooter/Top/kS", shooterTopGains.ffkS());
-	private static final LoggedTunableNumber kV = new LoggedTunableNumber("Shooter/Top/kV", shooterTopGains.ffkV());
+	private static final LoggedTunableNumber TopkP = new LoggedTunableNumber("Shooter/Top/kP", shooterTopGains.kP());
+	private static final LoggedTunableNumber TopkI = new LoggedTunableNumber("Shooter/Top/kI", shooterTopGains.kI());
+	private static final LoggedTunableNumber TopkD = new LoggedTunableNumber("Shooter/Top/kD", shooterTopGains.kD());
+	private static final LoggedTunableNumber TopkS = new LoggedTunableNumber("Shooter/Top/kS", shooterTopGains.ffkS());
+	private static final LoggedTunableNumber TopkV = new LoggedTunableNumber("Shooter/Top/kV", shooterTopGains.ffkV());
+	private static final LoggedTunableNumber BottomkP = new LoggedTunableNumber("Shooter/Bottom/kP", shooterBottomGains.kP());
+	private static final LoggedTunableNumber BottomkI = new LoggedTunableNumber("Shooter/Bottom/kI", shooterBottomGains.kI());
+	private static final LoggedTunableNumber BottomkD = new LoggedTunableNumber("Shooter/Bottom/kD", shooterBottomGains.kD());
+	private static final LoggedTunableNumber BottomkS = new LoggedTunableNumber("Shooter/Bottom/kS", shooterBottomGains.ffkS());
+	private static final LoggedTunableNumber BottomkV = new LoggedTunableNumber("Shooter/Bottom/kV", shooterBottomGains.ffkV());
 
 	private final Arm arm;
 	private final Intake intake;
@@ -45,8 +50,8 @@ public class Shooter extends SubsystemBase {
 
 		Logger.recordOutput("Shooter/TargetVelocity", getTargetVelocity());
 
-		LoggedTunableNumber.ifChanged(hashCode(), () -> io.setGains(kP.get(), kI.get(), kD.get(), kS.get(), kV.get()),
-				kP, kI, kD, kS, kV);
+		LoggedTunableNumber.ifChanged(hashCode(), () -> io.setGains(TopkP.get(), TopkI.get(), TopkD.get(), TopkS.get(), TopkV.get(), BottomkP.get(), BottomkI.get(), BottomkD.get(), BottomkS.get(), BottomkV.get()),
+				TopkP, TopkI, TopkD, TopkS, TopkV, BottomkP, BottomkI, BottomkD, BottomkS, BottomkV);
 	}
 
 	/* Define all subsystem-specific methods and enums here */
