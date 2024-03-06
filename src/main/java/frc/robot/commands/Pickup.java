@@ -9,6 +9,8 @@ public class Pickup extends Command {
 
 	public Pickup(Intake intake) {
 		this.intake = intake;
+
+		addRequirements(intake);
 	}
 
 	@Override
