@@ -1,14 +1,10 @@
 package frc.robot.subsystems.arm;
 
-import static edu.wpi.first.units.Units.Radians;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.*;
 import static frc.robot.Constants.GainsConstants.armGains;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.units.Measure;
-import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.ArmConstants;
@@ -39,12 +35,15 @@ public class Arm extends SubsystemBase {
 		this.io = io;
 		armMode = ArmMode.MANUAL;
 
-		routine = new SysIdRoutine(new SysIdRoutine.Config(),
-				new SysIdRoutine.Mechanism((Measure<Voltage> volts) -> io.setInputVoltage(volts.in(Volts)),
-						log -> log.motor("arm").voltage(Volts.of(inputs.appliedVoltage))
-								.angularPosition(Radians.of(inputs.positionRads))
-								.angularVelocity(RadiansPerSecond.of(inputs.velocityRadPerSec)),
-						this));
+		// routine = new SysIdRoutine(new
+		// SysIdRoutine.Config(Volts.of(2).per(Seconds.of(1)), Volts.of(5),
+		// Seconds.of(5)),
+		// new SysIdRoutine.Mechanism((Measure<Voltage> volts) ->
+		// io.setInputVoltage(volts.in(Volts)),
+		// log -> log.motor("arm").voltage(Volts.of(inputs.appliedVoltage))
+		// .angularPosition(Radians.of(inputs.positionRads))
+		// .angularVelocity(RadiansPerSecond.of(inputs.velocityRadPerSec)),
+		// this));
 	}
 
 	/* Runs periodically (about once every 20 ms) */
@@ -95,21 +94,21 @@ public class Arm extends SubsystemBase {
 	}
 
 	public double getPresetAngle() {
-		return angle.get();
-		// switch (armMode) {
-		// case SPEAKER :
-		// return ArmConstants.kSpeakerAngle;
-		// case AMP :
-		// return ArmConstants.kAmpAngle;
-		// case ROOMBA :
-		// return ArmConstants.kRoombaAngle;
-		// case TAXI :
-		// return ArmConstants.kTaxiAngle;
-		// case TRAP :
-		// return ArmConstants.kTrapAngle;
-		// default :
-		// return ArmConstants.kTaxiAngle;
-		// }
+		// return angle.get();
+		switch (armMode) {
+			case SPEAKER :
+				return ArmConstants.kSpeakerAngle;
+			case AMP :
+				return ArmConstants.kAmpAngle;
+			case ROOMBA :
+				return ArmConstants.kRoombaAngle;
+			case TAXI :
+				return ArmConstants.kTaxiAngle;
+			case TRAP :
+				return ArmConstants.kTrapAngle;
+			default :
+				return ArmConstants.kTaxiAngle;
+		}
 	}
 
 	public Transform3d getDeltaY() {
