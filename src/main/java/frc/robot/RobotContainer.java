@@ -131,7 +131,8 @@ public class RobotContainer {
 	 */
 	public void configureBindings() {
 		new JoystickButton(operatorJoystick, XboxController.Button.kLeftBumper.value).whileTrue(new Pickup(intake));
-		new JoystickButton(operatorJoystick, XboxController.Button.kRightBumper.value).whileTrue(new Shoot(shooter));
+		new JoystickButton(operatorJoystick, XboxController.Button.kRightBumper.value)
+				.whileTrue(new Shoot(shooter, intake));
 
 		new JoystickButton(operatorJoystick, XboxController.Button.kY.value)
 				.onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SPEAKER)));
@@ -161,7 +162,7 @@ public class RobotContainer {
 		new JoystickButton(driverJoystick, XboxController.Button.kBack.value)
 				.onTrue(new InstantCommand(() -> Lights.getInstance().hasNote = !Lights.getInstance().hasNote));
 
-		NamedCommands.registerCommand("Shoot", new Shoot(shooter));
+		NamedCommands.registerCommand("Shoot", new Shoot(shooter, intake));
 		NamedCommands.registerCommand("Pickup", new Pickup(intake));
 
 		// new JoystickButton(operatorJoystick, XboxController.Button.kStart.value)

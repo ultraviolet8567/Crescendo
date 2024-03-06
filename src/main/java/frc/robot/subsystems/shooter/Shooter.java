@@ -49,6 +49,11 @@ public class Shooter extends SubsystemBase {
 		io.setVelocity(targetVel, targetVel);
 	}
 
+	public boolean atVelocity() {
+		return inputs.topVelocityRPM >= ShooterConstants.kVelocityThreshold * getTargetVelocity()
+				&& inputs.bottomVelocityRPM >= ShooterConstants.kVelocityThreshold * getTargetVelocity();
+	}
+
 	public double getTargetVelocity() {
 		switch (arm.getArmMode()) {
 			case SPEAKER :
