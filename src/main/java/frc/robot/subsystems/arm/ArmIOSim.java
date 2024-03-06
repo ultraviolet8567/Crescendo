@@ -93,8 +93,7 @@ public class ArmIOSim implements ArmIO {
 
 	@Override
 	public void setPosition(double setpoint) {
-		double volts = (armPIDController.calculate(getPositionRads(), setpoint)
-				+ armFF.calculate(getPositionRads(), setpoint));
+		double volts = (armPIDController.calculate(getPositionRads(), setpoint) + armFF.calculate(setpoint, 0));
 		setInputVoltage(volts);
 	}
 

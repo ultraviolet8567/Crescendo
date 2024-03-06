@@ -9,11 +9,16 @@
     },
     "SmartDashboard": {
       "TunableNumbers": {
+        "Arm": {
+          "open": true
+        },
+        "Intake": {
+          "open": true
+        },
         "Shooter": {
           "Top": {
             "open": true
-          },
-          "open": true
+          }
         },
         "open": true
       },

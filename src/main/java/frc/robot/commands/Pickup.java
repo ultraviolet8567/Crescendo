@@ -12,7 +12,7 @@ public class Pickup extends Command {
 	}
 
 	@Override
-	public void execute() {
+	public void initialize() {
 		intake.pickup();
 	}
 

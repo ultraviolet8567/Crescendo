@@ -1,48 +1,41 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Shoot extends Command {
 	private Shooter shooter;
-	private Intake intake;
+	// private Intake intake;
 
-	private Timer timer;
 	private boolean shotComplete;
 
-	public Shoot(Shooter shooter, Intake intake) {
+	public Shoot(Shooter shooter) {
 		this.shooter = shooter;
-		this.intake = intake;
+		// this.intake = intake;
 
-		timer = new Timer();
 		shotComplete = false;
+	}
+
+	@Override
+	public void initialize() {
+		shooter.shoot();
 	}
 
 	@Override
 	public void execute() {
 		shooter.shoot();
-
-		// 87% buffer if the shooter flywheels never actually reach their target
-		// velocity
-		if (shooter.atVelocity()) {
-			intake.runIndexer();
-			if (!intake.noteDetected) {
-				timer.schedule(new TimerTask() {
-					@Override
-					public void run() {
-						shotComplete = true;
-					}
-				}, 1000);
-			}
-		}
+		// if (shooter.atVelocity()) {
+		// intake.runIndexer();
+		// if (!intake.noteDetected) {
+		// shotComplete = true;
+		// }
+		// }
 	}
 
 	@Override
 	public void end(boolean interrupted) {
 		shooter.stop();
+		// intake.stop();
 	}
 
 	@Override

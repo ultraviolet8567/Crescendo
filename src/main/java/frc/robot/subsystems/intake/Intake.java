@@ -3,11 +3,10 @@ package frc.robot.subsystems.intake;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Lights;
 import org.littletonrobotics.junction.Logger;
@@ -31,10 +30,10 @@ public class Intake extends SubsystemBase {
 	public Intake(IntakeIO io) {
 		this.io = io;
 
-		sensor = new ColorSensorV3(I2C.Port.kOnboard);
-		matcher = new ColorMatch();
-		matcher.addColorMatch(Constants.kNoteColor);
-		matcher.setConfidenceThreshold(Constants.kColorConfidenceThreshold);
+		sensor = new ColorSensorV3(Port.kOnboard);
+		// matcher = new ColorMatch();
+		// matcher.addColorMatch(Constants.kNoteColor);
+		// matcher.setConfidenceThreshold(Constants.kColorConfidenceThreshold);
 
 		noteIndicator = Shuffleboard.getTab("Main").add("Note collected", Lights.getInstance().hasNote)
 				.withWidget(BuiltInWidgets.kBooleanBox).withPosition(4, 0).withSize(2, 2).getEntry();
@@ -49,16 +48,18 @@ public class Intake extends SubsystemBase {
 		noteIndicator.setBoolean(Lights.getInstance().hasNote);
 
 		Logger.recordOutput("HoldingNote", Lights.getInstance().hasNote);
-		Logger.recordOutput("Intake/DetectedColor",
-				new double[]{sensor.getColor().red, sensor.getColor().green, sensor.getColor().blue});
+		// Logger.recordOutput("Intake/DetectedColor",
+		// new double[]{sensor.getColor().red, sensor.getColor().green,
+		// sensor.getColor().blue});
 		Logger.recordOutput("Intake/Proximity", sensor.getProximity());
+		Lights.getInstance().hasNote = sensor.getProximity() >= IntakeConstants.kProximityThreshold;
 
 		// If the sensor sees orange, we have a note in the system
 		// ColorMatchResult result = matcher.matchColor(sensor.getColor());
 		// noteDetected = (result != null);
-		noteDetected = sensor.getProximity() >= IntakeConstants.kProximityThreshold;
+		// noteDetected = sensor.getProximity() >= IntakeConstants.kProximityThreshold;
 
-		Lights.getInstance().hasNote = noteDetected;
+		// Lights.getInstance().hasNote = noteDetected;
 		// if (!notePreviouslyDetected && noteDetected) {
 		// Lights.getInstance().hasNote = true;
 		// }
@@ -67,9 +68,7 @@ public class Intake extends SubsystemBase {
 	}
 
 	public void pickup() {
-		if (!Lights.getInstance().hasNote) {
-			io.setInputVoltage(IntakeConstants.kIntakeVoltage.get());
-		}
+		io.setInputVoltage(IntakeConstants.kIntakeVoltage.get());
 	}
 
 	public void drop() {
