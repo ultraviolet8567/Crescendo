@@ -32,10 +32,10 @@ public class Intake extends SubsystemBase {
 	public Intake(IntakeIO io) {
 		this.io = io;
 
-		sensor = new ColorSensorV3(I2C.Port.kOnboard);
-		matcher = new ColorMatch();
-		matcher.addColorMatch(Constants.kNoteColor);
-		matcher.setConfidenceThreshold(Constants.kColorConfidenceThreshold);
+		// sensor = new ColorSensorV3(I2C.Port.kOnboard);
+		// matcher = new ColorMatch();
+		// matcher.addColorMatch(Constants.kNoteColor);
+		// matcher.setConfidenceThreshold(Constants.kColorConfidenceThreshold);
 
 		noteIndicator = Shuffleboard.getTab("Main").add("Note collected", Lights.getInstance().hasNote)
 				.withWidget(BuiltInWidgets.kBooleanBox).withPosition(4, 0).withSize(2, 2).getEntry();
@@ -50,13 +50,13 @@ public class Intake extends SubsystemBase {
 		noteIndicator.setBoolean(Lights.getInstance().hasNote);
 
 		Logger.recordOutput("HoldingNote", Lights.getInstance().hasNote);
-		Logger.recordOutput("Intake/DetectedColor",
-				new double[]{sensor.getColor().red, sensor.getColor().green, sensor.getColor().blue});
-		Logger.recordOutput("Intake/Proximity", sensor.getProximity());
+		// Logger.recordOutput("Intake/DetectedColor",
+		// 		new double[]{sensor.getColor().red, sensor.getColor().green, sensor.getColor().blue});
+		// Logger.recordOutput("Intake/Proximity", sensor.getProximity());
 
 		// If the sensor sees orange, we have a note in the system
-		ColorMatchResult result = matcher.matchColor(sensor.getColor());
-		noteDetected = (result != null);
+		// ColorMatchResult result = matcher.matchColor(sensor.getColor());
+		// noteDetected = (result != null);
 
 		Lights.getInstance().hasNote = noteDetected;
 		// if (!notePreviouslyDetected && noteDetected) {
