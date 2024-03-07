@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7418259386281802,
-      "y": 6.691938312786578
+      "x": 1.3468774807223807,
+      "y": 5.54487565115481
     },
-    "rotation": -119.83553910026154
+    "rotation": -1.5027147464385595
   },
   "command": {
     "type": "sequential",
@@ -14,24 +14,24 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "SpeakerFrontPosition"
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "AutoShoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "1 & 2 Note Auto Drive Out"
+            "pathName": "1 & 2 Note Drive Out Center"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "1 Note Autos",
   "choreoAuto": false
 }

@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.293678213604645,
-        "y": 7.43
+        "x": 0.6884877930156866,
+        "y": 4.392693697668098
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.806401972290393,
-        "y": 6.867879845802487
+        "x": 1.023898919835754,
+        "y": 4.250548027162404
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.64,
-        "y": 6.34
+        "x": 2.540208789690763,
+        "y": 4.1046482092964185
       },
       "prevControl": {
-        "x": 6.607420539691293,
-        "y": 6.831855134922823
+        "x": 1.5880448822509015,
+        "y": 4.143554827394014
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,20 +32,20 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.7,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -164.00641590227008,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Shootx4Blue",
+  "folder": null,
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -61.31783383700513,
     "velocity": 0
   },
   "useDefaultConstraints": true

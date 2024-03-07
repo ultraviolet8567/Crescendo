@@ -96,8 +96,12 @@ public class Arm extends SubsystemBase {
 	public double getPresetAngle() {
 		// return angle.get();
 		switch (armMode) {
-			case SPEAKER :
-				return ArmConstants.kSpeakerAngle;
+			case SPEAKERFRONT :
+				return ArmConstants.kSpeakerFrontAngle;
+			case SPEAKERANGLE :
+				return ArmConstants.kSpeakerAngleAngle;
+			case SPEAKERSTAGE :
+				return ArmConstants.kSpeakerStageAngle;
 			case AMP :
 				return ArmConstants.kAmpAngle;
 			case ROOMBA :
@@ -133,8 +137,12 @@ public class Arm extends SubsystemBase {
 		MANUAL,
 		/** Intaking from ground */
 		ROOMBA,
-		/** Pointing at speaker */
-		SPEAKER,
+		/** Pointing at speaker directly in front of the subwoofer */
+		SPEAKERFRONT,
+		/** Pointing at speaker on the angled side of the subwoofer */
+		SPEAKERANGLE,
+		/** Pointing at speaker on the right side of the stage */
+		SPEAKERSTAGE,
 		/** Pointing at amp */
 		AMP,
 		/** Pointing at trap */

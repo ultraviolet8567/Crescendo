@@ -35,7 +35,7 @@ public class Intake extends SubsystemBase {
 		// matcher.setConfidenceThreshold(Constants.kColorConfidenceThreshold);
 
 		noteIndicator = Shuffleboard.getTab("Main").add("Note collected", Lights.getInstance().hasNote)
-				.withWidget(BuiltInWidgets.kBooleanBox).withPosition(4, 0).withSize(2, 2).getEntry();
+				.withWidget(BuiltInWidgets.kBooleanBox).withPosition(0, 0).withSize(2, 2).getEntry();
 	}
 
 	/* Runs periodically (about once every 20 ms) */

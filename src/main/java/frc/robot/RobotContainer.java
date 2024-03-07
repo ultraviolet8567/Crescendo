@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -10,13 +11,15 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.*;
 import frc.robot.commands.*;
+import frc.robot.commands.autos.AutoSetArmMode;
+import frc.robot.commands.autos.AutoShoot;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.arm.*;
 import frc.robot.subsystems.arm.Arm.ArmMode;
@@ -40,6 +43,7 @@ public class RobotContainer {
 	private final Shooter shooter;
 	private final Swerve swerve;
 	// private final Vision vision;
+	private final AutoChooser autoChooser;
 
 	// Joysticks
 	private static final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
@@ -49,9 +53,6 @@ public class RobotContainer {
 
 	// Camera
 	public final UsbCamera camera = CameraServer.startAutomaticCapture(0);
-
-	// Auto chooser
-	public final SendableChooser<Command> autoChooser;
 
 	public RobotContainer() {
 		// intake camera limitations
@@ -89,6 +90,8 @@ public class RobotContainer {
 		gyro = new Gyrometer(swerve);
 		// odometry = new Odometry(vision, gyro);
 
+		autoChooser = new AutoChooser();
+
 		// Configure default commands for driving and arm movement
 		swerve.setDefaultCommand(new SwerveTeleOp(swerve, gyro,
 				() -> ControllerIO.inversionY() * driverJoystick.getRawAxis(ControllerIO.getLeftY()),
@@ -106,7 +109,8 @@ public class RobotContainer {
 		configureBindings();
 
 		// Post webcam feed to Shuffleboard
-		Shuffleboard.getTab("Main").add("Camera", camera).withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4);
+		Shuffleboard.getTab("Main").add("Camera", camera).withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4)
+				.withPosition(3, 0);
 
 		// Configure the PathPlanner auto-builder
 		AutoBuilder.configureHolonomic(gyro::getPose, gyro::resetPose, swerve::getRobotRelativeSpeeds,
@@ -117,11 +121,6 @@ public class RobotContainer {
 					}
 					return false;
 				}, swerve);
-
-		// Post auto selector to Shuffleboard
-		autoChooser = AutoBuilder.buildAutoChooser();
-		Shuffleboard.getTab("Main").add("Auto", autoChooser).withWidget(BuiltInWidgets.kComboBoxChooser).withSize(2, 1);
-
 	}
 
 	/**
@@ -135,7 +134,10 @@ public class RobotContainer {
 				.whileTrue(new Shoot(shooter, intake));
 
 		new JoystickButton(operatorJoystick, XboxController.Button.kY.value)
-				.onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SPEAKER)));
+				.onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SPEAKERFRONT)));
+		new POVButton(operatorJoystick, 0).onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SPEAKERANGLE)));
+		new JoystickButton(operatorJoystick, XboxController.Button.kStart.value)
+				.onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SPEAKERSTAGE)));
 		new JoystickButton(operatorJoystick, XboxController.Button.kB.value)
 				.onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.TAXI)));
 		new JoystickButton(operatorJoystick, XboxController.Button.kA.value)
@@ -162,8 +164,14 @@ public class RobotContainer {
 		new JoystickButton(driverJoystick, XboxController.Button.kBack.value)
 				.onTrue(new InstantCommand(() -> Lights.getInstance().hasNote = !Lights.getInstance().hasNote));
 
-		NamedCommands.registerCommand("Shoot", new Shoot(shooter, intake));
+		NamedCommands.registerCommand("AutoShoot", new AutoShoot(shooter, intake));
 		NamedCommands.registerCommand("Pickup", new Pickup(intake));
+		NamedCommands.registerCommand("TaxiPosition", new AutoSetArmMode(arm, ArmMode.TAXI));
+		NamedCommands.registerCommand("AmpPosition", new AutoSetArmMode(arm, ArmMode.AMP));
+		NamedCommands.registerCommand("IntakePosition", new AutoSetArmMode(arm, ArmMode.ROOMBA));
+		NamedCommands.registerCommand("SpeakerFrontPosition", new AutoSetArmMode(arm, ArmMode.SPEAKERFRONT));
+		NamedCommands.registerCommand("SpeakerAnglePosition", new AutoSetArmMode(arm, ArmMode.SPEAKERANGLE));
+		NamedCommands.registerCommand("SpeakerStagePosition", new AutoSetArmMode(arm, ArmMode.SPEAKERSTAGE));
 
 		// new JoystickButton(operatorJoystick, XboxController.Button.kStart.value)
 		// .whileTrue(new Climb(climber, "extend"));
@@ -184,7 +192,7 @@ public class RobotContainer {
 	}
 
 	public Command getAutonomousCommand() {
-		return autoChooser.getSelected();
+		return new PathPlannerAuto(autoChooser.getAutoCommand());
 	}
 
 	public static Joystick getDriverJoystick() {

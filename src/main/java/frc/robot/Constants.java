@@ -185,7 +185,9 @@ public final class Constants {
 		// Arm presets
 		public static final double kTaxiAngle = -1.175;
 		public static final double kRoombaAngle = -0.084;
-		public static final double kSpeakerAngle = -0.31;
+		public static final double kSpeakerFrontAngle = -0.31;
+		public static final double kSpeakerAngleAngle = -0.33;
+		public static final double kSpeakerStageAngle = -0.75;
 		public static final double kAmpAngle = -1.620;
 		public static final double kTrapAngle = -0.13816;
 
@@ -202,7 +204,12 @@ public final class Constants {
 				0.5);
 
 		public static final LoggedTunableNumber kAmpRPM = new LoggedTunableNumber("Shooter/Amp RPM", 500);
-		public static final LoggedTunableNumber kSpeakerRPM = new LoggedTunableNumber("Shooter/Speaker RPM", 4500);
+		public static final LoggedTunableNumber kSpeakerFrontRPM = new LoggedTunableNumber("Shooter/SpeakerFront RPM",
+				4500);
+		public static final LoggedTunableNumber kSpeakerAngleRPM = new LoggedTunableNumber("Shooter/SpeakerAngle RPM",
+				3000);
+		public static final LoggedTunableNumber kSpeakerStageRPM = new LoggedTunableNumber("Shooter/SpeakerStage RPM",
+				4000);
 		public static final LoggedTunableNumber kTrapRPM = new LoggedTunableNumber("Shooter/Manual RPM", 1000);
 		public static final LoggedTunableNumber kIdleRPM = new LoggedTunableNumber("Shooter/Idle RPM", 500);
 	}
@@ -211,6 +218,11 @@ public final class Constants {
 		public static final double kIntakeReduction = 1.0;
 
 		public static final LoggedTunableNumber kIntakeVoltage = new LoggedTunableNumber("Intake/Voltage", 10);
+	}
+
+	public static final class AutoConstants {
+		public static final double kAutoShootTime = 2.0;
+		public static final double kAutoArmTime = 1.0;
 	}
 
 	public static final class GainsConstants {

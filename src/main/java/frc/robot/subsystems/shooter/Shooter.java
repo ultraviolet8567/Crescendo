@@ -56,8 +56,12 @@ public class Shooter extends SubsystemBase {
 
 	public double getTargetVelocity() {
 		switch (arm.getArmMode()) {
-			case SPEAKER :
-				return ShooterConstants.kSpeakerRPM.get();
+			case SPEAKERFRONT :
+				return ShooterConstants.kSpeakerFrontRPM.get();
+			case SPEAKERANGLE :
+				return ShooterConstants.kSpeakerAngleRPM.get();
+			case SPEAKERSTAGE :
+				return ShooterConstants.kSpeakerStageRPM.get();
 			case AMP :
 				return ShooterConstants.kAmpRPM.get();
 			case TRAP :
