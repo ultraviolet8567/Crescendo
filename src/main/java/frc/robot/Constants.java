@@ -186,7 +186,7 @@ public final class Constants {
 		public static final double kTaxiAngle = -1.175;
 		public static final double kRoombaAngle = -0.084;
 		public static final double kSpeakerFrontAngle = -0.31;
-		public static final double kSpeakerAngleAngle = -0.40;
+		public static final double kSpeakerAngleAngle = -0.31;
 		public static final double kSpeakerStageAngle = -0.75;
 		public static final double kAmpAngle = -1.620;
 		public static final double kTrapAngle = -0.13816;
@@ -208,7 +208,7 @@ public final class Constants {
 		public static final LoggedTunableNumber kSpeakerFrontRPM = new LoggedTunableNumber("Shooter/SpeakerFront RPM",
 				4500);
 		public static final LoggedTunableNumber kSpeakerAngleRPM = new LoggedTunableNumber("Shooter/SpeakerAngle RPM",
-				3000);
+				4500);
 		public static final LoggedTunableNumber kSpeakerStageRPM = new LoggedTunableNumber("Shooter/SpeakerStage RPM",
 				4000);
 		public static final LoggedTunableNumber kTrapRPM = new LoggedTunableNumber("Shooter/Manual RPM", 1000);
