@@ -223,6 +223,7 @@ public final class Constants {
 	public static final class AutoConstants {
 		public static final double kAutoShootTime = 2.0;
 		public static final double kAutoArmTime = 1.0;
+		public static final double kAutoIntakeTime = 4.0;
 	}
 
 	public static final class GainsConstants {

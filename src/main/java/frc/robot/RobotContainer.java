@@ -20,6 +20,7 @@ import frc.robot.Constants.*;
 import frc.robot.commands.*;
 import frc.robot.commands.autos.AutoSetArmMode;
 import frc.robot.commands.autos.AutoShoot;
+import frc.robot.commands.autos.AutoIntake;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.arm.*;
 import frc.robot.subsystems.arm.Arm.ArmMode;
@@ -165,7 +166,7 @@ public class RobotContainer {
 				.onTrue(new InstantCommand(() -> Lights.getInstance().hasNote = !Lights.getInstance().hasNote));
 
 		NamedCommands.registerCommand("AutoShoot", new AutoShoot(shooter, intake));
-		NamedCommands.registerCommand("Pickup", new Pickup(intake));
+		NamedCommands.registerCommand("Pickup", new AutoIntake(intake));
 		NamedCommands.registerCommand("TaxiPosition", new AutoSetArmMode(arm, ArmMode.TAXI));
 		NamedCommands.registerCommand("AmpPosition", new AutoSetArmMode(arm, ArmMode.AMP));
 		NamedCommands.registerCommand("IntakePosition", new AutoSetArmMode(arm, ArmMode.ROOMBA));
