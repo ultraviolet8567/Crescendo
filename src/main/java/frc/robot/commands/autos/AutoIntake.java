@@ -18,8 +18,11 @@ public class AutoIntake extends Command {
 
 	@Override
 	public void initialize() {
+		timer.reset();
 		timer.start();
 		intake.pickup();
+
+		System.out.println("Intaking");
 	}
 
 	@Override
@@ -29,6 +32,6 @@ public class AutoIntake extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return Math.abs(timer.get() - AutoConstants.kAutoIntakeTime) < 0.1;
+		return timer.get() > AutoConstants.kAutoIntakeTime;
 	}
 }

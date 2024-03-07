@@ -178,21 +178,22 @@ public final class Constants {
 		public static final double kMaxArmAngle = -0.084;
 		public static final double kMinArmAngle = -1.76625;
 
-		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Arm/Max Speed", 3.5);
-		public static final LoggedTunableNumber kMaxAcceleration = new LoggedTunableNumber("Arm/Max Acceleration", 1);
+		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Arm/Max Speed", 4);
+		public static final LoggedTunableNumber kMaxAcceleration = new LoggedTunableNumber("Arm/Max Acceleration", 2);
 		public static final LoggedTunableNumber kManualVoltage = new LoggedTunableNumber("Arm/ManualVoltage", 8);
 
 		// Arm presets
 		public static final double kTaxiAngle = -1.175;
 		public static final double kRoombaAngle = -0.084;
 		public static final double kSpeakerFrontAngle = -0.31;
-		public static final double kSpeakerAngleAngle = -0.33;
+		public static final double kSpeakerAngleAngle = -0.40;
 		public static final double kSpeakerStageAngle = -0.75;
 		public static final double kAmpAngle = -1.620;
 		public static final double kTrapAngle = -0.13816;
 
 		// Control
 		public static final LoggedTunableNumber kArmPIDTolerance = new LoggedTunableNumber("Arm/PID Tolerance", 0.0001);
+		public static final double kSetpointTolerance = 0.2;
 	}
 
 	public static final class ShooterConstants {
@@ -239,7 +240,7 @@ public final class Constants {
 		public static final Gains armGains = switch (currentRobot) {
 			// case REALBOT -> new Gains(5.6814, 0.0, 0.21662, 1.0241, 0.0096705, 0.049916,
 			// 10.0);
-			case REALBOT -> new Gains(5.7183, 0.0, 0.28642, 0.016186, 0.02131, 0.087119, 1.4338);
+			case REALBOT -> new Gains(6.25, 0.0, 0.28642, 0.016186, 0.02131, 0.087119, 1.4338);
 			case SIMBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
 		};
 	}

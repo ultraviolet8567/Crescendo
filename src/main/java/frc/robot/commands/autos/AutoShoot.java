@@ -21,8 +21,11 @@ public class AutoShoot extends Command {
 
 	@Override
 	public void initialize() {
+		timer.reset();
 		timer.start();
 		shooter.shoot();
+
+		System.out.println("Shooting");
 	}
 
 	@Override
@@ -40,9 +43,6 @@ public class AutoShoot extends Command {
 
 	@Override
 	public boolean isFinished() {
-		if (shooter.atVelocity()) {
-			return Math.abs(timer.get() - AutoConstants.kAutoShootTime) < 0.1;
-		}
-		return false;
+		return shooter.atVelocity() && timer.get() > AutoConstants.kAutoShootTime;
 	}
 }

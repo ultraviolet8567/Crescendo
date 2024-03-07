@@ -115,6 +115,10 @@ public class Arm extends SubsystemBase {
 		}
 	}
 
+	public boolean atSetpoint() {
+		return Math.abs(getPresetAngle() - inputs.positionRads) < ArmConstants.kSetpointTolerance;
+	}
+
 	public Transform3d getDeltaY() {
 		double y = ArmConstants.kArmLength * Math.sin(io.getPositionRads());
 		return new Transform3d(0.0, y, 0.0, new Rotation3d());

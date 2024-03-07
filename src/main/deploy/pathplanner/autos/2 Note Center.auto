@@ -49,6 +49,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -76,6 +82,6 @@
       ]
     }
   },
-  "folder": "2 Note Autos",
+  "folder": null,
   "choreoAuto": false
 }
