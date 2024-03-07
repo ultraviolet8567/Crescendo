@@ -19,7 +19,7 @@ public class AutoIntake extends Command {
 	@Override
 	public void initialize() {
 		timer.start();
-        intake.pickup();
+		intake.pickup();
 	}
 
 	@Override
