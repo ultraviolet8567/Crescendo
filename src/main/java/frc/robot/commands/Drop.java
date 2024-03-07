@@ -8,7 +8,7 @@ public class Drop extends Command {
 
 	public Drop(Intake intake) {
 		this.intake = intake;
-		
+
 		addRequirements(intake);
 	}
 

@@ -9,6 +9,7 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
@@ -24,6 +25,7 @@ public class ArmIOSparkMax implements ArmIO {
 	public final CANSparkMax arm1Motor, arm2Motor;
 	public final RelativeEncoder arm1Encoder, arm2Encoder;
 	private final DutyCycleEncoder armEncoder;
+	private final TrapezoidProfile.Constraints constraints;
 	private final ProfiledPIDController armPID;
 	private ArmFeedforward armFF;
 
@@ -48,8 +50,8 @@ public class ArmIOSparkMax implements ArmIO {
 
 		armEncoder = new DutyCycleEncoder(ArmConstants.kArmEncoderPort);
 
-		armPID = new ProfiledPIDController(armGains.kP(), armGains.kI(), armGains.kD(),
-				new Constraints(ArmConstants.kMaxSpeed.get(), ArmConstants.kMaxAcceleration.get()));
+		constraints = new Constraints(ArmConstants.kMaxSpeed.get(), ArmConstants.kMaxAcceleration.get());
+		armPID = new ProfiledPIDController(armGains.kP(), armGains.kI(), armGains.kD(), constraints);
 		armPID.setTolerance(ArmConstants.kArmPIDTolerance.get());
 		armFF = new ArmFeedforward(armGains.ffkS(), armGains.ffkG(), armGains.ffkV(), armGains.ffkA());
 
@@ -113,9 +115,13 @@ public class ArmIOSparkMax implements ArmIO {
 
 	@Override
 	public void setPosition(double setpoint) {
-		double volts = armPID.calculate(getPositionRads(), setpoint);
-		Logger.recordOutput("Arm/PID", armPID.calculate(getPositionRads(), setpoint));
-		Logger.recordOutput("Arm/FF", armFF.calculate(getPositionRads(), setpoint));
+		armPID.setGoal(setpoint);
+		double pid = armPID.calculate(getPositionRads());
+		double ff = armFF.calculate(setpoint, armPID.getSetpoint().velocity);
+		double volts = pid + ff;
+
+		Logger.recordOutput("Arm/PID", pid);
+		Logger.recordOutput("Arm/FF", ff);
 		setInputVoltage(volts);
 	}
 
