@@ -34,7 +34,7 @@ public class IntakeIOSparkMax implements IntakeIO {
 
 	public void setInputVoltage(double volts) {
 		double appliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
-		intakeMotor.setVoltage(appliedVolts);
+		// intakeMotor.setVoltage(appliedVolts);
 	}
 
 	public void stop() {
