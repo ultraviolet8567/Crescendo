@@ -1,6 +1,7 @@
 package frc.robot.subsystems.intake;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,11 +12,9 @@ import org.littletonrobotics.junction.Logger;
 public class Intake extends SubsystemBase {
 	private final IntakeIO io;
 	private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
+	private final DigitalInput sensor;
 
 	private GenericEntry noteIndicator;
-
-	private boolean notePreviouslyDetected = false;
-	private boolean noteDetected = false;
 
 	/*
 	 * Initialize all components here, as well as any one-time logic to be completed
@@ -23,6 +22,7 @@ public class Intake extends SubsystemBase {
 	 */
 	public Intake(IntakeIO io) {
 		this.io = io;
+		sensor = new DigitalInput(IntakeConstants.kSensorPort);
 
 		noteIndicator = Shuffleboard.getTab("Main").add("Note collected", Lights.getInstance().hasNote)
 				.withWidget(BuiltInWidgets.kBooleanBox).withPosition(0, 0).withSize(2, 2).getEntry();
@@ -34,10 +34,10 @@ public class Intake extends SubsystemBase {
 		io.updateInputs(inputs);
 		Logger.processInputs("Intake", inputs);
 
-		noteIndicator.setBoolean(Lights.getInstance().hasNote);
+		Lights.getInstance().hasNote = sensor.get();
 
 		Logger.recordOutput("HoldingNote", Lights.getInstance().hasNote);
-		Lights.getInstance().hasNote = noteDetected;
+		noteIndicator.setBoolean(Lights.getInstance().hasNote);
 	}
 
 	public void pickup() {

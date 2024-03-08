@@ -217,6 +217,7 @@ public final class Constants {
 
 	public static final class IntakeConstants {
 		public static final double kIntakeReduction = 1.0;
+		public static final int kSensorPort = 9;
 
 		public static final LoggedTunableNumber kIntakeVoltage = new LoggedTunableNumber("Intake/Voltage", 10);
 	}

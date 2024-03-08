@@ -21,8 +21,8 @@ import frc.robot.util.SparkConfig.SparkType;
 import org.littletonrobotics.junction.Logger;
 
 public class ArmIOSparkMax implements ArmIO {
-	public final CANSparkMax arm1Motor, arm2Motor;
-	public final RelativeEncoder arm1Encoder, arm2Encoder;
+	private final CANSparkMax arm1Motor, arm2Motor;
+	private final RelativeEncoder arm1Encoder, arm2Encoder;
 	private final DutyCycleEncoder armEncoder;
 	private final ProfiledPIDController armPID;
 	private ArmFeedforward armFF;

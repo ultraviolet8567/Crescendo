@@ -16,8 +16,8 @@ import frc.robot.util.SparkConfig;
 import frc.robot.util.SparkConfig.SparkType;
 
 public class ShooterIOSparkMax implements ShooterIO {
-	public final CANSparkFlex shooterTopMotor, shooterBottomMotor;
-	public final RelativeEncoder shooterTopEncoder, shooterBottomEncoder;
+	private final CANSparkFlex shooterTopMotor, shooterBottomMotor;
+	private final RelativeEncoder shooterTopEncoder, shooterBottomEncoder;
 	private final SparkPIDController shooterTopPID, shooterBottomPID;
 	private SimpleMotorFeedforward shooterTopFF, shooterBottomFF;
 
