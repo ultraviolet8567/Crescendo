@@ -34,9 +34,10 @@ public class Intake extends SubsystemBase {
 		io.updateInputs(inputs);
 		Logger.processInputs("Intake", inputs);
 
-		Lights.getInstance().hasNote = sensor.get();
+		Lights.getInstance().hasNote = false; // sensor.get();
 
 		Logger.recordOutput("HoldingNote", Lights.getInstance().hasNote);
+		Logger.recordOutput("SensorOutput", sensor.get());
 		noteIndicator.setBoolean(Lights.getInstance().hasNote);
 	}
 
