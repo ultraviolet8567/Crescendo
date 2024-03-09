@@ -17,7 +17,8 @@ public class AutoChooser extends SubsystemBase {
 	public AutoChooser() {
 		// Post the selectors to the ShuffleBoard
 		noteNumber = new SendableChooser<>();
-		noteNumber.setDefaultOption("1 Note", "1 Note");
+		noteNumber.setDefaultOption("0 Note", "Do nothing");
+		noteNumber.addOption("1 Note", "1 Note");
 		noteNumber.addOption("2 Note", "2 Note");
 		noteNumber.addOption("3 Note", "3 Note");
 		noteNumber.addOption("4 Note", "4 Note");
@@ -36,6 +37,8 @@ public class AutoChooser extends SubsystemBase {
 		otherStuff.setDefaultOption("None", "");
 		otherStuff.addOption("Rush", "Rush ");
 		otherStuff.addOption("Inner", "Inner ");
+		otherStuff.addOption("Out of Way", "Out Of Way ");
+		otherStuff.addOption("Don't Move", "Don't Move ");
 		main.add("Other variables", otherStuff).withWidget(BuiltInWidgets.kComboBoxChooser).withSize(2, 1)
 				.withPosition(2, 2);
 	}
@@ -43,6 +46,11 @@ public class AutoChooser extends SubsystemBase {
 	public String getAutoCommand() {
 		Logger.recordOutput("Auto/Routine",
 				noteNumber.getSelected() + " " + otherStuff.getSelected() + sideOfField.getSelected());
+
+		if (noteNumber.getSelected() == "Do Nothing") {
+			return null;
+		}
+
 		return noteNumber.getSelected() + " " + otherStuff.getSelected() + sideOfField.getSelected();
 	}
 }
