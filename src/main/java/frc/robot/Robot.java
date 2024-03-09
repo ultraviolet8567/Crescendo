@@ -53,7 +53,7 @@ public class Robot extends LoggedRobot {
 
 		switch (Constants.currentMode) {
 			case REAL :
-				Logger.addDataReceiver(new WPILOGWriter("/media/sda1"));
+				Logger.addDataReceiver(new WPILOGWriter("/home/lvuser/logs/"));
 				Logger.addDataReceiver(new NT4Publisher());
 				break;
 			case SIM :
