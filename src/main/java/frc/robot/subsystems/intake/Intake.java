@@ -55,13 +55,15 @@ public class Intake extends SubsystemBase {
 		sensorOverride.setBoolean(sensorDisabled);
 
 		if (timer.get() > 0.5) {
+			RobotContainer.getDriverJoystick().setRumble(RumbleType.kBothRumble, 0);
 			RobotContainer.getOperatorJoystick().setRumble(RumbleType.kBothRumble, 0);
 			timer.stop();
 		}
 	}
 
 	public void collectionIndicator() {
-		RobotContainer.getOperatorJoystick().setRumble(RumbleType.kBothRumble, 0.05);
+		RobotContainer.getDriverJoystick().setRumble(RumbleType.kBothRumble, 0.05);
+		RobotContainer.getOperatorJoystick().setRumble(RumbleType.kBothRumble, 0);
 		timer.reset();
 		timer.start();
 	}

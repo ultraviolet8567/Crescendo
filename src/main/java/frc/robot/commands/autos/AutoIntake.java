@@ -12,8 +12,6 @@ public class AutoIntake extends Command {
 	public AutoIntake(Intake intake) {
 		this.intake = intake;
 		timer = new Timer();
-
-		addRequirements(intake);
 	}
 
 	@Override
