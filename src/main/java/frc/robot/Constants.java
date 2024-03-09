@@ -29,7 +29,7 @@ public final class Constants {
 
 	public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
 	public static final RobotType currentRobot = (currentMode == Mode.REAL) ? RobotType.REALBOT : RobotType.SIMBOT;
-	public static final boolean tuningMode = true;
+	public static final boolean tuningMode = false;
 
 	public static final ModuleType powerDistributionType = ModuleType.kRev;
 	public static final boolean fieldOriented = true;
@@ -56,9 +56,6 @@ public final class Constants {
 	}
 
 	public static final class CAN {
-		// public static final int kLeftClimberPort = 2;
-		// public static final int kRightClimberPort = 3;
-
 		public static final int kIntakePort = 4;
 
 		public static final int kShooterTopPort = 7;
@@ -219,7 +216,7 @@ public final class Constants {
 		public static final double kIntakeReduction = 1.0;
 		public static final int kSensorPort = 8;
 
-		public static final LoggedTunableNumber kIntakeVoltage = new LoggedTunableNumber("Intake/Voltage", 12);
+		public static final LoggedTunableNumber kIntakeVoltage = new LoggedTunableNumber("Intake/Voltage", 10);
 	}
 
 	public static final class AutoConstants {
@@ -239,8 +236,6 @@ public final class Constants {
 		};
 
 		public static final Gains armGains = switch (currentRobot) {
-			// case REALBOT -> new Gains(5.6814, 0.0, 0.21662, 1.0241, 0.0096705, 0.049916,
-			// 10.0);
 			case REALBOT -> new Gains(6.25, 0.0, 0.28642, 0.016186, 0.02131, 0.087119, 1.4338);
 			case SIMBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
 		};

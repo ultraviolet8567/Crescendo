@@ -3,24 +3,14 @@ package frc.robot.subsystems.shooter;
 import static frc.robot.Constants.GainsConstants.*;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
-	private static final LoggedTunableNumber kP = new LoggedTunableNumber("Shooter/Top/kP", shooterTopGains.kP());
-	private static final LoggedTunableNumber kI = new LoggedTunableNumber("Shooter/Top/kI", shooterTopGains.kI());
-	private static final LoggedTunableNumber kD = new LoggedTunableNumber("Shooter/Top/kD", shooterTopGains.kD());
-	private static final LoggedTunableNumber kS = new LoggedTunableNumber("Shooter/Top/kS", shooterTopGains.ffkS());
-	private static final LoggedTunableNumber kV = new LoggedTunableNumber("Shooter/Top/kV", shooterTopGains.ffkV());
-
 	private final Arm arm;
 	private final ShooterIO io;
 	private final ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
-
-	private SysIdRoutine routine;
 
 	/*
 	 * Initialize all components here, as well as any one-time logic to be completed
@@ -38,9 +28,6 @@ public class Shooter extends SubsystemBase {
 		Logger.processInputs("Shooter", inputs);
 
 		Logger.recordOutput("Shooter/TargetVelocity", getTargetVelocity());
-
-		LoggedTunableNumber.ifChanged(hashCode(), () -> io.setGains(kP.get(), kI.get(), kD.get(), kS.get(), kV.get()),
-				kP, kI, kD, kS, kV);
 	}
 
 	/* Define all subsystem-specific methods and enums here */

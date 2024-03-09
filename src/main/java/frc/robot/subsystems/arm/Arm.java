@@ -59,7 +59,6 @@ public class Arm extends SubsystemBase {
 		LoggedTunableNumber.ifChanged(hashCode(),
 				() -> io.setGains(kP.get(), kI.get(), kD.get(), kS.get(), kV.get(), kA.get(), kG.get()), kP, kI, kD, kS,
 				kV, kA, kG);
-
 	}
 
 	// Move arm to exact angle
@@ -94,7 +93,6 @@ public class Arm extends SubsystemBase {
 	}
 
 	public double getPresetAngle() {
-		// return angle.get();
 		switch (armMode) {
 			case SPEAKERFRONT :
 				return ArmConstants.kSpeakerFrontAngle;
