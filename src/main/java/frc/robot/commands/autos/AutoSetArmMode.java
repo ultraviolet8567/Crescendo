@@ -9,10 +9,12 @@ public class AutoSetArmMode extends Command {
 	private Timer timer;
 	private ArmMode armMode;
 	private Arm arm;
+	private double threshold;
 
-	public AutoSetArmMode(Arm arm, ArmMode armMode) {
+	public AutoSetArmMode(Arm arm, ArmMode armMode, double threshold) {
 		this.arm = arm;
 		this.armMode = armMode;
+		this.threshold = threshold;
 		timer = new Timer();
 	}
 
@@ -27,6 +29,6 @@ public class AutoSetArmMode extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return arm.atSetpoint();
+		return arm.atSetpoint(threshold);
 	}
 }

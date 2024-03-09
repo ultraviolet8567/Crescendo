@@ -113,8 +113,8 @@ public class Arm extends SubsystemBase {
 		}
 	}
 
-	public boolean atSetpoint() {
-		return Math.abs(getPresetAngle() - inputs.positionRads) < ArmConstants.kSetpointTolerance;
+	public boolean atSetpoint(double threshold) {
+		return Math.abs(getPresetAngle() - inputs.positionRads) < threshold;
 	}
 
 	public Transform3d getDeltaY() {

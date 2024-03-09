@@ -179,13 +179,14 @@ public class RobotContainer {
 
 		NamedCommands.registerCommand("AutoShoot", new AutoShoot(shooter, intake));
 		NamedCommands.registerCommand("Pickup", new AutoIntake(intake));
-		NamedCommands.registerCommand("TaxiPosition", new AutoSetArmMode(arm, ArmMode.TAXI));
-		NamedCommands.registerCommand("AmpPosition", new AutoSetArmMode(arm, ArmMode.AMP));
-		NamedCommands.registerCommand("IntakePosition", new AutoSetArmMode(arm, ArmMode.ROOMBA));
-		NamedCommands.registerCommand("SpeakerFrontPosition", new AutoSetArmMode(arm, ArmMode.SPEAKERFRONT));
-		NamedCommands.registerCommand("SpeakerAnglePosition", new AutoSetArmMode(arm, ArmMode.SPEAKERANGLE));
-		NamedCommands.registerCommand("SpeakerStagePosition", new AutoSetArmMode(arm, ArmMode.SPEAKERSTAGE));
-
+		NamedCommands.registerCommand("PickupTimed", new AutoIntake(intake));
+		NamedCommands.registerCommand("TaxiPosition", new AutoSetArmMode(arm, ArmMode.TAXI, 0.1));
+		NamedCommands.registerCommand("AmpPosition", new AutoSetArmMode(arm, ArmMode.AMP, 0.1));
+		NamedCommands.registerCommand("IntakePosition", new AutoSetArmMode(arm, ArmMode.ROOMBA, 0.05));
+		NamedCommands.registerCommand("SpeakerFrontPosition", new AutoSetArmMode(arm, ArmMode.SPEAKERFRONT, 0.2));
+		NamedCommands.registerCommand("SpeakerAnglePosition", new AutoSetArmMode(arm, ArmMode.SPEAKERANGLE, 0.2));
+		NamedCommands.registerCommand("SpeakerStagePosition", new AutoSetArmMode(arm, ArmMode.SPEAKERSTAGE, 0.2));
+		
 		/*
 		 * Will switch to this soon to simplify button constructors
 		 *
