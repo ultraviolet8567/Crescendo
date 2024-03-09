@@ -1,8 +1,6 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.intake.Intake;
 
@@ -25,7 +23,7 @@ public class Pickup extends Command {
 		intake.stop();
 
 		if (!interrupted) {
-			RobotContainer.getOperatorJoystick().setRumble(RumbleType.kBothRumble, 0.025);
+			intake.collectionIndicator();
 		}
 	}
 

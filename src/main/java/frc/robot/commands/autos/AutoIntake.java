@@ -2,7 +2,7 @@ package frc.robot.commands.autos;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.AutoConstants;
+import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.intake.Intake;
 
 public class AutoIntake extends Command {
@@ -32,6 +32,6 @@ public class AutoIntake extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return timer.get() > AutoConstants.kAutoIntakeTime;
+		return Lights.getInstance().hasNote;
 	}
 }

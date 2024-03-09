@@ -2,10 +2,13 @@ package frc.robot.subsystems.intake;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Lights;
 import org.littletonrobotics.junction.Logger;
 
@@ -14,7 +17,9 @@ public class Intake extends SubsystemBase {
 	private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
 	private final DigitalInput sensor;
 
-	private GenericEntry noteIndicator;
+	private GenericEntry noteIndicator, sensorOutput, sensorOverride;
+	private Timer timer;
+	private boolean sensorDisabled;
 
 	/*
 	 * Initialize all components here, as well as any one-time logic to be completed
@@ -24,8 +29,14 @@ public class Intake extends SubsystemBase {
 		this.io = io;
 		sensor = new DigitalInput(IntakeConstants.kSensorPort);
 
+		timer = new Timer();
+
 		noteIndicator = Shuffleboard.getTab("Main").add("Note collected", Lights.getInstance().hasNote)
-				.withWidget(BuiltInWidgets.kBooleanBox).withPosition(0, 0).withSize(2, 2).getEntry();
+				.withWidget(BuiltInWidgets.kBooleanBox).withPosition(0, 0).withSize(3, 3).getEntry();
+		sensorOutput = Shuffleboard.getTab("Main").add("Sensor output", false).withWidget(BuiltInWidgets.kBooleanBox)
+				.withPosition(0, 3).withSize(1, 1).getEntry();
+		sensorOverride = Shuffleboard.getTab("Main").add("Sensor override", false)
+				.withWidget(BuiltInWidgets.kBooleanBox).withPosition(1, 3).withSize(2, 1).getEntry();
 	}
 
 	/* Runs periodically (about once every 20 ms) */
@@ -34,11 +45,29 @@ public class Intake extends SubsystemBase {
 		io.updateInputs(inputs);
 		Logger.processInputs("Intake", inputs);
 
-		Lights.getInstance().hasNote = false; // sensor.get();
+		Lights.getInstance().hasNote = !sensorDisabled && sensor.get();
 
 		Logger.recordOutput("HoldingNote", Lights.getInstance().hasNote);
-		Logger.recordOutput("SensorOutput", sensor.get());
+		Logger.recordOutput("Intake/NoteSensorOutput", sensor.get());
+
 		noteIndicator.setBoolean(Lights.getInstance().hasNote);
+		sensorOutput.setBoolean(sensor.get());
+		sensorOverride.setBoolean(sensorDisabled);
+
+		if (timer.get() > 0.5) {
+			RobotContainer.getOperatorJoystick().setRumble(RumbleType.kBothRumble, 0);
+			timer.stop();
+		}
+	}
+
+	public void collectionIndicator() {
+		RobotContainer.getOperatorJoystick().setRumble(RumbleType.kBothRumble, 0.05);
+		timer.reset();
+		timer.start();
+	}
+
+	public void toggleSensorDisabled() {
+		sensorDisabled = !sensorDisabled;
 	}
 
 	public void pickup() {
