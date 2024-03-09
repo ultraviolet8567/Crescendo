@@ -176,12 +176,12 @@ public final class Constants {
 		public static final double kMinArmAngle = -1.76625;
 
 		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Arm/Max Speed", 4);
-		public static final LoggedTunableNumber kMaxAcceleration = new LoggedTunableNumber("Arm/Max Acceleration", 2);
+		public static final LoggedTunableNumber kMaxAcceleration = new LoggedTunableNumber("Arm/Max Acceleration", 1.5);
 		public static final LoggedTunableNumber kManualVoltage = new LoggedTunableNumber("Arm/ManualVoltage", 8);
 
 		// Arm presets
 		public static final double kTaxiAngle = -1.175;
-		public static final double kRoombaAngle = -0.084;
+		public static final double kRoombaAngle = -0.1;
 		public static final double kSpeakerFrontAngle = -0.31;
 		public static final double kSpeakerAngleAngle = -0.31;
 		public static final double kSpeakerStageAngle = -0.75;
