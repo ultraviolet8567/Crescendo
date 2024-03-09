@@ -209,7 +209,7 @@ public final class Constants {
 		public static final LoggedTunableNumber kSpeakerStageRPM = new LoggedTunableNumber("Shooter/SpeakerStage RPM",
 				4000);
 		public static final LoggedTunableNumber kTrapRPM = new LoggedTunableNumber("Shooter/Manual RPM", 1000);
-		public static final LoggedTunableNumber kIdleRPM = new LoggedTunableNumber("Shooter/Idle RPM", 500);
+		public static final LoggedTunableNumber kIdleRPM = new LoggedTunableNumber("Shooter/Idle RPM", 4500);
 	}
 
 	public static final class IntakeConstants {
@@ -236,7 +236,7 @@ public final class Constants {
 		};
 
 		public static final Gains armGains = switch (currentRobot) {
-			case REALBOT -> new Gains(7, 0.0, 0.28642, 0.016186, 0.02131, 0.087119, 1.4338);
+			case REALBOT -> new Gains(12, 0.0, 0, 0.016186, 0.02131, 0.087119, 1.4338);
 			case SIMBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
 		};
 	}

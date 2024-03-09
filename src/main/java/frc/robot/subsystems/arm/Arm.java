@@ -63,10 +63,8 @@ public class Arm extends SubsystemBase {
 
 	// Move arm to exact angle
 	public void setPosition(double targetAngle) {
-		if (io.armWithinRange()) {
-			io.setPosition(targetAngle);
-			Logger.recordOutput("Setpoints/Arm", targetAngle);
-		}
+		io.setPosition(targetAngle);
+		Logger.recordOutput("Setpoints/Arm", targetAngle);
 	}
 
 	// Manually control arm

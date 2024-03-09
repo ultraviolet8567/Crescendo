@@ -17,9 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.*;
 import frc.robot.commands.*;
-import frc.robot.commands.autos.AutoIntake;
-import frc.robot.commands.autos.AutoSetArmMode;
-import frc.robot.commands.autos.AutoShoot;
+import frc.robot.commands.autos.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.arm.*;
 import frc.robot.subsystems.arm.Arm.ArmMode;
@@ -179,14 +177,14 @@ public class RobotContainer {
 
 		NamedCommands.registerCommand("AutoShoot", new AutoShoot(shooter, intake));
 		NamedCommands.registerCommand("Pickup", new AutoIntake(intake));
-		NamedCommands.registerCommand("PickupTimed", new AutoIntake(intake));
+		NamedCommands.registerCommand("PickupTimed", new AutoIntakeTimed(intake));
 		NamedCommands.registerCommand("TaxiPosition", new AutoSetArmMode(arm, ArmMode.TAXI, 0.1));
 		NamedCommands.registerCommand("AmpPosition", new AutoSetArmMode(arm, ArmMode.AMP, 0.1));
 		NamedCommands.registerCommand("IntakePosition", new AutoSetArmMode(arm, ArmMode.ROOMBA, 0.05));
 		NamedCommands.registerCommand("SpeakerFrontPosition", new AutoSetArmMode(arm, ArmMode.SPEAKERFRONT, 0.2));
 		NamedCommands.registerCommand("SpeakerAnglePosition", new AutoSetArmMode(arm, ArmMode.SPEAKERANGLE, 0.2));
 		NamedCommands.registerCommand("SpeakerStagePosition", new AutoSetArmMode(arm, ArmMode.SPEAKERSTAGE, 0.2));
-		
+
 		/*
 		 * Will switch to this soon to simplify button constructors
 		 *
