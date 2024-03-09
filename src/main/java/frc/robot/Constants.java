@@ -236,7 +236,7 @@ public final class Constants {
 		};
 
 		public static final Gains armGains = switch (currentRobot) {
-			case REALBOT -> new Gains(6.25, 0.0, 0.28642, 0.016186, 0.02131, 0.087119, 1.4338);
+			case REALBOT -> new Gains(7, 0.0, 0.28642, 0.016186, 0.02131, 0.087119, 1.4338);
 			case SIMBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
 		};
 	}
