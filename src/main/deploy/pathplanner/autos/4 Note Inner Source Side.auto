@@ -147,7 +147,7 @@
         {
           "type": "named",
           "data": {
-            "name": "IntakeTimed"
+            "name": "PickupTimed"
           }
         },
         {
@@ -223,7 +223,7 @@
         {
           "type": "named",
           "data": {
-            "name": "IntakeTimed"
+            "name": "PickupTimed"
           }
         },
         {

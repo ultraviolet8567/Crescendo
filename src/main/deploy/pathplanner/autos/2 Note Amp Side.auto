@@ -24,28 +24,54 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "deadline",
                 "data": {
-                  "pathName": "1 & 2 Note Drive Out Amp Side"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "1 & 2 Note Drive Out Amp Side"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Pickup"
+                      }
+                    }
+                  ]
                 }
               },
               {
-                "type": "named",
+                "type": "deadline",
                 "data": {
-                  "name": "IntakePosition"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Pickup"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "IntakePosition"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Pickup"
+                      }
+                    }
+                  ]
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PickupTimed"
           }
         },
         {

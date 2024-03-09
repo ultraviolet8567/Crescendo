@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.5753270654410987,
-      "y": 4.3824063588028235
+      "x": 0.7193498096269378,
+      "y": 4.4544177308906
     },
     "rotation": -57.84770485871766
   },
@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4 Note Rush Get Second Note Souce Side"
+                  "pathName": "2 Note Rush Second Note Source Side"
                 }
               },
               {
@@ -49,19 +49,25 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "PickupTimed"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4 Note Rush Go To Speaker Source Side"
+                  "pathName": "2 Note Rush Go To Speaker Source Side"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "SpeakerStagePosition"
+                  "name": "SpeakerAnglePosition"
                 }
               }
             ]
@@ -80,7 +86,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4 Note Rush Get Third Note Source Side"
+                  "pathName": "2 Note Rush Third Note Source Side"
                 }
               },
               {
@@ -99,28 +105,9 @@
           }
         },
         {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "4 Note Rush Go To Speaker 2 Source Side"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "SpeakerStagePosition"
-                }
-              }
-            ]
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "AutoShoot"
+            "name": "PickupTimed"
           }
         },
         {
@@ -130,38 +117,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4 Note Rush Get Fourth Note Amp Side"
+                  "pathName": "2 Note Rush Go To Speaker 2 Source Side"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "IntakePosition"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Pickup"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "4 Note Rush Go To Speaker 3 Amp Side"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "SpeakerStagePosition"
+                  "name": "SpeakerAnglePosition"
                 }
               }
             ]
