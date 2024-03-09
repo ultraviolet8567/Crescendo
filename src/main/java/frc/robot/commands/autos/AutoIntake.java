@@ -20,7 +20,7 @@ public class AutoIntake extends Command {
 	public void initialize() {
 		timer.reset();
 		timer.start();
-		// intake.pickup();
+		intake.pickup();
 
 		System.out.println("Intaking");
 	}

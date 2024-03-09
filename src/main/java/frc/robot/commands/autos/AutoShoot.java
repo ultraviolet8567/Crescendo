@@ -31,7 +31,7 @@ public class AutoShoot extends Command {
 	@Override
 	public void execute() {
 		if (shooter.atVelocity()) {
-			// intake.runIndexer();
+			intake.runIndexer();
 		}
 	}
 

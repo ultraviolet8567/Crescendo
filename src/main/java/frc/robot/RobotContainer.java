@@ -193,6 +193,10 @@ public class RobotContainer {
 	}
 
 	public Command getAutonomousCommand() {
+		if (autoChooser.getAutoCommand().equals("Do Nothing")) {
+			return null;
+		}
+
 		return new PathPlannerAuto(autoChooser.getAutoCommand());
 	}
 

@@ -17,7 +17,7 @@ public class AutoChooser extends SubsystemBase {
 	public AutoChooser() {
 		// Post the selectors to the ShuffleBoard
 		noteNumber = new SendableChooser<>();
-		noteNumber.setDefaultOption("0 Note", "Do nothing");
+		noteNumber.setDefaultOption("0 Note", "Do Nothing");
 		noteNumber.addOption("1 Note", "1 Note");
 		noteNumber.addOption("2 Note", "2 Note");
 		noteNumber.addOption("3 Note", "3 Note");
@@ -47,8 +47,8 @@ public class AutoChooser extends SubsystemBase {
 		Logger.recordOutput("Auto/Routine",
 				noteNumber.getSelected() + " " + otherStuff.getSelected() + sideOfField.getSelected());
 
-		if (noteNumber.getSelected() == "Do Nothing") {
-			return null;
+		if (noteNumber.getSelected().equals("Do Nothing")) {
+			return "Do Nothing";
 		}
 
 		return noteNumber.getSelected() + " " + otherStuff.getSelected() + sideOfField.getSelected();
