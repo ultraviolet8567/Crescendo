@@ -13,8 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.*;
 import frc.robot.commands.*;
@@ -39,7 +38,7 @@ public class RobotContainer {
 	// private final Climber climber;
 	private final Gyrometer gyro;
 	private final Intake intake;
-	private final KMeans kmeans;
+	// private final KMeans kmeans;
 	// private final Odometry odometry;
 	private final Shooter shooter;
 	private final Swerve swerve;
@@ -49,8 +48,10 @@ public class RobotContainer {
 	// Joysticks
 	private static final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
 	private static final Joystick operatorJoystick = new Joystick(OIConstants.kOperatorControllerPort);
-	// private static final CommandXboxController operatorController = new
-	// CommandXboxController(OIConstants.kOperatorControllerPort);
+	private static final CommandXboxController driverController = new CommandXboxController(
+			OIConstants.kDriverControllerPort);
+	private static final CommandXboxController operatorController = new CommandXboxController(
+			OIConstants.kOperatorControllerPort);
 
 	// Camera
 	public final UsbCamera camera = CameraServer.startAutomaticCapture(0);
@@ -85,7 +86,7 @@ public class RobotContainer {
 			}
 		}
 
-		kmeans = new KMeans();
+		// kmeans = new KMeans();
 		// vision = new Vision(kmeans);
 		swerve = new Swerve();
 		gyro = new Gyrometer(swerve);
@@ -111,7 +112,7 @@ public class RobotContainer {
 
 		// Post webcam feed to Shuffleboard
 		Shuffleboard.getTab("Main").add("Camera", camera).withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4)
-				.withPosition(3, 0);
+				.withPosition(6, 0);
 
 		// Configure the PathPlanner auto-builder
 		AutoBuilder.configureHolonomic(gyro::getPose, gyro::resetPose, swerve::getRobotRelativeSpeeds,
@@ -130,40 +131,51 @@ public class RobotContainer {
 	 * constructor with an arbitrary predicate
 	 */
 	public void configureBindings() {
-		new JoystickButton(operatorJoystick, XboxController.Button.kLeftBumper.value).whileTrue(new Pickup(intake));
-		new JoystickButton(operatorJoystick, XboxController.Button.kRightBumper.value)
-				.whileTrue(new Shoot(shooter, intake));
+		operatorController.leftBumper().whileTrue(new Pickup(intake));
+		operatorController.leftTrigger(0.5).whileTrue(new Drop(intake));
+		operatorController.rightTrigger().whileTrue(new Shoot(shooter, intake));
 
-		new JoystickButton(operatorJoystick, XboxController.Button.kY.value)
-				.onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SPEAKERFRONT)));
-		new POVButton(operatorJoystick, 0).onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SPEAKERANGLE)));
-		new JoystickButton(operatorJoystick, XboxController.Button.kStart.value)
-				.onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SPEAKERSTAGE)));
-		new JoystickButton(operatorJoystick, XboxController.Button.kB.value)
-				.onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.TAXI)));
-		new JoystickButton(operatorJoystick, XboxController.Button.kA.value)
-				.onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.ROOMBA)));
-		new JoystickButton(operatorJoystick, XboxController.Button.kX.value)
-				.onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.AMP)));
-		// new JoystickButton(operatorJoystick, XboxController.Button.kY.value)
-		// .whileTrue(arm.routine().dynamic(Direction.kForward));
-		// new JoystickButton(operatorJoystick, XboxController.Button.kB.value)
-		// .whileTrue(arm.routine().quasistatic(Direction.kForward));
-		// new JoystickButton(operatorJoystick, XboxController.Button.kA.value)
-		// .whileTrue(arm.routine().dynamic(Direction.kReverse));
-		// new JoystickButton(operatorJoystick, XboxController.Button.kX.value)
-		// .whileTrue(arm.routine().quasistatic(Direction.kReverse));
+		operatorController.back().onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SPEAKERANGLE)));
+		operatorController.start().onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SPEAKERSTAGE)));
+		operatorController.a().onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.ROOMBA)));
+		operatorController.b().onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.AMP)));
+		operatorController.x().onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.TAXI)));
+		operatorController.y().onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SPEAKERFRONT)));
+
+		operatorController.povUp().or(operatorController.povDown()).or(operatorController.povLeft())
+				.or(operatorController.povRight()).onTrue(new InstantCommand(() -> intake.toggleSensorDisabled()));
+
 		// new JoystickButton(operatorJoystick,
-		// XboxController.Button.kStart.value).onTrue(new InstantCommand(() ->
-		// arm.setArmMode(ArmMode.TRAP)));
+		// XboxController.Button.kLeftBumper.value).whileTrue(new Pickup(intake));
+		// new JoystickButton(operatorJoystick,
+		// XboxController.Button.kRightBumper.value)
+		// .whileTrue(new Shoot(shooter, intake));
 
-		new JoystickButton(operatorJoystick, XboxController.Button.kBack.value).whileTrue(new Drop(intake));
+		// new JoystickButton(operatorJoystick, XboxController.Button.kY.value)
+		// .onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SPEAKERFRONT)));
+		// new POVButton(operatorJoystick, 0).onTrue(new InstantCommand(() ->
+		// arm.setArmMode(ArmMode.SPEAKERANGLE)));
+		// new JoystickButton(operatorJoystick, XboxController.Button.kStart.value)
+		// .onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SPEAKERSTAGE)));
+		// new JoystickButton(operatorJoystick, XboxController.Button.kB.value)
+		// .onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.TAXI)));
+		// new JoystickButton(operatorJoystick, XboxController.Button.kA.value)
+		// .onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.ROOMBA)));
+		// new JoystickButton(operatorJoystick, XboxController.Button.kX.value)
+		// .onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.AMP)));
+
+		// new JoystickButton(operatorJoystick,
+		// XboxController.Button.kBack.value).whileTrue(new Drop(intake));
 
 		// Overrides
-		new JoystickButton(driverJoystick, XboxController.Button.kStart.value)
-				.onTrue(new InstantCommand(() -> gyro.reset()));
-		new JoystickButton(driverJoystick, XboxController.Button.kBack.value)
+		driverController.back()
 				.onTrue(new InstantCommand(() -> Lights.getInstance().hasNote = !Lights.getInstance().hasNote));
+		driverController.start().onTrue(new InstantCommand(() -> gyro.reset()));
+		// new JoystickButton(driverJoystick, XboxController.Button.kStart.value)
+		// .onTrue(new InstantCommand(() -> gyro.reset()));
+		// new JoystickButton(driverJoystick, XboxController.Button.kBack.value)
+		// .onTrue(new InstantCommand(() -> Lights.getInstance().hasNote =
+		// !Lights.getInstance().hasNote));
 
 		NamedCommands.registerCommand("AutoShoot", new AutoShoot(shooter, intake));
 		NamedCommands.registerCommand("Pickup", new AutoIntake(intake));
@@ -173,11 +185,6 @@ public class RobotContainer {
 		NamedCommands.registerCommand("SpeakerFrontPosition", new AutoSetArmMode(arm, ArmMode.SPEAKERFRONT));
 		NamedCommands.registerCommand("SpeakerAnglePosition", new AutoSetArmMode(arm, ArmMode.SPEAKERANGLE));
 		NamedCommands.registerCommand("SpeakerStagePosition", new AutoSetArmMode(arm, ArmMode.SPEAKERSTAGE));
-
-		// new JoystickButton(operatorJoystick, XboxController.Button.kStart.value)
-		// .whileTrue(new Climb(climber, "extend"));
-		// new JoystickButton(operatorJoystick, XboxController.Button.kBack.value)
-		// .whileTrue(new Climb(climber, "retract"));
 
 		/*
 		 * Will switch to this soon to simplify button constructors

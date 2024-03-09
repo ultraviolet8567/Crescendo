@@ -24,14 +24,14 @@ public class AutoChooser extends SubsystemBase {
 		noteNumber.addOption("4 Note", "4 Note");
 		noteNumber.addOption("5 Note", "5 Note");
 		main.add("Number of Notes", noteNumber).withWidget(BuiltInWidgets.kComboBoxChooser).withSize(2, 1)
-				.withPosition(2, 0);
+				.withPosition(3, 0);
 
 		sideOfField = new SendableChooser<>();
 		sideOfField.setDefaultOption("Amp", "Amp Side");
 		sideOfField.addOption("Source", "Source Side");
 		sideOfField.addOption("Center", "Center");
 		main.add("Side of Field", sideOfField).withWidget(BuiltInWidgets.kComboBoxChooser).withSize(2, 1)
-				.withPosition(2, 1);
+				.withPosition(3, 1);
 
 		otherStuff = new SendableChooser<>();
 		otherStuff.setDefaultOption("None", "");
@@ -40,17 +40,17 @@ public class AutoChooser extends SubsystemBase {
 		otherStuff.addOption("Out of Way", "Out Of Way ");
 		otherStuff.addOption("Don't Move", "Don't Move ");
 		main.add("Other variables", otherStuff).withWidget(BuiltInWidgets.kComboBoxChooser).withSize(2, 1)
-				.withPosition(2, 2);
+				.withPosition(3, 2);
 	}
 
 	public String getAutoCommand() {
-		Logger.recordOutput("Auto/Routine",
-				noteNumber.getSelected() + " " + otherStuff.getSelected() + sideOfField.getSelected());
+		String routineName = noteNumber.getSelected() + " " + otherStuff.getSelected() + sideOfField.getSelected();
+		Logger.recordOutput("Auto/Routine", routineName);
 
 		if (noteNumber.getSelected().equals("Do Nothing")) {
 			return "Do Nothing";
+		} else {
+			return routineName;
 		}
-
-		return noteNumber.getSelected() + " " + otherStuff.getSelected() + sideOfField.getSelected();
 	}
 }
