@@ -5,7 +5,7 @@
       "x": 0.6884877930156866,
       "y": 4.392693697668098
     },
-    "rotation": -59.27861573201146
+    "rotation": -58.877854096302016
   },
   "command": {
     "type": "sequential",
@@ -24,48 +24,34 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "deadline",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "1 & 2 Note Drive Out Source Side"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Pickup"
-                      }
-                    }
-                  ]
+                  "pathName": "1 & 2 Note Drive Out Source Side"
                 }
               },
               {
-                "type": "deadline",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "IntakePosition"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Pickup"
-                      }
-                    }
-                  ]
+                  "name": "IntakePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PickupTimed"
           }
         },
         {
@@ -75,7 +61,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4 Note Return To Speaker 2 Amp Side"
+                  "pathName": "2 Note Return To Speaker Source Side"
                 }
               },
               {
@@ -94,48 +80,34 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "deadline",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "1 & 2 Note Drive Out Center"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Pickup"
-                      }
-                    }
-                  ]
+                  "pathName": "2 Note Rush Second Note Source Side"
                 }
               },
               {
-                "type": "deadline",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "IntakePosition"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Pickup"
-                      }
-                    }
-                  ]
+                  "name": "IntakePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PickupTimed"
           }
         },
         {
@@ -145,13 +117,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "2 Note Return to Speaker Center"
+                  "pathName": "2 Note Rush Go To Speaker Source Side"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "SpeakerStagePosition"
+                  "name": "SpeakerAnglePosition"
                 }
               }
             ]

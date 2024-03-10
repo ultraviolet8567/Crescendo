@@ -28,44 +28,30 @@
           "data": {
             "commands": [
               {
-                "type": "deadline",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "1 & 2 Note Drive Out Amp Side"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Pickup"
-                      }
-                    }
-                  ]
+                  "pathName": "1 & 2 Note Drive Out Amp Side"
                 }
               },
               {
-                "type": "deadline",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "IntakePosition"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Pickup"
-                      }
-                    }
-                  ]
+                  "name": "IntakePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PickupTimed"
           }
         },
         {
@@ -75,7 +61,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4 Note Return To Speaker 1 Amp Side"
+                  "pathName": "2 Note Return to Speaker Amp Side"
                 }
               },
               {
@@ -98,44 +84,30 @@
           "data": {
             "commands": [
               {
-                "type": "deadline",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "1 & 2 Note Drive Out Center"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Pickup"
-                      }
-                    }
-                  ]
+                  "pathName": "3 Note Get Source Note Amp Side"
                 }
               },
               {
-                "type": "deadline",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "IntakePosition"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Pickup"
-                      }
-                    }
-                  ]
+                  "name": "IntakePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PickupTimed"
           }
         },
         {
@@ -145,7 +117,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "2 Note Return to Speaker Center"
+                  "pathName": "2 Note Return To Speaker Source Side"
                 }
               },
               {

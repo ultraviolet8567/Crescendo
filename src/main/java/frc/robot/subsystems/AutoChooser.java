@@ -38,6 +38,7 @@ public class AutoChooser extends SubsystemBase {
 		otherStuff.addOption("Rush", "Rush ");
 		otherStuff.addOption("Inner", "Inner ");
 		otherStuff.addOption("Out of Way", "Out Of Way ");
+		otherStuff.addOption("Test", "Test");
 		otherStuff.addOption("Don't Move", "Don't Move ");
 		main.add("Other variables", otherStuff).withWidget(BuiltInWidgets.kComboBoxChooser).withSize(2, 1)
 				.withPosition(3, 2);
@@ -49,6 +50,8 @@ public class AutoChooser extends SubsystemBase {
 
 		if (noteNumber.getSelected().equals("Do Nothing")) {
 			return "Do Nothing";
+		} else if (otherStuff.getSelected().equals("Test")) {
+			return "Test";
 		} else {
 			return routineName;
 		}

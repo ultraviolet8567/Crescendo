@@ -20,7 +20,7 @@ public class AutoIntakeTimed extends Command {
 		timer.start();
 		intake.pickup();
 
-		System.out.println("Intaking");
+		System.out.println("Intaking timed");
 	}
 
 	@Override
