@@ -106,6 +106,8 @@ public class Arm extends SubsystemBase {
 				return ArmConstants.kTaxiAngle;
 			case TRAP :
 				return ArmConstants.kTrapAngle;
+			case SOURCE :
+				return ArmConstants.kSourceAngle;
 			default :
 				return ArmConstants.kTaxiAngle;
 		}
@@ -148,7 +150,9 @@ public class Arm extends SubsystemBase {
 		/** Pointing at trap */
 		TRAP,
 		/** Stowed in taxi position */
-		TAXI
+		TAXI,
+		/** Source */
+		SOURCE
 	}
 
 	public SysIdRoutine routine() {

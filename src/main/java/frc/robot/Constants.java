@@ -181,12 +181,13 @@ public final class Constants {
 
 		// Arm presets
 		public static final double kTaxiAngle = -1.175;
-		public static final double kRoombaAngle = -0.1;
+		public static final double kRoombaAngle = -0.15;
 		public static final double kSpeakerFrontAngle = -0.31;
 		public static final double kSpeakerAngleAngle = -0.31;
 		public static final double kSpeakerStageAngle = -0.75;
 		public static final double kAmpAngle = -1.620;
 		public static final double kTrapAngle = -0.13816;
+		public static final double kSourceAngle = -1.37;
 
 		// Control
 		public static final LoggedTunableNumber kArmPIDTolerance = new LoggedTunableNumber("Arm/PID Tolerance", 0.0001);
@@ -222,7 +223,7 @@ public final class Constants {
 	public static final class AutoConstants {
 		public static final double kAutoShootTime = 2.0;
 		public static final double kAutoArmTime = 1.0;
-		public static final double kAutoIntakeTime = 2.0;
+		public static final double kAutoIntakeTime = 1.75;
 	}
 
 	public static final class GainsConstants {

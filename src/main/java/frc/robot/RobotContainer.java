@@ -133,7 +133,7 @@ public class RobotContainer {
 		operatorController.leftTrigger(0.5).whileTrue(new Drop(intake));
 		operatorController.rightTrigger().whileTrue(new Shoot(shooter, intake));
 
-		operatorController.back().onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SPEAKERANGLE)));
+		operatorController.back().onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SOURCE)));
 		operatorController.start().onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SPEAKERSTAGE)));
 		operatorController.a().onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.ROOMBA)));
 		operatorController.b().onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.AMP)));
