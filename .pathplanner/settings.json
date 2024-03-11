@@ -9,7 +9,7 @@
     "3 Note Autos",
     "4 Note Autos"
   ],
-  "defaultMaxVel": 3.0,
+  "defaultMaxVel": 3.5,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,

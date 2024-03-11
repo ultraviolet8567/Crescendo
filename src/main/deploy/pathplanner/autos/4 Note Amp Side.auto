@@ -49,6 +49,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "PickupTimed"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -99,6 +105,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "PickupTimed"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -146,6 +158,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PickupTimed"
           }
         },
         {

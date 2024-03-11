@@ -30,6 +30,11 @@
     },
     "Retained Values": {
       "open": false
+    },
+    "transitory": {
+      "Shuffleboard": {
+        "open": true
+      }
     }
   },
   "NetworkTables Info": {

@@ -5,6 +5,7 @@ import static frc.robot.Constants.GainsConstants.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.Arm.ArmMode;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
@@ -37,8 +38,10 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public boolean atVelocity() {
-		return inputs.topVelocityRPM >= ShooterConstants.kVelocityThreshold * getTargetVelocity()
-				&& inputs.bottomVelocityRPM >= ShooterConstants.kVelocityThreshold * getTargetVelocity();
+		double threshold = (arm.getArmMode() == ArmMode.AMP) ? 0.6 : ShooterConstants.kVelocityThreshold;
+
+		return inputs.topVelocityRPM >= threshold * getTargetVelocity()
+				&& inputs.bottomVelocityRPM >= threshold * getTargetVelocity();
 	}
 
 	public double getTargetVelocity() {

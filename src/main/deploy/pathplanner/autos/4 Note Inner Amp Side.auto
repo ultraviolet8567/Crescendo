@@ -24,45 +24,25 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "deadline",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "1 & 2 Note Drive Out Amp Side"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Pickup"
-                      }
-                    }
-                  ]
+                  "pathName": "1 & 2 Note Drive Out Amp Side"
                 }
               },
               {
-                "type": "deadline",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "IntakePosition"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Pickup"
-                      }
-                    }
-                  ]
+                  "name": "IntakePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
                 }
               }
             ]
@@ -100,45 +80,25 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "deadline",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "1 & 2 Note Drive Out Center"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Pickup"
-                      }
-                    }
-                  ]
+                  "pathName": "1 & 2 Note Drive Out Center"
                 }
               },
               {
-                "type": "deadline",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "IntakePosition"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Pickup"
-                      }
-                    }
-                  ]
+                  "name": "IntakePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
                 }
               }
             ]
@@ -176,45 +136,25 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "deadline",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "4 Note Inner Get Third Note Amp Side"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Pickup"
-                      }
-                    }
-                  ]
+                  "pathName": "4 Note Inner Get Third Note Source Side"
                 }
               },
               {
-                "type": "deadline",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "IntakePosition"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Pickup"
-                      }
-                    }
-                  ]
+                  "name": "IntakePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
                 }
               }
             ]

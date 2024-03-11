@@ -9,6 +9,7 @@ import frc.robot.Constants.CAN;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.util.SparkConfig;
 import frc.robot.util.SparkConfig.SparkType;
+import org.littletonrobotics.junction.Logger;
 
 public class IntakeIOSparkMax implements IntakeIO {
 	private final CANSparkMax intakeMotor;
@@ -34,6 +35,7 @@ public class IntakeIOSparkMax implements IntakeIO {
 
 	public void setInputVoltage(double volts) {
 		double appliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+		Logger.recordOutput("Test", appliedVolts);
 		intakeMotor.set(appliedVolts / 12.0);
 	}
 
