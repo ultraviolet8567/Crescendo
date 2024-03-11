@@ -9,7 +9,6 @@ import frc.robot.Constants.CAN;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.util.SparkConfig;
 import frc.robot.util.SparkConfig.SparkType;
-import org.littletonrobotics.junction.Logger;
 
 public class IntakeIOSparkMax implements IntakeIO {
 	private final CANSparkMax intakeMotor;

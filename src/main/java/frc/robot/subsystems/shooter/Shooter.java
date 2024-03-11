@@ -1,7 +1,5 @@
 package frc.robot.subsystems.shooter;
 
-import static frc.robot.Constants.GainsConstants.*;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.arm.Arm;
