@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4 Note Rush Get First Note Amp Side"
+                  "pathName": "4 Note Rush Second Note Amp Side"
                 }
               },
               {
@@ -61,7 +61,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4 Note Go To Stage"
+                  "pathName": "4 Note Stage"
                 }
               },
               {
@@ -86,7 +86,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4 Note Rush Get Third Note Amp Side"
+                  "pathName": "4 Note Rush Third Note Amp Side"
                 }
               },
               {
@@ -117,7 +117,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4 Note Rush Go To Speaker 2 Amp Side"
+                  "pathName": "4 Note Rush Stage 2 Amp Side"
                 }
               },
               {
@@ -142,7 +142,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4 Note Rush Get Fourth Note Amp Side"
+                  "pathName": "4 Note Rush Fourth Note Amp Side"
                 }
               },
               {
@@ -173,7 +173,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4 Note Rush Go To Speaker 3 Amp Side"
+                  "pathName": "4 Note Rush Stage 3 Amp Side"
                 }
               },
               {

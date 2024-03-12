@@ -2,7 +2,16 @@
   "robotWidth": 0.79,
   "robotLength": 0.79,
   "holonomicMode": true,
-  "pathFolders": [],
+  "pathFolders": [
+    "1 Note",
+    "1 Note Out Of Way",
+    "2 Note",
+    "3 Note",
+    "3 Note Rush",
+    "4 Note",
+    "4 Note Rush",
+    "4 Note Inner"
+  ],
   "autoFolders": [
     "1 Note Autos",
     "2 Note Autos",

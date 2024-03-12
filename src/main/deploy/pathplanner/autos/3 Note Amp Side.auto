@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "1 & 2 Note Drive Out Amp Side"
+                  "pathName": "1 Note Drive Amp Side"
                 }
               },
               {
@@ -61,7 +61,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "2 Note Return to Speaker Amp Side"
+                  "pathName": "2 Note Speaker Amp Side"
                 }
               },
               {
@@ -86,7 +86,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "3 Note Get Source Note Amp Side"
+                  "pathName": "3 Note Third Note Amp Side"
                 }
               },
               {
@@ -117,7 +117,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "2 Note Return To Speaker Source Side"
+                  "pathName": "2 Note Speaker Center"
                 }
               },
               {

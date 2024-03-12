@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7193498096269378,
-      "y": 4.4544177308906
+      "x": 0.6884877930156866,
+      "y": 6.6456209102894395
     },
     "rotation": -57.84770485871766
   },
@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "2 Note Rush Second Note Source Side"
+                  "pathName": "3 Note Rush Second Note Source Side"
                 }
               },
               {
@@ -61,7 +61,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "2 Note Rush Go To Speaker Source Side"
+                  "pathName": "3 Note Rush Speaker Source Side"
                 }
               },
               {
@@ -86,7 +86,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "2 Note Rush Third Note Source Side"
+                  "pathName": "3 Note Rush Third Note Source Side"
                 }
               },
               {
@@ -117,7 +117,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "2 Note Rush Go To Speaker 2 Source Side"
+                  "pathName": "3 Note Rush Speaker 2 Source Side"
                 }
               },
               {
