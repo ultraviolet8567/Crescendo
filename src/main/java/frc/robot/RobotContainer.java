@@ -144,7 +144,8 @@ public class RobotContainer {
 		driverController.start().onTrue(new InstantCommand(() -> gyro.reset()));
 
 		// Register PathPlanner named commands
-		NamedCommands.registerCommand("AutoShoot", new AutoShoot(shooter, intake));
+		// Make new shoot commands by RPM
+		NamedCommands.registerCommand("AutoShoot", new AutoShoot(shooter, intake, 4000));
 		NamedCommands.registerCommand("Pickup", new AutoIntake(intake));
 		NamedCommands.registerCommand("PickupTimed", new AutoIntakeTimed(intake));
 		NamedCommands.registerCommand("TaxiPosition", new AutoSetArmMode(arm, ArmMode.TAXI, 0.1));

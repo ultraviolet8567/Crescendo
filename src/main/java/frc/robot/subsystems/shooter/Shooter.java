@@ -34,6 +34,10 @@ public class Shooter extends SubsystemBase {
 		io.setVelocity(targetVel, targetVel);
 	}
 
+	public void autoShoot(double rpm) {
+		io.setVelocity(rpm, rpm);
+	}
+
 	public boolean atVelocity() {
 		// Velocity threshold for Amp shots is lower because shot velocity requires less
 		// precision

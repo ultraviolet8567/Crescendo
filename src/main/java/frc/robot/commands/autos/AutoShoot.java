@@ -10,20 +10,20 @@ public class AutoShoot extends Command {
 	private Shooter shooter;
 	private Intake intake;
 	private Timer timer;
+	private double rpm;
 
-	public AutoShoot(Shooter shooter, Intake intake) {
+	public AutoShoot(Shooter shooter, Intake intake, double rpm) {
 		this.shooter = shooter;
 		this.intake = intake;
+		this.rpm = rpm;
 		timer = new Timer();
-
-		addRequirements(shooter, intake);
 	}
 
 	@Override
 	public void initialize() {
 		timer.reset();
 		timer.start();
-		shooter.shoot();
+		shooter.autoShoot(rpm);
 
 		System.out.println("Shooting");
 	}
