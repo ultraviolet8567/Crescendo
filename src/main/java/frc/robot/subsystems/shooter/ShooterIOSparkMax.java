@@ -42,7 +42,8 @@ public class ShooterIOSparkMax implements ShooterIO {
 		shooterBottomPID = shooterBottomMotor.getPIDController();
 
 		setGains(shooterTopGains.kP(), shooterTopGains.kI(), shooterTopGains.kD(), shooterTopGains.ffkS(),
-				shooterTopGains.ffkV());
+				shooterTopGains.ffkV(), shooterBottomGains.kP(), shooterBottomGains.kI(), shooterBottomGains.kD(),
+				shooterBottomGains.ffkS(), shooterBottomGains.ffkV());
 	}
 
 	@Override
@@ -84,16 +85,18 @@ public class ShooterIOSparkMax implements ShooterIO {
 		setInputVoltage(0.0, 0.0);
 	}
 
-	public void setGains(double kP, double kI, double kD, double ffkS, double ffkV) {
-		shooterTopPID.setP(shooterTopGains.kP());
-		shooterTopPID.setI(shooterTopGains.kI());
-		shooterTopPID.setD(shooterTopGains.kD());
-		shooterTopFF = new SimpleMotorFeedforward(shooterTopGains.ffkS(), shooterTopGains.ffkV());
+	@Override
+	public void setGains(double tkP, double tkI, double tkD, double tffkS, double tffkV, double bkP, double bkI,
+			double bkD, double bffkS, double bffkV) {
+		shooterTopPID.setP(tkP);
+		shooterTopPID.setI(tkI);
+		shooterTopPID.setD(tkI);
+		shooterTopFF = new SimpleMotorFeedforward(tffkS, tffkV);
 
-		shooterBottomPID.setP(shooterBottomGains.kP());
-		shooterBottomPID.setI(shooterBottomGains.kI());
-		shooterBottomPID.setD(shooterBottomGains.kD());
-		shooterBottomFF = new SimpleMotorFeedforward(shooterBottomGains.ffkS(), shooterBottomGains.ffkV());
+		shooterTopPID.setP(bkP);
+		shooterTopPID.setI(bkI);
+		shooterTopPID.setD(bkD);
+		shooterTopFF = new SimpleMotorFeedforward(bffkS, bffkV);
 	}
 
 	@Override

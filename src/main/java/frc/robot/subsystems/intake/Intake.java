@@ -17,7 +17,7 @@ public class Intake extends SubsystemBase {
 	private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
 	private final DigitalInput sensor;
 
-	private GenericEntry noteIndicator, sensorOutput, sensorOverride;
+  private GenericEntry noteIndicator, sensorOutput, sensorOverride;
 	private Timer timer;
 	private boolean sensorDisabled;
 
@@ -54,7 +54,7 @@ public class Intake extends SubsystemBase {
 		sensorOutput.setBoolean(sensor.get());
 		sensorOverride.setBoolean(sensorDisabled);
 
-		if (timer.get() > 0.5) {
+    if (timer.get() > 0.5) {
 			RobotContainer.getDriverJoystick().setRumble(RumbleType.kBothRumble, 0);
 			RobotContainer.getOperatorJoystick().setRumble(RumbleType.kBothRumble, 0);
 			timer.stop();

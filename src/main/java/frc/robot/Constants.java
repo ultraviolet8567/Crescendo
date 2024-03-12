@@ -203,6 +203,8 @@ public final class Constants {
 	}
 
 	public static final class ShooterConstants {
+		public static final double kVelocityThreshold = 0.9;
+
 		public static final double kShooterReduction = 1.0;
 
 		public static final double kVelocityThreshold = 0.8;

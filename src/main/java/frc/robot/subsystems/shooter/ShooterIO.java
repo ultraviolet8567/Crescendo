@@ -41,7 +41,8 @@ public interface ShooterIO {
 	}
 
 	/** Sets the PID and feed-forward parameters */
-	default void setGains(double kP, double kI, double kD, double ffkS, double ffkV) {
+	default void setGains(double tkP, double tkI, double tkD, double tffkS, double tffkV, double bkP, double bkI,
+			double bkD, double bffkS, double bffkV) {
 	}
 
 	/** Sets the idle mode of the motor */
