@@ -49,6 +49,7 @@ public class Intake extends SubsystemBase {
 
 		Logger.recordOutput("HoldingNote", Lights.getInstance().hasNote);
 		Logger.recordOutput("Intake/NoteSensorOutput", sensor.get());
+		Logger.recordOutput("Intake/NoteSensorDisabled", sensorDisabled);
 
 		noteIndicator.setBoolean(Lights.getInstance().hasNote);
 		sensorOutput.setBoolean(sensor.get());
@@ -63,7 +64,7 @@ public class Intake extends SubsystemBase {
 
 	public void collectionIndicator() {
 		RobotContainer.getDriverJoystick().setRumble(RumbleType.kBothRumble, 0.05);
-		RobotContainer.getOperatorJoystick().setRumble(RumbleType.kBothRumble, 0);
+		RobotContainer.getOperatorJoystick().setRumble(RumbleType.kBothRumble, 0.05);
 		timer.reset();
 		timer.start();
 	}

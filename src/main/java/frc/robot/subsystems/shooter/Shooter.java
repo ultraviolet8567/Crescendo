@@ -27,6 +27,7 @@ public class Shooter extends SubsystemBase {
 		Logger.processInputs("Shooter", inputs);
 
 		Logger.recordOutput("Shooter/TargetVelocity", getTargetVelocity());
+		Logger.recordOutput("Shooter/AtVelocity", atVelocity());
 	}
 
 	/* Define all subsystem-specific methods and enums here */

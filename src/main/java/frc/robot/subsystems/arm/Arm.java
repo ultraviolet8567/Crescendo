@@ -53,7 +53,8 @@ public class Arm extends SubsystemBase {
 		Logger.processInputs("Arms", inputs);
 
 		Logger.recordOutput("Arm/Mode", armMode);
-		Logger.recordOutput("Arm/Setpoint", getPresetAngle());
+		Logger.recordOutput("Arm/PresetAngle", getPresetAngle());
+		Logger.recordOutput("Arm/AtSetpoint", atSetpoint(ArmConstants.kSetpointTolerance));
 
 		// Check if the gains configuration has changed
 		LoggedTunableNumber.ifChanged(hashCode(),
@@ -64,7 +65,8 @@ public class Arm extends SubsystemBase {
 	// Move arm to exact angle
 	public void setPosition(double targetAngle) {
 		io.setPosition(targetAngle);
-		Logger.recordOutput("Setpoints/Arm", targetAngle);
+
+		Logger.recordOutput("Arm/Setpoint", targetAngle);
 	}
 
 	// Manually control arm
