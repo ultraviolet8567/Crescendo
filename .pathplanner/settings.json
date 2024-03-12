@@ -9,18 +9,20 @@
     "3 Note",
     "3 Note Rush",
     "4 Note",
+    "4 Note Inner",
     "4 Note Rush",
-    "4 Note Inner"
+    "5 Note"
   ],
   "autoFolders": [
     "1 Note Autos",
     "2 Note Autos",
     "3 Note Autos",
-    "4 Note Autos"
+    "4 Note Autos",
+    "5 Note Autos"
   ],
-  "defaultMaxVel": 3.5,
-  "defaultMaxAccel": 3.0,
-  "defaultMaxAngVel": 540.0,
-  "defaultMaxAngAccel": 720.0,
+  "defaultMaxVel": 3.0,
+  "defaultMaxAccel": 11.43,
+  "defaultMaxAngVel": 343.77,
+  "defaultMaxAngAccel": 171.89,
   "maxModuleSpeed": 4.5
 }

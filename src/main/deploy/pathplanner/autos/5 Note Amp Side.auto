@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3057281252407118,
-      "y": 6.707344943511942
+      "x": 1.336590141851963,
+      "y": 7.108551159458209
     },
     "rotation": 60.439645535319286
   },
@@ -30,7 +30,50 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4 Note Rush Second Note Amp Side"
+                  "pathName": "5 Note Second Note Amp Side"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PickupTimed"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SpeakerAnglePosition"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShoot"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "5 Note Third Note Amp Side"
                 }
               },
               {
@@ -80,6 +123,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "PickupTimed"
+          }
+        },
+        {
           "type": "deadline",
           "data": {
             "commands": [
@@ -102,12 +151,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "PickupTimed"
           }
         },
         {
@@ -194,6 +237,6 @@
       ]
     }
   },
-  "folder": "4 Note Autos",
+  "folder": "5 Note Autos",
   "choreoAuto": false
 }
