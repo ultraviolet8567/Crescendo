@@ -5,6 +5,8 @@ import static frc.robot.Constants.GainsConstants.armGains;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.ArmConstants;
@@ -19,7 +21,7 @@ public class Arm extends SubsystemBase {
 	private static final LoggedTunableNumber kV = new LoggedTunableNumber("Arm/kV", armGains.ffkV());
 	private static final LoggedTunableNumber kA = new LoggedTunableNumber("Arm/kA", armGains.ffkA());
 	private static final LoggedTunableNumber kG = new LoggedTunableNumber("Arm/kG", armGains.ffkG());
-	private static final LoggedTunableNumber angle = new LoggedTunableNumber("Arm/Angle", -Math.PI / 2);
+	// private static final LoggedTunableNumber overrideAngle = new LoggedTunableNumber("Arm/OverrideAngle", -Math.PI / 2);
 
 	private final ArmIO io;
 	private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
@@ -28,22 +30,18 @@ public class Arm extends SubsystemBase {
 	private SysIdRoutine routine;
 
 	/*
-	 * Initialize all components here, as well as any one-time logic to be completed
-	 * on boot-up
+	 * Initialize all components and one-time logic to be completed on boot-up here
 	 */
 	public Arm(ArmIO io) {
 		this.io = io;
 		armMode = ArmMode.MANUAL;
 
-		// routine = new SysIdRoutine(new
-		// SysIdRoutine.Config(Volts.of(2).per(Seconds.of(1)), Volts.of(5),
-		// Seconds.of(5)),
-		// new SysIdRoutine.Mechanism((Measure<Voltage> volts) ->
-		// io.setInputVoltage(volts.in(Volts)),
-		// log -> log.motor("arm").voltage(Volts.of(inputs.appliedVoltage))
-		// .angularPosition(Radians.of(inputs.positionRads))
-		// .angularVelocity(RadiansPerSecond.of(inputs.velocityRadPerSec)),
-		// this));
+		routine = new SysIdRoutine(ArmConstants.characterizationConfig,
+				new SysIdRoutine.Mechanism((Measure<Voltage> volts) -> io.setInputVoltage(volts.in(Volts)),
+						log -> log.motor("arm").voltage(Volts.of(inputs.appliedVoltage))
+								.angularPosition(Radians.of(inputs.positionRads))
+								.angularVelocity(RadiansPerSecond.of(inputs.velocityRadPerSec)),
+						this));
 	}
 
 	/* Runs periodically (about once every 20 ms) */
@@ -123,6 +121,10 @@ public class Arm extends SubsystemBase {
 		double y = ArmConstants.kArmLength * Math.sin(io.getPositionRads());
 		return new Transform3d(0.0, y, 0.0, new Rotation3d());
 	}
+	
+	public SysIdRoutine routine() {
+		return routine;
+	}
 
 	public void stop() {
 		io.stop();
@@ -155,9 +157,5 @@ public class Arm extends SubsystemBase {
 		TAXI,
 		/** Source */
 		SOURCE
-	}
-
-	public SysIdRoutine routine() {
-		return routine;
 	}
 }

@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.*;
 import frc.robot.commands.*;
 import frc.robot.commands.autos.*;
@@ -83,13 +82,13 @@ public class RobotContainer {
 				}, arm);
 			}
 		}
-
 		// kmeans = new KMeans();
 		// vision = new Vision(kmeans);
 		swerve = new Swerve();
 		gyro = new Gyrometer(swerve);
 		// odometry = new Odometry(vision, gyro);
 
+		// Create AutoChooser
 		autoChooser = new AutoChooser();
 
 		// Configure default commands for driving and arm movement
@@ -123,12 +122,8 @@ public class RobotContainer {
 				}, swerve);
 	}
 
-	/**
-	 * Use this method to define your trigger->command mappings. Triggers can be
-	 * created via the {@link Trigger#Trigger(java.util.function.BooleanSupplier)}
-	 * constructor with an arbitrary predicate
-	 */
 	public void configureBindings() {
+		// Button bindings
 		operatorController.leftBumper().whileTrue(new Pickup(intake));
 		operatorController.leftTrigger(0.5).whileTrue(new Drop(intake));
 		operatorController.rightTrigger().whileTrue(new Shoot(shooter, intake));
@@ -143,38 +138,12 @@ public class RobotContainer {
 		operatorController.povUp().or(operatorController.povDown()).or(operatorController.povLeft())
 				.or(operatorController.povRight()).onTrue(new InstantCommand(() -> intake.toggleSensorDisabled()));
 
-		// new JoystickButton(operatorJoystick,
-		// XboxController.Button.kLeftBumper.value).whileTrue(new Pickup(intake));
-		// new JoystickButton(operatorJoystick,
-		// XboxController.Button.kRightBumper.value)
-		// .whileTrue(new Shoot(shooter, intake));
-
-		// new JoystickButton(operatorJoystick, XboxController.Button.kY.value)
-		// .onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SPEAKERFRONT)));
-		// new POVButton(operatorJoystick, 0).onTrue(new InstantCommand(() ->
-		// arm.setArmMode(ArmMode.SPEAKERANGLE)));
-		// new JoystickButton(operatorJoystick, XboxController.Button.kStart.value)
-		// .onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SPEAKERSTAGE)));
-		// new JoystickButton(operatorJoystick, XboxController.Button.kB.value)
-		// .onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.TAXI)));
-		// new JoystickButton(operatorJoystick, XboxController.Button.kA.value)
-		// .onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.ROOMBA)));
-		// new JoystickButton(operatorJoystick, XboxController.Button.kX.value)
-		// .onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.AMP)));
-
-		// new JoystickButton(operatorJoystick,
-		// XboxController.Button.kBack.value).whileTrue(new Drop(intake));
-
 		// Overrides
 		driverController.back()
 				.onTrue(new InstantCommand(() -> Lights.getInstance().hasNote = !Lights.getInstance().hasNote));
 		driverController.start().onTrue(new InstantCommand(() -> gyro.reset()));
-		// new JoystickButton(driverJoystick, XboxController.Button.kStart.value)
-		// .onTrue(new InstantCommand(() -> gyro.reset()));
-		// new JoystickButton(driverJoystick, XboxController.Button.kBack.value)
-		// .onTrue(new InstantCommand(() -> Lights.getInstance().hasNote =
-		// !Lights.getInstance().hasNote));
 
+		// Register PathPlanner named commands
 		NamedCommands.registerCommand("AutoShoot", new AutoShoot(shooter, intake));
 		NamedCommands.registerCommand("Pickup", new AutoIntake(intake));
 		NamedCommands.registerCommand("PickupTimed", new AutoIntakeTimed(intake));
@@ -184,18 +153,6 @@ public class RobotContainer {
 		NamedCommands.registerCommand("SpeakerFrontPosition", new AutoSetArmMode(arm, ArmMode.SPEAKERFRONT, 0.2));
 		NamedCommands.registerCommand("SpeakerAnglePosition", new AutoSetArmMode(arm, ArmMode.SPEAKERANGLE, 0.2));
 		NamedCommands.registerCommand("SpeakerStagePosition", new AutoSetArmMode(arm, ArmMode.SPEAKERSTAGE, 0.2));
-
-		/*
-		 * Will switch to this soon to simplify button constructors
-		 *
-		 * operatorController.leftTrigger().onTrue(new Command());
-		 * operatorController.leftTrigger().whileTrue(new Command());
-		 *
-		 * operatorController.a().onTrue(new Command());
-		 * operatorController.rightTrigger().whileTrue(new Command());
-		 *
-		 * operatorController.povUp().onTrue(new Command());
-		 */
 	}
 
 	public Command getAutonomousCommand() {

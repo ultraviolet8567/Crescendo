@@ -22,8 +22,7 @@ public class Intake extends SubsystemBase {
 	private boolean sensorDisabled;
 
 	/*
-	 * Initialize all components here, as well as any one-time logic to be completed
-	 * on boot-up
+	 * Initialize all components and one-time logic to be completed on boot-up here
 	 */
 	public Intake(IntakeIO io) {
 		this.io = io;

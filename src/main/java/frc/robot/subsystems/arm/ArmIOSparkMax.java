@@ -113,9 +113,10 @@ public class ArmIOSparkMax implements ArmIO {
 	@Override
 	public void setPosition(double setpoint) {
 		double volts = armPID.calculate(getPositionRads(), setpoint);
-		Logger.recordOutput("Arm/PID", armPID.calculate(getPositionRads(), setpoint));
-		Logger.recordOutput("Arm/FF", armFF.calculate(getPositionRads(), setpoint));
 		setInputVoltage(volts);
+
+		Logger.recordOutput("Arm/PID", armPID.calculate(getPositionRads(), setpoint));
+		Logger.recordOutput("Arm/FF", armFF.calculate(setpoint, armPID.getSetpoint().velocity));
 	}
 
 	@Override

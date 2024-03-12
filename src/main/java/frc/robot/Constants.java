@@ -1,5 +1,8 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -16,6 +19,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.util.LoggedTunableNumber;
 
 public final class Constants {
@@ -192,12 +196,17 @@ public final class Constants {
 		// Control
 		public static final LoggedTunableNumber kArmPIDTolerance = new LoggedTunableNumber("Arm/PID Tolerance", 0.0001);
 		public static final double kSetpointTolerance = 0.2;
+
+		// Arm characterization
+		public static final SysIdRoutine.Config characterizationConfig = new SysIdRoutine.Config(
+				Volts.of(2).per(Seconds.of(1)), Volts.of(5), Seconds.of(5));
 	}
 
 	public static final class ShooterConstants {
-		public static final double kVelocityThreshold = 0.8;
-
 		public static final double kShooterReduction = 1.0;
+
+		public static final double kVelocityThreshold = 0.8;
+		public static final double kVelocityThresholdAmp = 0.6;
 
 		public static final LoggedTunableNumber kShooterPIDTolerance = new LoggedTunableNumber("Shooter/PID Tolerance",
 				0.5);
@@ -214,7 +223,7 @@ public final class Constants {
 	}
 
 	public static final class IntakeConstants {
-		public static final double kIntakeReduction = 1.0;
+		public static final double kIntakeReduction = 4.0 * 3.0;
 		public static final int kSensorPort = 8;
 
 		public static final LoggedTunableNumber kIntakeVoltage = new LoggedTunableNumber("Intake/Voltage", 10);

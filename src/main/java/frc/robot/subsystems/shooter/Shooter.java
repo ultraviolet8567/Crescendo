@@ -12,8 +12,7 @@ public class Shooter extends SubsystemBase {
 	private final ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
 
 	/*
-	 * Initialize all components here, as well as any one-time logic to be completed
-	 * on boot-up
+	 * Initialize all components and one-time logic to be completed on boot-up here
 	 */
 	public Shooter(ShooterIO io, Arm arm) {
 		this.io = io;
@@ -30,14 +29,17 @@ public class Shooter extends SubsystemBase {
 		Logger.recordOutput("Shooter/AtVelocity", atVelocity());
 	}
 
-	/* Define all subsystem-specific methods and enums here */
 	public void shoot() {
 		double targetVel = getTargetVelocity();
 		io.setVelocity(targetVel, targetVel);
 	}
 
 	public boolean atVelocity() {
-		double threshold = (arm.getArmMode() == ArmMode.AMP) ? 0.6 : ShooterConstants.kVelocityThreshold;
+		// Velocity threshold for Amp shots is lower because shot velocity requires less
+		// precision
+		double threshold = (arm.getArmMode() == ArmMode.AMP)
+				? ShooterConstants.kVelocityThresholdAmp
+				: ShooterConstants.kVelocityThreshold;
 
 		return inputs.topVelocityRPM >= threshold * getTargetVelocity()
 				&& inputs.bottomVelocityRPM >= threshold * getTargetVelocity();
