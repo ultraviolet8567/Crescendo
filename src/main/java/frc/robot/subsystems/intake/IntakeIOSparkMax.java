@@ -11,8 +11,8 @@ import frc.robot.util.SparkConfig;
 import frc.robot.util.SparkConfig.SparkType;
 
 public class IntakeIOSparkMax implements IntakeIO {
-	public final CANSparkMax intakeMotor;
-	public final RelativeEncoder intakeEncoder;
+	private final CANSparkMax intakeMotor;
+	private final RelativeEncoder intakeEncoder;
 
 	public IntakeIOSparkMax() {
 		System.out.println("[Init] Creating IntakeIOSparkMax");
@@ -34,7 +34,7 @@ public class IntakeIOSparkMax implements IntakeIO {
 
 	public void setInputVoltage(double volts) {
 		double appliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
-		intakeMotor.setVoltage(appliedVolts);
+		intakeMotor.set(appliedVolts / 12.0);
 	}
 
 	public void stop() {

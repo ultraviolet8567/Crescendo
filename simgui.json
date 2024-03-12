@@ -15,8 +15,12 @@
   },
   "NTProvider": {
     "types": {
+      "/AdvantageKit/RealOutputs/Arm/Mechanism": "Mechanism2d",
       "/AdvantageKit/RealOutputs/ArmMechanism": "Mechanism2d",
       "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Main/Number of Notes": "String Chooser",
+      "/Shuffleboard/Main/Other variables": "String Chooser",
+      "/Shuffleboard/Main/Side of Field": "String Chooser",
       "/SmartDashboard/Mechanism": "Mechanism2d"
     }
   },
@@ -26,6 +30,11 @@
     },
     "Retained Values": {
       "open": false
+    },
+    "transitory": {
+      "Shuffleboard": {
+        "open": true
+      }
     }
   },
   "NetworkTables Info": {

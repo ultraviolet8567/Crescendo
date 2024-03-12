@@ -10,9 +10,12 @@ import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.Lights.RobotState;
 import frc.robot.util.VirtualSubsystem;
 import java.util.Map;
+import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -52,7 +55,7 @@ public class Robot extends LoggedRobot {
 
 		switch (Constants.currentMode) {
 			case REAL :
-				// Logger.addDataReceiver(new WPILOGWriter());
+				Logger.addDataReceiver(new WPILOGWriter("/home/lvuser/logs/"));
 				Logger.addDataReceiver(new NT4Publisher());
 				break;
 			case SIM :
@@ -60,10 +63,9 @@ public class Robot extends LoggedRobot {
 				break;
 			case REPLAY :
 				setUseTiming(false);
-				// String logpath = LogFileUtil.findReplayLog();
-				// Logger.setReplaySource(new WPILOGReader(logpath));
-				// Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logpath,
-				// "_sim")));
+				String logpath = LogFileUtil.findReplayLog();
+				Logger.setReplaySource(new WPILOGReader(logpath));
+				Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logpath, "_sim")));
 				break;
 		}
 
@@ -77,7 +79,7 @@ public class Robot extends LoggedRobot {
 		Lights.getInstance();
 
 		timer = Shuffleboard.getTab("Main").add("Time remaining", 0).withWidget(BuiltInWidgets.kNumberBar)
-				.withProperties(Map.of("min", 0, "max", 135)).withPosition(4, 0).withSize(2, 1).getEntry();
+				.withProperties(Map.of("min", 0, "max", 135)).withPosition(0, 2).withSize(2, 1).getEntry();
 	}
 
 	/**

@@ -10,43 +10,28 @@ public class Shoot extends Command {
 	private Shooter shooter;
 	private Intake intake;
 
-	private Timer timer;
-	private boolean shotComplete;
-
 	public Shoot(Shooter shooter, Intake intake) {
 		this.shooter = shooter;
 		this.intake = intake;
 
-		timer = new Timer();
-		shotComplete = false;
+    addRequirements(shooter, intake);
+	}
+
+	@Override
+	public void initialize() {
+		shooter.shoot();
 	}
 
 	@Override
 	public void execute() {
-		shooter.shoot();
-
-		// 87% buffer if the shooter flywheels never actually reach their target
-		// velocity
 		if (shooter.atVelocity()) {
 			intake.runIndexer();
-			if (!intake.noteDetected) {
-				timer.schedule(new TimerTask() {
-					@Override
-					public void run() {
-						shotComplete = true;
-					}
-				}, 1000);
-			}
 		}
 	}
 
 	@Override
 	public void end(boolean interrupted) {
 		shooter.stop();
-	}
-
-	@Override
-	public boolean isFinished() {
-		return shotComplete;
+		intake.stop();
 	}
 }

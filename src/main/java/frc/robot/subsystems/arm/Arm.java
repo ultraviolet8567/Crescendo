@@ -1,8 +1,6 @@
 package frc.robot.subsystems.arm;
 
-import static edu.wpi.first.units.Units.Radians;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.*;
 import static frc.robot.Constants.GainsConstants.armGains;
 
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -23,6 +21,7 @@ public class Arm extends SubsystemBase {
 	private static final LoggedTunableNumber kV = new LoggedTunableNumber("Arm/kV", armGains.ffkV());
 	private static final LoggedTunableNumber kA = new LoggedTunableNumber("Arm/kA", armGains.ffkA());
 	private static final LoggedTunableNumber kG = new LoggedTunableNumber("Arm/kG", armGains.ffkG());
+	// private static final LoggedTunableNumber overrideAngle = new LoggedTunableNumber("Arm/OverrideAngle", -Math.PI / 2);
 
 	private final ArmIO io;
 	private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
@@ -31,14 +30,13 @@ public class Arm extends SubsystemBase {
 	private SysIdRoutine routine;
 
 	/*
-	 * Initialize all components here, as well as any one-time logic to be completed
-	 * on boot-up
+	 * Initialize all components and one-time logic to be completed on boot-up here
 	 */
 	public Arm(ArmIO io) {
 		this.io = io;
 		armMode = ArmMode.MANUAL;
 
-		routine = new SysIdRoutine(new SysIdRoutine.Config(),
+		routine = new SysIdRoutine(ArmConstants.characterizationConfig,
 				new SysIdRoutine.Mechanism((Measure<Voltage> volts) -> io.setInputVoltage(volts.in(Volts)),
 						log -> log.motor("arm").voltage(Volts.of(inputs.appliedVoltage))
 								.angularPosition(Radians.of(inputs.positionRads))
@@ -53,21 +51,20 @@ public class Arm extends SubsystemBase {
 		Logger.processInputs("Arms", inputs);
 
 		Logger.recordOutput("Arm/Mode", armMode);
-		Logger.recordOutput("Arm/Setpoint", getPresetAngle());
+		Logger.recordOutput("Arm/PresetAngle", getPresetAngle());
+		Logger.recordOutput("Arm/AtSetpoint", atSetpoint(ArmConstants.kSetpointTolerance));
 
 		// Check if the gains configuration has changed
 		LoggedTunableNumber.ifChanged(hashCode(),
 				() -> io.setGains(kP.get(), kI.get(), kD.get(), kS.get(), kV.get(), kA.get(), kG.get()), kP, kI, kD, kS,
 				kV, kA, kG);
-
 	}
 
 	// Move arm to exact angle
 	public void setPosition(double targetAngle) {
-		if (io.armWithinRange()) {
-			io.setPosition(targetAngle);
-			Logger.recordOutput("Setpoints/Arm", targetAngle);
-		}
+		io.setPosition(targetAngle);
+
+		Logger.recordOutput("Arm/Setpoint", targetAngle);
 	}
 
 	// Manually control arm
@@ -95,8 +92,12 @@ public class Arm extends SubsystemBase {
 
 	public double getPresetAngle() {
 		switch (armMode) {
-			case SPEAKER :
-				return ArmConstants.kSpeakerAngle;
+			case SPEAKERFRONT :
+				return ArmConstants.kSpeakerFrontAngle;
+			case SPEAKERANGLE :
+				return ArmConstants.kSpeakerAngleAngle;
+			case SPEAKERSTAGE :
+				return ArmConstants.kSpeakerStageAngle;
 			case AMP :
 				return ArmConstants.kAmpAngle;
 			case ROOMBA :
@@ -105,14 +106,24 @@ public class Arm extends SubsystemBase {
 				return ArmConstants.kTaxiAngle;
 			case TRAP :
 				return ArmConstants.kTrapAngle;
+			case SOURCE :
+				return ArmConstants.kSourceAngle;
 			default :
 				return ArmConstants.kTaxiAngle;
 		}
 	}
 
+	public boolean atSetpoint(double threshold) {
+		return Math.abs(getPresetAngle() - inputs.positionRads) < threshold;
+	}
+
 	public Transform3d getDeltaY() {
 		double y = ArmConstants.kArmLength * Math.sin(io.getPositionRads());
 		return new Transform3d(0.0, y, 0.0, new Rotation3d());
+	}
+	
+	public SysIdRoutine routine() {
+		return routine;
 	}
 
 	public void stop() {
@@ -132,17 +143,19 @@ public class Arm extends SubsystemBase {
 		MANUAL,
 		/** Intaking from ground */
 		ROOMBA,
-		/** Pointing at speaker */
-		SPEAKER,
+		/** Pointing at speaker directly in front of the subwoofer */
+		SPEAKERFRONT,
+		/** Pointing at speaker on the angled side of the subwoofer */
+		SPEAKERANGLE,
+		/** Pointing at speaker on the right side of the stage */
+		SPEAKERSTAGE,
 		/** Pointing at amp */
 		AMP,
 		/** Pointing at trap */
 		TRAP,
 		/** Stowed in taxi position */
-		TAXI
-	}
-
-	public SysIdRoutine routine() {
-		return routine;
+		TAXI,
+		/** Source */
+		SOURCE
 	}
 }

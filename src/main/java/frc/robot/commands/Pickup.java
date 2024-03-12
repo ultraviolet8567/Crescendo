@@ -9,6 +9,8 @@ public class Pickup extends Command {
 
 	public Pickup(Intake intake) {
 		this.intake = intake;
+
+		addRequirements(intake);
 	}
 
 	@Override
@@ -19,6 +21,10 @@ public class Pickup extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		intake.stop();
+
+		if (!interrupted) {
+			intake.collectionIndicator();
+		}
 	}
 
 	@Override

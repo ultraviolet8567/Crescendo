@@ -1,43 +1,41 @@
 package frc.robot.subsystems.intake;
 
-import com.revrobotics.ColorMatch;
-import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Lights;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
 	private final IntakeIO io;
 	private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
+	private final DigitalInput sensor;
 
-	private GenericEntry noteIndicator;
-
-	private boolean notePreviouslyDetected = false;
-	public boolean noteDetected = false;
-
-	private ColorSensorV3 sensor;
-	private ColorMatch matcher;
+  private GenericEntry noteIndicator, sensorOutput, sensorOverride;
+	private Timer timer;
+	private boolean sensorDisabled;
 
 	/*
-	 * Initialize all components here, as well as any one-time logic to be completed
-	 * on boot-up
+	 * Initialize all components and one-time logic to be completed on boot-up here
 	 */
 	public Intake(IntakeIO io) {
 		this.io = io;
+		sensor = new DigitalInput(IntakeConstants.kSensorPort);
 
-		sensor = new ColorSensorV3(I2C.Port.kOnboard);
-		matcher = new ColorMatch();
-		matcher.addColorMatch(Constants.kNoteColor);
-		matcher.setConfidenceThreshold(Constants.kColorConfidenceThreshold);
+		timer = new Timer();
 
 		noteIndicator = Shuffleboard.getTab("Main").add("Note collected", Lights.getInstance().hasNote)
-				.withWidget(BuiltInWidgets.kBooleanBox).withPosition(4, 0).withSize(2, 2).getEntry();
+				.withWidget(BuiltInWidgets.kBooleanBox).withPosition(0, 0).withSize(3, 3).getEntry();
+		sensorOutput = Shuffleboard.getTab("Main").add("Sensor output", false).withWidget(BuiltInWidgets.kBooleanBox)
+				.withPosition(0, 3).withSize(1, 1).getEntry();
+		sensorOverride = Shuffleboard.getTab("Main").add("Sensor override", false)
+				.withWidget(BuiltInWidgets.kBooleanBox).withPosition(1, 3).withSize(2, 1).getEntry();
 	}
 
 	/* Runs periodically (about once every 20 ms) */
@@ -46,24 +44,32 @@ public class Intake extends SubsystemBase {
 		io.updateInputs(inputs);
 		Logger.processInputs("Intake", inputs);
 
-		noteIndicator.setBoolean(Lights.getInstance().hasNote);
+		Lights.getInstance().hasNote = !sensorDisabled && sensor.get();
 
 		Logger.recordOutput("HoldingNote", Lights.getInstance().hasNote);
-		Logger.recordOutput("Intake/DetectedColor",
-				new double[]{sensor.getColor().red, sensor.getColor().green, sensor.getColor().blue});
-		Logger.recordOutput("Intake/Proximity", sensor.getProximity());
+		Logger.recordOutput("Intake/NoteSensorOutput", sensor.get());
+		Logger.recordOutput("Intake/NoteSensorDisabled", sensorDisabled);
 
-		// If the sensor sees orange, we have a note in the system
-		// ColorMatchResult result = matcher.matchColor(sensor.getColor());
-		// noteDetected = (result != null);
-		noteDetected = sensor.getProximity() >= IntakeConstants.kProximityThreshold;
+		noteIndicator.setBoolean(Lights.getInstance().hasNote);
+		sensorOutput.setBoolean(sensor.get());
+		sensorOverride.setBoolean(sensorDisabled);
 
-		Lights.getInstance().hasNote = noteDetected;
-		// if (!notePreviouslyDetected && noteDetected) {
-		// Lights.getInstance().hasNote = true;
-		// }
+    if (timer.get() > 0.5) {
+			RobotContainer.getDriverJoystick().setRumble(RumbleType.kBothRumble, 0);
+			RobotContainer.getOperatorJoystick().setRumble(RumbleType.kBothRumble, 0);
+			timer.stop();
+		}
+	}
 
-		// notePreviouslyDetected = noteDetected;
+	public void collectionIndicator() {
+		RobotContainer.getDriverJoystick().setRumble(RumbleType.kBothRumble, 0.05);
+		RobotContainer.getOperatorJoystick().setRumble(RumbleType.kBothRumble, 0.05);
+		timer.reset();
+		timer.start();
+	}
+
+	public void toggleSensorDisabled() {
+		sensorDisabled = !sensorDisabled;
 	}
 
 	public void pickup() {

@@ -1,5 +1,8 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -16,6 +19,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.util.LoggedTunableNumber;
 
 public final class Constants {
@@ -29,7 +33,7 @@ public final class Constants {
 
 	public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
 	public static final RobotType currentRobot = (currentMode == Mode.REAL) ? RobotType.REALBOT : RobotType.SIMBOT;
-	public static final boolean tuningMode = true;
+	public static final boolean tuningMode = false;
 
 	public static final ModuleType powerDistributionType = ModuleType.kRev;
 	public static final boolean fieldOriented = true;
@@ -56,9 +60,6 @@ public final class Constants {
 	}
 
 	public static final class CAN {
-		// public static final int kLeftClimberPort = 2;
-		// public static final int kRightClimberPort = 3;
-
 		public static final int kIntakePort = 4;
 
 		public static final int kShooterTopPort = 7;
@@ -135,10 +136,10 @@ public final class Constants {
 		public static final boolean kBackLeftDriveAbsoluteEncoderReversed = false;
 		public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
 
-		public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -1.677 - 0.005;
-		public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -0.804 + 0.069;
-		public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.452 - 0.01;
-		public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.132 - 0.064;
+		public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -1.677 - 0.005 - 0.004;
+		public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -0.804 + 0.069 + 0.071;
+		public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.452 - 0.01 + 0.046;
+		public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.132 - 0.064 + 0.017;
 
 		public static final double kPhysicalMaxSpeedMetersPerSecond = 4.5;
 		public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 3 * Math.PI;
@@ -178,19 +179,27 @@ public final class Constants {
 		public static final double kMaxArmAngle = -0.084;
 		public static final double kMinArmAngle = -1.76625;
 
-		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Arm/Max Speed", 3.5);
-		public static final LoggedTunableNumber kMaxAcceleration = new LoggedTunableNumber("Arm/Max Acceleration", 1);
+		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Arm/Max Speed", 4);
+		public static final LoggedTunableNumber kMaxAcceleration = new LoggedTunableNumber("Arm/Max Acceleration", 1.5);
 		public static final LoggedTunableNumber kManualVoltage = new LoggedTunableNumber("Arm/ManualVoltage", 8);
 
 		// Arm presets
 		public static final double kTaxiAngle = -1.175;
-		public static final double kRoombaAngle = -0.084;
-		public static final double kSpeakerAngle = -0.31;
+		public static final double kRoombaAngle = -0.15;
+		public static final double kSpeakerFrontAngle = -0.31;
+		public static final double kSpeakerAngleAngle = -0.31;
+		public static final double kSpeakerStageAngle = -0.75;
 		public static final double kAmpAngle = -1.620;
 		public static final double kTrapAngle = -0.13816;
+		public static final double kSourceAngle = -1.37;
 
 		// Control
 		public static final LoggedTunableNumber kArmPIDTolerance = new LoggedTunableNumber("Arm/PID Tolerance", 0.0001);
+		public static final double kSetpointTolerance = 0.2;
+
+		// Arm characterization
+		public static final SysIdRoutine.Config characterizationConfig = new SysIdRoutine.Config(
+				Volts.of(2).per(Seconds.of(1)), Volts.of(5), Seconds.of(5));
 	}
 
 	public static final class ShooterConstants {
@@ -198,21 +207,34 @@ public final class Constants {
 
 		public static final double kShooterReduction = 1.0;
 
+		public static final double kVelocityThreshold = 0.8;
+		public static final double kVelocityThresholdAmp = 0.6;
+
 		public static final LoggedTunableNumber kShooterPIDTolerance = new LoggedTunableNumber("Shooter/PID Tolerance",
 				0.5);
 
 		public static final LoggedTunableNumber kAmpRPM = new LoggedTunableNumber("Shooter/Amp RPM", 500);
-		public static final LoggedTunableNumber kSpeakerRPM = new LoggedTunableNumber("Shooter/Speaker RPM", 4500);
+		public static final LoggedTunableNumber kSpeakerFrontRPM = new LoggedTunableNumber("Shooter/SpeakerFront RPM",
+				4500);
+		public static final LoggedTunableNumber kSpeakerAngleRPM = new LoggedTunableNumber("Shooter/SpeakerAngle RPM",
+				4500);
+		public static final LoggedTunableNumber kSpeakerStageRPM = new LoggedTunableNumber("Shooter/SpeakerStage RPM",
+				4000);
 		public static final LoggedTunableNumber kTrapRPM = new LoggedTunableNumber("Shooter/Manual RPM", 1000);
-		public static final LoggedTunableNumber kIdleRPM = new LoggedTunableNumber("Shooter/Idle RPM", 500);
+		public static final LoggedTunableNumber kIdleRPM = new LoggedTunableNumber("Shooter/Idle RPM", 4500);
 	}
 
 	public static final class IntakeConstants {
-		public static final int kProximityThreshold = 1000;
-
-		public static final double kIntakeReduction = 1.0;
+		public static final double kIntakeReduction = 4.0 * 3.0;
+		public static final int kSensorPort = 8;
 
 		public static final LoggedTunableNumber kIntakeVoltage = new LoggedTunableNumber("Intake/Voltage", 10);
+	}
+
+	public static final class AutoConstants {
+		public static final double kAutoShootTime = 2.0;
+		public static final double kAutoArmTime = 1.0;
+		public static final double kAutoIntakeTime = 1.75;
 	}
 
 	public static final class GainsConstants {
@@ -226,8 +248,7 @@ public final class Constants {
 		};
 
 		public static final Gains armGains = switch (currentRobot) {
-			// case REALBOT -> new Gains(3, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
-			case REALBOT -> new Gains(3.596, 0.0, 0.0, 1.1283, 0.14542, 0.06, 1.07);
+			case REALBOT -> new Gains(12, 0.0, 0, 0.016186, 0.02131, 0.087119, 1.4338);
 			case SIMBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
 		};
 	}
