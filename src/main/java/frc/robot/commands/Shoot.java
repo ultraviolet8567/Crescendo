@@ -3,8 +3,6 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Shoot extends Command {
 	private Shooter shooter;
@@ -14,7 +12,7 @@ public class Shoot extends Command {
 		this.shooter = shooter;
 		this.intake = intake;
 
-    addRequirements(shooter, intake);
+		addRequirements(shooter, intake);
 	}
 
 	@Override

@@ -109,7 +109,7 @@ public class RobotContainer {
 
 		// Post webcam feed to Shuffleboard
 		Shuffleboard.getTab("Main").add("Camera", camera).withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4)
-				.withPosition(6, 0);
+				.withPosition(5, 0);
 
 		// Configure the PathPlanner auto-builder
 		AutoBuilder.configureHolonomic(gyro::getPose, gyro::resetPose, swerve::getRobotRelativeSpeeds,

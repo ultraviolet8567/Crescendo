@@ -21,7 +21,8 @@ public class Arm extends SubsystemBase {
 	private static final LoggedTunableNumber kV = new LoggedTunableNumber("Arm/kV", armGains.ffkV());
 	private static final LoggedTunableNumber kA = new LoggedTunableNumber("Arm/kA", armGains.ffkA());
 	private static final LoggedTunableNumber kG = new LoggedTunableNumber("Arm/kG", armGains.ffkG());
-	// private static final LoggedTunableNumber overrideAngle = new LoggedTunableNumber("Arm/OverrideAngle", -Math.PI / 2);
+	// private static final LoggedTunableNumber overrideAngle = new
+	// LoggedTunableNumber("Arm/OverrideAngle", -Math.PI / 2);
 
 	private final ArmIO io;
 	private final ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
@@ -121,7 +122,7 @@ public class Arm extends SubsystemBase {
 		double y = ArmConstants.kArmLength * Math.sin(io.getPositionRads());
 		return new Transform3d(0.0, y, 0.0, new Rotation3d());
 	}
-	
+
 	public SysIdRoutine routine() {
 		return routine;
 	}
