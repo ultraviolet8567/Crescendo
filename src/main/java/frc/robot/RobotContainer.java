@@ -99,7 +99,6 @@ public class RobotContainer {
 				() -> OIConstants.controllerTypeDriver == ControllerType.JOYSTICK
 						? driverJoystick.getRawButton(ControllerIO.getTrigger())
 						: true,
-				() -> driverJoystick.getRawButton(XboxController.Button.kLeftBumper.value),
 				() -> driverJoystick.getRawButton(XboxController.Button.kRightBumper.value)));
 
 		arm.setDefaultCommand(new MoveArm(arm, () -> operatorJoystick.getRawAxis(ControllerIO.getLeftY())));
@@ -124,6 +123,9 @@ public class RobotContainer {
 
 	public void configureBindings() {
 		// Button bindings
+		driverController.leftBumper()
+				.whileTrue(new InstantCommand(() -> shooter.autoShoot(0.75 * shooter.getTargetVelocity())));
+
 		operatorController.leftBumper().whileTrue(new Pickup(intake));
 		operatorController.leftTrigger(0.5).whileTrue(new Drop(intake));
 		operatorController.rightTrigger().whileTrue(new Shoot(shooter, intake));

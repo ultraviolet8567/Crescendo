@@ -11,26 +11,25 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.Gyrometer;
 import frc.robot.subsystems.Swerve;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
 
 public class SwerveTeleOp extends Command {
 	private final Swerve swerve;
 	private final Gyrometer odometry;
 	private final Supplier<Double> xSpdFunction, ySpdFunction, turningSpdFunction;
-	private final Supplier<Boolean> rotationOnFunction, leftBumper, rightBumper;
+	private final Supplier<Boolean> rotationOnFunction, rightBumper;
 	private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
 
 	// First supplier is the forward velocity, then its horizontal velocity, then
 	// rotational velocity
 	public SwerveTeleOp(Swerve swerve, Gyrometer odometry, Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction,
-			Supplier<Double> turningSpdFunction, Supplier<Boolean> rotationOnFunction, Supplier<Boolean> leftBumper,
-			Supplier<Boolean> rightBumper) {
+			Supplier<Double> turningSpdFunction, Supplier<Boolean> rotationOnFunction, Supplier<Boolean> rightBumper) {
 		this.swerve = swerve;
 		this.odometry = odometry;
 		this.xSpdFunction = xSpdFunction;
 		this.ySpdFunction = ySpdFunction;
 		this.turningSpdFunction = turningSpdFunction;
 		this.rotationOnFunction = rotationOnFunction;
-		this.leftBumper = leftBumper;
 		this.rightBumper = rightBumper;
 		this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
 		this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
@@ -46,22 +45,19 @@ public class SwerveTeleOp extends Command {
 	@Override
 	public void execute() {
 		// Get real-time joystick inputs
-		double xSpeed = xSpdFunction.get();
-		double ySpeed = ySpdFunction.get();
+		double xSpeed = (Math.pow(xSpdFunction.get(), 3));
+		double ySpeed = (Math.pow(ySpdFunction.get(), 3));
 		double turningSpeed = rotationOnFunction.get() ? turningSpdFunction.get() : 0;
+
+		Logger.recordOutput("Drivetrain/X Speed", xSpeed);
+		Logger.recordOutput("Drivetrain/Y Speed", ySpeed);
 
 		// Apply deadband (drops to 0 if joystick value is less than the deadband)
 		xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0;
 		ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0;
 		turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0;
 
-		if (leftBumper.get()) {
-			RobotContainer.getDriverJoystick().setRumble(RumbleType.kLeftRumble, 0.025);
-			RobotContainer.getDriverJoystick().setRumble(RumbleType.kRightRumble, 0);
-			xSpeed *= 0.2;
-			ySpeed *= 0.2;
-			turningSpeed *= 0.2;
-		} else if (rightBumper.get()) {
+		if (rightBumper.get()) {
 			RobotContainer.getDriverJoystick().setRumble(RumbleType.kLeftRumble, 0);
 			RobotContainer.getDriverJoystick().setRumble(RumbleType.kRightRumble, 0.025);
 			xSpeed *= 0.33;
