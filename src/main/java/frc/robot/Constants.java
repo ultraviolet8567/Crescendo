@@ -108,7 +108,7 @@ public final class Constants {
 		// Distance between right and left wheels:
 		public static final double kTrackWidth = Units.inchesToMeters(21);
 		// Distance between front and back wheels:
-		public static final double kWheelBase = Units.inchesToMeters(21);
+		public static final double kWheelBase = Units.inchesToMeters(20.5);
 		public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
 				new Translation2d(kWheelBase / 2, kTrackWidth / 2), // Front left (+/+)
 				new Translation2d(kWheelBase / 2, -kTrackWidth / 2), // Front right (+/-)
