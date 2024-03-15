@@ -41,6 +41,7 @@ public class Vision extends SubsystemBase {
 		Logger.recordOutput("EstimatedPoses/Nu", estimatedPoses.get(1));
 		Logger.recordOutput("EstimatedPoses/Xi", estimatedPoses.get(2));
 
+		// 🐖 <-- Carlos II reincarnate (DO NOT REMOVE)
 		// var result = cameraMu.getLatestResult();
 		// if (result.hasTargets()) {
 		// List<PhotonTrackedTarget> target = result.getTargets();
