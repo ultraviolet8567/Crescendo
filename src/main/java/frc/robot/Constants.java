@@ -80,15 +80,16 @@ public final class Constants {
 	}
 
 	public static final class Cameras {
-		public static final Transform3d frontLefttoRobot = new Transform3d(
-				new Translation3d(Units.inchesToMeters(10.5), Units.inchesToMeters(9), Units.inchesToMeters(4.5)),
-				new Rotation3d(Math.PI, Math.PI / 6, Math.PI / 3));
-		public static final Transform3d frontRighttoRobot = new Transform3d(
-				new Translation3d(Units.inchesToMeters(9.5), Units.inchesToMeters(-9.5), Units.inchesToMeters(4.5)),
-				new Rotation3d(Math.PI, Math.PI / 6, -Math.PI / 3));
-		public static final Transform3d backToRobot = new Transform3d(
+		public static final Transform3d robotToCameraMu = new Transform3d(
 				new Translation3d(Units.inchesToMeters(-12), Units.inchesToMeters(-8), Units.inchesToMeters(4.5)),
 				new Rotation3d(Math.PI, Math.PI / 6, Math.PI));
+		public static final Transform3d robotToCameraNu = new Transform3d(
+				new Translation3d(Units.inchesToMeters(-12), Units.inchesToMeters(-8), Units.inchesToMeters(4.5)),
+				new Rotation3d(Math.PI, Math.PI / 6, Math.PI));
+		public static final Transform3d robotToCameraXi = new Transform3d(
+				new Translation3d(Units.inchesToMeters(-12), Units.inchesToMeters(-8), Units.inchesToMeters(4.5)),
+				new Rotation3d(Math.PI, Math.PI / 6, Math.PI));
+
 	}
 
 	public static final class ModuleConstants {

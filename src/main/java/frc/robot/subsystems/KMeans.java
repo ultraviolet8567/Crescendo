@@ -98,7 +98,7 @@
 // }
 
 // // compare distances, assign point to the cluster whose centroid it's closest
-// to
+
 // private void reassign(Transform3d point) {
 // remove(point);
 

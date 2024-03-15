@@ -1,124 +1,72 @@
-// /**
-// * - field: positive theta is counter-clockwise, positive x-axis is away from
-// alliance wall, positive y-axis is perpendicular & to the left of positive x
-// * - robot: positive theta is counter-clockwise, positive x-axis is dir robot
-// is facing, positive y-axis is perpendicular & to the left of robot
-// */
+package frc.robot.subsystems;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.Cameras;
+import java.util.List;
+import java.util.Optional;
+import org.littletonrobotics.junction.Logger;
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
-// package frc.robot.subsystems;
+public class Vision extends SubsystemBase {
+	PhotonCamera cameraMu, cameraNu, cameraXi;
+	PhotonPoseEstimator estimatorMu, estimatorNu, estimatorXi;
+	AprilTagFieldLayout fieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+	List<Pose3d> estimatedPoses;
 
-// import edu.wpi.first.apriltag.AprilTagFieldLayout;
-// import edu.wpi.first.math.geometry.Pose3d;
-// import edu.wpi.first.math.geometry.Rotation2d;
-// import edu.wpi.first.math.geometry.Transform3d;
-// import edu.wpi.first.wpilibj2.command.SubsystemBase;
-// import frc.robot.Constants;
-// import java.util.ArrayList;
-// import java.util.List;
+	public Vision() {
+		cameraMu = new PhotonCamera("Mu");
+		cameraNu = new PhotonCamera("Nu");
+		cameraXi = new PhotonCamera("Xi");
 
-// public class Vision extends SubsystemBase {
-// private Camera right, left, back;
-// private KMeans kmeans;
-// private AprilTagFieldLayout field = Constants.fieldLayout;
+		estimatorMu = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraMu,
+				Cameras.robotToCameraMu);
+		estimatorNu = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraNu,
+				Cameras.robotToCameraNu);
+		estimatorXi = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraXi,
+				Cameras.robotToCameraXi);
+	}
 
-// public Vision(KMeans kmeans) {
-// this.kmeans = kmeans;
-// right = new Camera("frontRight", Constants.Cameras.frontRighttoRobot, field);
-// left = new Camera("frontLeft", Constants.Cameras.frontLefttoRobot, field);
-// back = new Camera("back", Constants.Cameras.backToRobot, field);
-// }
+	@Override
+	public void periodic() {
+		estimatedPoses = List.of(getEstimatedPose(estimatorMu.update()).estimatedPose,
+				getEstimatedPose(estimatorNu.update()).estimatedPose,
+				getEstimatedPose(estimatorXi.update()).estimatedPose);
 
-// @Override
-// public void periodic() {
-// update();
-// }
+		Logger.recordOutput("EstimatedPoses/Mu", estimatedPoses.get(0));
+		Logger.recordOutput("EstimatedPoses/Nu", estimatedPoses.get(1));
+		Logger.recordOutput("EstimatedPoses/Xi", estimatedPoses.get(2));
 
-// // get robot pose
-// public Transform3d getPose() {
-// kmeans.updatePoints(getUnnestedList(right.getPoses(), left.getPoses(),
-// back.getPoses()));
-// return kmeans.getCentroid();
-// }
+		// var result = cameraMu.getLatestResult();
+		// if (result.hasTargets()) {
+		// List<PhotonTrackedTarget> target = result.getTargets();
+		// PhotonTrackedTarget bestTarget = result.getBestTarget();
 
-// // get yaw to align to tag (rotation2d)
-// public Rotation2d getRotToAlign() {
-// kmeans.updatePoints(
-// getUnnestedListforDistances(right.getDistances(), left.getDistances(),
-// back.getDistances()));
-// return kmeans.getCentroid().getRotation().toRotation2d();
-// }
+		// Transform3d poseTransform = bestTarget.getBestCameraToTarget();
+		// Transform3d poseTransformAlternate = bestTarget.getAlternateCameraToTarget();
 
-// // get value to align to tag (radians)
-// public double getRadtoSpeaker() {
-// return getRotToAlign().getRadians();
-// }
+		// double yaw = bestTarget.getYaw();
+		// int targetID = bestTarget.getFiducialId();
+		// double poseAmbiguity = bestTarget.getPoseAmbiguity();
 
-// // get shoot velocity
-// public double getShootVelocity() {
-// kmeans.updatePoints(getUnnestedList(right.getPoses(), left.getPoses(),
-// back.getPoses()));
-// return kmeans.getCentroid().getTranslation()
-// .getDistance(field.getTagPose(right.getSpeakerTag()).get().getTranslation())
-// / 1.0;
-// }
+		// Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(poseTransform,
+		// fieldLayout.getTagPose(bestTarget.getFiducialId()).get(),
+		// Cameras.robotToCameraMu.inverse());
 
-// // thank you so much stephanie
-// public double[] getShootRad() {
-// Transform3d d = getPose();
-// double g = -9.80665;
-// double x2 = Math.pow(d.getX(), 2);
-// double thing = (g * x2) / 2 * Math.pow(getShootVelocity(), 2);
+		// camera.takeInputSnapshot();
+		// camera.takeOutputSnapshot();
+		// }
+	}
 
-// double minus = Math.atan((d.getX()) + Math.sqrt(x2 - (4 * thing * (d.getY() +
-// thing))) / (2 * thing));
-// double plus = Math.atan((d.getX()) - Math.sqrt(x2 - (4 * thing * (d.getY() +
-// thing))) / (2 * thing));
-
-// return new double[]{plus, minus};
-// }
-
-// // update all the cameras
-// public void update() {
-// right.update();
-// left.update();
-// back.update();
-// }
-
-// // unnest lists
-// private List<Transform3d> getUnnestedList(List<Pose3d> nested1, List<Pose3d>
-// nested2, List<Pose3d> nested3) {
-// List<Transform3d> unnestedData = new ArrayList<Transform3d>();
-// List<List<Pose3d>> nestedData = new ArrayList<List<Pose3d>>();
-// nestedData.add(nested1);
-// nestedData.add(nested2);
-// nestedData.add(nested3);
-
-// for (List<Pose3d> data : nestedData) {
-// for (Pose3d point : data) {
-// unnestedData.add(new Transform3d(point.getX(), point.getY(), point.getZ(),
-// point.getRotation()));
-// }
-// }
-
-// return unnestedData;
-// }
-
-// // unnest list (transform3d)
-// private List<Transform3d> getUnnestedListforDistances(List<Transform3d>
-// nested1, List<Transform3d> nested2,
-// List<Transform3d> nested3) {
-// List<Transform3d> unnestedData = new ArrayList<Transform3d>();
-// List<List<Transform3d>> nestedData = new ArrayList<List<Transform3d>>();
-// nestedData.add(nested1);
-// nestedData.add(nested2);
-// nestedData.add(nested3);
-
-// for (List<Transform3d> data : nestedData) {
-// for (Transform3d point : data) {
-// unnestedData.add(point);
-// }
-// }
-
-// return unnestedData;
-// }
-// }
+	public EstimatedRobotPose getEstimatedPose(Optional<EstimatedRobotPose> optionalEstimatePose) {
+		if (optionalEstimatePose.isPresent()) {
+			return optionalEstimatePose.get();
+		} else {
+			return null;
+		}
+	}
+}
