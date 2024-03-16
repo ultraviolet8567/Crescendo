@@ -8,10 +8,16 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN;
 import frc.robot.Constants.DriveConstants;
+import java.util.*;
+import java.util.Arrays;
 import org.littletonrobotics.junction.Logger;
 
 public class Swerve extends SubsystemBase {
 	private final SwerveModule frontLeft, frontRight, backLeft, backRight;
+
+	private final SwerveModule[] modules = new SwerveModule[4];
+	public double characterizationInput;
+	public boolean wheelRadiusCharacterization;
 
 	public Swerve() {
 		frontLeft = new SwerveModule(CAN.kFrontLeftDriveMotorPort, CAN.kFrontLeftTurningMotorPort,
@@ -87,6 +93,15 @@ public class Swerve extends SubsystemBase {
 				new SwerveModuleState(0, Rotation2d.fromDegrees(45))};
 
 		setModuleStates(locked);
+	}
+
+	public void runWheelRadiusCharacterization(double omegaSpeed) {
+		wheelRadiusCharacterization = true;
+		characterizationInput = omegaSpeed;
+	}
+
+	public double[] getWheelRadiusCharacterizationPosition() {
+		return Arrays.stream(modules).mapToDouble(SwerveModule::getTurningPosition).toArray();
 	}
 
 	public void resetEncoders() {

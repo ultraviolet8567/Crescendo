@@ -126,6 +126,9 @@ public class RobotContainer {
 		driverController.leftBumper()
 				.whileTrue(new InstantCommand(() -> shooter.autoShoot(0.75 * shooter.getTargetVelocity())));
 
+		// driverController.y().whileTrue(new WheelRadiusCharacterization(swerve, gyro,
+		// WheelRadiusCharacterization.Direction.COUNTER_CLOCKWISE));
+
 		operatorController.leftBumper().whileTrue(new Pickup(intake));
 		operatorController.leftTrigger(0.5).whileTrue(new Drop(intake));
 		operatorController.rightTrigger().whileTrue(new Shoot(shooter, intake));

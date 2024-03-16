@@ -78,6 +78,8 @@ public class SwerveTeleOp extends Command {
 		ChassisSpeeds chassisSpeeds;
 		if (Constants.fieldOriented) {
 			chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turningSpeed, odometry.getHeading());
+		} else if (swerve.wheelRadiusCharacterization) {
+			chassisSpeeds = new ChassisSpeeds(0, 0, swerve.characterizationInput);
 		} else {
 			chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
 		}
