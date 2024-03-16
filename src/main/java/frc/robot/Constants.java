@@ -216,6 +216,14 @@ public final class Constants {
 				4000);
 		public static final LoggedTunableNumber kTrapRPM = new LoggedTunableNumber("Shooter/Manual RPM", 1000);
 		public static final LoggedTunableNumber kIdleRPM = new LoggedTunableNumber("Shooter/Idle RPM", 4500);
+
+		// Constants used for auto-aiming
+
+		public static final boolean ampUpperEntry = false;
+		public static final boolean speakerUpperEntry = true;
+
+		public static final double ampHoriEntryRange = Math.PI/6;
+		public static final double speakerHoriEntryRange = Math.PI/2;
 	}
 
 	public static final class IntakeConstants {
