@@ -1,22 +1,21 @@
 package frc.robot.subsystems;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Cameras;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 public class Vision extends SubsystemBase {
-	PhotonCamera cameraMu, cameraNu, cameraXi;
-	PhotonPoseEstimator estimatorMu, estimatorNu, estimatorXi;
-	AprilTagFieldLayout fieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
-	List<Pose3d> estimatedPoses;
+	private static final AprilTagFieldLayout fieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+
+	private PhotonCamera cameraMu, cameraNu, cameraXi;
+	private PhotonPoseEstimator estimatorMu, estimatorNu, estimatorXi;
 
 	public Vision() {
 		cameraMu = new PhotonCamera("Mu");
@@ -29,18 +28,14 @@ public class Vision extends SubsystemBase {
 				Cameras.robotToCameraNu);
 		estimatorXi = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraXi,
 				Cameras.robotToCameraXi);
+
+		estimatorMu.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+		estimatorNu.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+		estimatorXi.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 	}
 
 	@Override
 	public void periodic() {
-		estimatedPoses = List.of(getEstimatedPose(estimatorMu.update()).estimatedPose,
-				getEstimatedPose(estimatorNu.update()).estimatedPose,
-				getEstimatedPose(estimatorXi.update()).estimatedPose);
-
-		Logger.recordOutput("EstimatedPoses/Mu", estimatedPoses.get(0));
-		Logger.recordOutput("EstimatedPoses/Nu", estimatedPoses.get(1));
-		Logger.recordOutput("EstimatedPoses/Xi", estimatedPoses.get(2));
-
 		// 🐖 <-- Carlos II reincarnate (DO NOT REMOVE)
 		// var result = cameraMu.getLatestResult();
 		// if (result.hasTargets()) {
@@ -63,11 +58,16 @@ public class Vision extends SubsystemBase {
 		// }
 	}
 
-	public EstimatedRobotPose getEstimatedPose(Optional<EstimatedRobotPose> optionalEstimatePose) {
-		if (optionalEstimatePose.isPresent()) {
-			return optionalEstimatePose.get();
-		} else {
-			return null;
+	public List<EstimatedRobotPose> getEstimatedPoses() {
+		List<EstimatedRobotPose> estimatedPoses = Collections.emptyList();
+
+		for (PhotonPoseEstimator estimator : List.of(estimatorMu, estimatorNu, estimatorXi)) {
+			Optional<EstimatedRobotPose> optionalEstimatedPose = estimator.update();
+			if (optionalEstimatedPose.isPresent()) {
+				estimatedPoses.add(optionalEstimatedPose.get());
+			}
 		}
+
+		return estimatedPoses;
 	}
 }

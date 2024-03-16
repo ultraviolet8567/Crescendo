@@ -33,8 +33,8 @@ public class Gyrometer extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		Logger.recordOutput("Odometry/Pose", getPose());
-		Logger.recordOutput("Odometry/Heading", Math.IEEEremainder(getHeading().getRadians(), 2 * Math.PI));
+		Logger.recordOutput("Gyrometer/Pose", getPose());
+		Logger.recordOutput("Gyrometer/Heading", Math.IEEEremainder(getHeading().getRadians(), 2 * Math.PI));
 
 		update();
 	}

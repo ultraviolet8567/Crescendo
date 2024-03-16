@@ -1,58 +1,65 @@
-// package frc.robot.subsystems;
+package frc.robot.subsystems;
 
-// import edu.wpi.first.math.geometry.Pose2d;
-// import edu.wpi.first.math.geometry.Rotation2d;
-// import edu.wpi.first.math.geometry.Rotation3d;
-// import edu.wpi.first.math.geometry.Transform3d;
-// import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DriveConstants;
+import java.util.List;
+import org.littletonrobotics.junction.Logger;
+import org.photonvision.EstimatedRobotPose;
 
-// public class Odometry extends SubsystemBase {
-// private Vision vision;
-// private Gyrometer gyro;
-// private double gyroWeight = 0.6;
-// private double visionWeight = 0.4;
+public class Odometry extends SubsystemBase {
+	/**
+	 * Standard deviations of model states. Increase these numbers to trust your
+	 * model's state estimates less. This matrix is in the form [x, y, theta]ᵀ, with
+	 * units in meters and radians, then meters.
+	 */
+	private static final Vector<N3> STATE_STDS = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
+	/**
+	 * Standard deviations of the vision measurements. Increase these numbers to
+	 * trust global measurements from vision less. This matrix is in the form [x, y,
+	 * theta]ᵀ, with units in meters and radians.
+	 */
+	private static final Vector<N3> VISION_STDS = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(10));
 
-// public Odometry(Vision vision, Gyrometer gyro) {
-// this.vision = vision;
-// this.gyro = gyro;
-// }
+	private Gyrometer gyro;
+	private Swerve swerve;
+	private Vision vision;
 
-// /* Runs periodically (about once every 20 ms) */
-// @Override
-// public void periodic() {
-// gyro.update();
-// vision.update();
-// }
+	private SwerveDrivePoseEstimator poseEstimator;
 
-// // calculate weighted average
-// public double getAverage() {
-// return add(vision.getPose(), visionWeight) + add(gyro.getPose(), gyroWeight);
-// }
+	public Odometry(Gyrometer gyro, Swerve swerve, Vision vision) {
+		this.gyro = gyro;
+		this.swerve = swerve;
+		this.vision = vision;
 
-// public Rotation3d getHeading() {
-// double roll = average(vision.getPose().getRotation().getX(),
-// gyro.getRotation3d().getX());
-// double pitch = average(vision.getPose().getRotation().getY(),
-// gyro.getRotation3d().getY());
-// double yaw = average(vision.getPose().getRotation().getZ(),
-// gyro.getRotation3d().getZ());
+		poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics, gyro.getHeading(),
+				swerve.getModulePositions(), new Pose2d(), STATE_STDS, VISION_STDS);
+	}
 
-// return new Rotation3d(roll, pitch, yaw);
-// }
+	/* Runs periodically (about once every 20 ms) */
+	@Override
+	public void periodic() {
+		Logger.recordOutput("Odometry/Pose", getPose());
 
-// private double add(Transform3d t, double value) {
-// return (t.getX() * value) + (t.getY() * value);
-// }
+		List<EstimatedRobotPose> estimatedPoses = vision.getEstimatedPoses();
 
-// private double add(Pose2d p, double value) {
-// return (p.getX() * value) + (p.getY() * value);
-// }
+		int counter = 0;
+		for (EstimatedRobotPose estimatedPose : estimatedPoses) {
+			poseEstimator.addVisionMeasurement(estimatedPose.estimatedPose.toPose2d(), estimatedPose.timestampSeconds);
 
-// private double average(double one, double two) {
-// return (one + two) / 2;
-// }
+			Logger.recordOutput("EstimatedPoses/" + counter, estimatedPoses.get(counter).estimatedPose);
+			counter++;
+		}
 
-// public Rotation2d getRotation2d() {
-// return new Rotation2d();
-// }
-// }
+		poseEstimator.update(gyro.getHeading(), swerve.getModulePositions());
+	}
+
+	public Pose2d getPose() {
+		return poseEstimator.getEstimatedPosition();
+	}
+}

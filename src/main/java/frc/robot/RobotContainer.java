@@ -36,10 +36,10 @@ public class RobotContainer {
 	private final Gyrometer gyro;
 	private final Intake intake;
 	// private final KMeans kmeans;
-	// private final Odometry odometry;
+	private final Odometry odometry;
 	private final Shooter shooter;
 	private final Swerve swerve;
-	// private final Vision vision;
+	private final Vision vision;
 	private final AutoChooser autoChooser;
 
 	// Joysticks
@@ -51,12 +51,12 @@ public class RobotContainer {
 			OIConstants.kOperatorControllerPort);
 
 	// Camera
-	public final UsbCamera camera = CameraServer.startAutomaticCapture(0);
+	public final UsbCamera driverCam = CameraServer.startAutomaticCapture(0);
 
 	public RobotContainer() {
-		// intake camera limitations
-		camera.setFPS(30);
-		camera.setResolution(320, 240);
+		// Driver cam limitations
+		driverCam.setFPS(30);
+		// driverCam.setResolution(320, 240);
 
 		// Create subsystems with real or simulated hardware depending on current mode
 		switch (Constants.currentMode) {
@@ -83,10 +83,10 @@ public class RobotContainer {
 			}
 		}
 		// kmeans = new KMeans();
-		// vision = new Vision(kmeans);
 		swerve = new Swerve();
 		gyro = new Gyrometer(swerve);
-		// odometry = new Odometry(vision, gyro);
+		vision = new Vision();
+		odometry = new Odometry(gyro, swerve, vision);
 
 		// Create AutoChooser
 		autoChooser = new AutoChooser();
@@ -107,7 +107,7 @@ public class RobotContainer {
 		configureBindings();
 
 		// Post webcam feed to Shuffleboard
-		Shuffleboard.getTab("Main").add("Camera", camera).withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4)
+		Shuffleboard.getTab("Main").add("Camera", driverCam).withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4)
 				.withPosition(5, 0);
 
 		// Configure the PathPlanner auto-builder

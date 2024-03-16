@@ -6,8 +6,6 @@ import static edu.wpi.first.units.Units.Volts;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -40,10 +38,6 @@ public final class Constants {
 	public static final boolean lightsExist = false;
 
 	public static final Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
-
-	// AprilTags
-	public static final AprilTagFields field = AprilTagFields.k2024Crescendo;
-	public static final AprilTagFieldLayout fieldLayout = field.loadAprilTagLayoutField();
 
 	// Color of note and detection tolerance, subject to change.
 	public static final Color kNoteColor = new Color(138, 94, 23);
@@ -89,7 +83,6 @@ public final class Constants {
 		public static final Transform3d robotToCameraXi = new Transform3d(
 				new Translation3d(Units.inchesToMeters(-12), Units.inchesToMeters(-8), Units.inchesToMeters(4.5)),
 				new Rotation3d(Math.PI, Math.PI / 6, Math.PI));
-
 	}
 
 	public static final class ModuleConstants {
