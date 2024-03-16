@@ -39,6 +39,8 @@ public class Vision extends SubsystemBase {
 
 	@Override
 	public void periodic() {
+		// im comin for you carlos >:D 🔪
+
 		// 🐖 <-- Carlos II reincarnate (DO NOT REMOVE)
 		// var result = cameraMu.getLatestResult();
 		// if (result.hasTargets()) {
@@ -72,5 +74,40 @@ public class Vision extends SubsystemBase {
 		}
 
 		return estimatedPoses;
+	}
+
+	// THIS CODE IS IN NEED OF COMPATIBILITY CHANGES
+	//
+	// CODE PROPERTIES:
+	// 1) This uses an XYZ system where Z is the up axis
+	// 2) Purely mathematical, no interface with data from the robot
+	// 3) Completely untested, uses math imported from https://www.desmos.com/3d/606011a56d
+
+	public void setPose() {
+		// Interface code
+	}
+
+	public double solveBodyRot(double xDiff, double yDiff) {
+		return Math.atan2(yDiff,xDiff);
+	}
+
+	public double solveShooterRot(double xDiff, double zDiff, double exitVel, boolean isUpper) {
+		//a_{1}=\arctan\left(\frac{-T.x+\sqrt{T.x^{2}-4\left(\frac{gT.x^{2}}{v^{2}}\cdot\left(\frac{gT.x^{2}}{v^{2}}-T.y\right)\right)}}{2\cdot\frac{gT.x^{2}}{v^{2}}}\right)
+		//\frac{gT.x^{2}}{v^{2}}
+		
+		double gravity = -9.8;
+		double var = Math.pow(xDiff,2)*gravity/Math.pow(exitVel,2);
+		double deriv = Math.pow(xDiff,2)-4*(var*(var-zDiff));
+
+		if (deriv < 0) {
+			return -999;
+		}
+
+		if (isUpper) {
+			return Math.atan((-xDiff+Math.sqrt(deriv))/(2*var));
+		}
+		else {
+			return Math.atan((-xDiff-Math.sqrt(deriv))/(2*var));
+		}
 	}
 }
