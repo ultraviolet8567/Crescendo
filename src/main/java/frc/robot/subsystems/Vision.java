@@ -18,8 +18,11 @@ public class Vision extends SubsystemBase {
 	private PhotonPoseEstimator estimatorMu, estimatorNu, estimatorXi;
 
 	public Vision() {
+		// Mu ID is 70, location
 		cameraMu = new PhotonCamera("Mu");
+		// Nu ID is 71, back right
 		cameraNu = new PhotonCamera("Nu");
+		// Xi ID is 72, back left
 		cameraXi = new PhotonCamera("Xi");
 
 		estimatorMu = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraMu,

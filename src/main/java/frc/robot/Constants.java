@@ -76,13 +76,15 @@ public final class Constants {
 	public static final class Cameras {
 		public static final Transform3d robotToCameraMu = new Transform3d(
 				new Translation3d(Units.inchesToMeters(-12), Units.inchesToMeters(-8), Units.inchesToMeters(4.5)),
-				new Rotation3d(Math.PI, Math.PI / 6, Math.PI));
+				new Rotation3d(0, Math.PI / 6, Math.PI));
 		public static final Transform3d robotToCameraNu = new Transform3d(
-				new Translation3d(Units.inchesToMeters(-12), Units.inchesToMeters(-8), Units.inchesToMeters(4.5)),
-				new Rotation3d(Math.PI, Math.PI / 6, Math.PI));
+				new Translation3d(Units.inchesToMeters(-9.302), Units.inchesToMeters(-10.747),
+						Units.inchesToMeters(7.014)),
+				new Rotation3d(0, 28.125 * Math.PI / 180, 7 * Math.PI / 6));
 		public static final Transform3d robotToCameraXi = new Transform3d(
-				new Translation3d(Units.inchesToMeters(-12), Units.inchesToMeters(-8), Units.inchesToMeters(4.5)),
-				new Rotation3d(Math.PI, Math.PI / 6, Math.PI));
+				new Translation3d(Units.inchesToMeters(-9.302), Units.inchesToMeters(10.747),
+						Units.inchesToMeters(7.014)),
+				new Rotation3d(0, 28.125 * Math.PI / 180, 5 * Math.PI / 6));
 	}
 
 	public static final class ModuleConstants {
