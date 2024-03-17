@@ -55,8 +55,8 @@ public class RobotContainer {
 
 	public RobotContainer() {
 		// Driver cam limitations
-		driverCam.setFPS(30);
-		// driverCam.setResolution(320, 240);
+		driverCam.setFPS(60);
+		driverCam.setResolution(320, 240);
 
 		// Create subsystems with real or simulated hardware depending on current mode
 		switch (Constants.currentMode) {
@@ -124,7 +124,8 @@ public class RobotContainer {
 	public void configureBindings() {
 		// Button bindings
 		driverController.leftBumper()
-				.whileTrue(new InstantCommand(() -> shooter.autoShoot(0.75 * shooter.getTargetVelocity())));
+				.whileTrue(new InstantCommand(() -> shooter.autoShoot(0.75 * shooter.getTargetVelocity())))
+				.onFalse(new InstantCommand(() -> shooter.stop()));
 
 		// driverController.y().whileTrue(new WheelRadiusCharacterization(swerve, gyro,
 		// WheelRadiusCharacterization.Direction.COUNTER_CLOCKWISE));

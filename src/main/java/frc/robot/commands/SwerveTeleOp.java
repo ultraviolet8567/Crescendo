@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -11,7 +12,6 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.Gyrometer;
 import frc.robot.subsystems.Swerve;
 import java.util.function.Supplier;
-import org.littletonrobotics.junction.Logger;
 
 public class SwerveTeleOp extends Command {
 	private final Swerve swerve;
@@ -45,20 +45,21 @@ public class SwerveTeleOp extends Command {
 	@Override
 	public void execute() {
 		// Get real-time joystick inputs
-		double xSpeed = (Math.pow(xSpdFunction.get(), 3));
-		double ySpeed = (Math.pow(ySpdFunction.get(), 3));
+		double xSpeed = xSpdFunction.get();
+		double ySpeed = ySpdFunction.get();
 		double turningSpeed = rotationOnFunction.get() ? turningSpdFunction.get() : 0;
 
-		Logger.recordOutput("Drivetrain/X Speed", xSpeed);
-		Logger.recordOutput("Drivetrain/Y Speed", ySpeed);
+		xSpeed *= (xSpeed > 0) ? (1.0 / 0.8) : (1.0 / 0.9);
+		ySpeed *= (1.0 / 0.9);
 
 		// Apply deadband (drops to 0 if joystick value is less than the deadband)
-		xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0;
-		ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0;
+		if (Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2)) < OIConstants.kDeadband) {
+			xSpeed = 0;
+			ySpeed = 0;
+		}
 		turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0;
 
 		if (rightBumper.get()) {
-			RobotContainer.getDriverJoystick().setRumble(RumbleType.kLeftRumble, 0);
 			RobotContainer.getDriverJoystick().setRumble(RumbleType.kRightRumble, 0.025);
 			xSpeed *= 0.33;
 			ySpeed *= 0.33;
@@ -66,6 +67,10 @@ public class SwerveTeleOp extends Command {
 		} else {
 			RobotContainer.getDriverJoystick().setRumble(RumbleType.kBothRumble, 0);
 		}
+
+		xSpeed = MathUtil.clamp(xSpeed, -1, 1);
+		ySpeed = MathUtil.clamp(ySpeed, -1, 1);
+		turningSpeed = MathUtil.clamp(turningSpeed, -1, 1);
 
 		// Make the driving smoother by using a slew rate limiter to minimize
 		// acceleration

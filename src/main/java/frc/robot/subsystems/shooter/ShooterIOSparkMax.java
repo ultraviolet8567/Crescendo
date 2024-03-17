@@ -93,10 +93,10 @@ public class ShooterIOSparkMax implements ShooterIO {
 		shooterTopPID.setD(tkI);
 		shooterTopFF = new SimpleMotorFeedforward(tffkS, tffkV);
 
-		shooterTopPID.setP(bkP);
-		shooterTopPID.setI(bkI);
-		shooterTopPID.setD(bkD);
-		shooterTopFF = new SimpleMotorFeedforward(bffkS, bffkV);
+		shooterBottomPID.setP(bkP);
+		shooterBottomPID.setI(bkI);
+		shooterBottomPID.setD(bkD);
+		shooterBottomFF = new SimpleMotorFeedforward(bffkS, bffkV);
 	}
 
 	@Override

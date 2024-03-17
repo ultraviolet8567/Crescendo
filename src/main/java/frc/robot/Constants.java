@@ -132,10 +132,10 @@ public final class Constants {
 		public static final boolean kBackLeftDriveAbsoluteEncoderReversed = false;
 		public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
 
-		public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -1.677 - 0.005 - 0.004;
-		public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -0.804 + 0.069 + 0.071;
-		public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.452 - 0.01 + 0.046;
-		public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.132 - 0.064 + 0.017;
+		public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -1.677 - 0.005 - 0.004 + 0.011;
+		public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -0.804 + 0.069 + 0.071 - 0.121;
+		public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.452 - 0.01 + 0.046 - 0.016;
+		public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.132 - 0.064 + 0.017 - 0.012;
 
 		public static final double kPhysicalMaxSpeedMetersPerSecond = 4.5;
 		public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 3 * Math.PI;
@@ -175,13 +175,13 @@ public final class Constants {
 		public static final double kMaxArmAngle = -0.084;
 		public static final double kMinArmAngle = -1.76625;
 
-		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Arm/Max Speed", 4);
-		public static final LoggedTunableNumber kMaxAcceleration = new LoggedTunableNumber("Arm/Max Acceleration", 1.5);
+		public static final LoggedTunableNumber kMaxSpeed = new LoggedTunableNumber("Arm/Max Speed", 4.5);
+		public static final LoggedTunableNumber kMaxAcceleration = new LoggedTunableNumber("Arm/Max Acceleration", 1);
 		public static final LoggedTunableNumber kManualVoltage = new LoggedTunableNumber("Arm/ManualVoltage", 8);
 
 		// Arm presets
 		public static final double kTaxiAngle = -1.175;
-		public static final double kRoombaAngle = -0.15;
+		public static final double kRoombaAngle = -0.1;
 		public static final double kSpeakerFrontAngle = -0.31;
 		public static final double kSpeakerAngleAngle = -0.31;
 		public static final double kSpeakerStageAngle = -0.75;
@@ -217,8 +217,7 @@ public final class Constants {
 		public static final LoggedTunableNumber kTrapRPM = new LoggedTunableNumber("Shooter/Manual RPM", 1000);
 		public static final LoggedTunableNumber kIdleRPM = new LoggedTunableNumber("Shooter/Idle RPM", 4500);
 
-		// Constants used for auto-aiming
-
+		// Constants for auto-aiming
 		public static final boolean ampUpperEntry = false;
 		public static final boolean speakerUpperEntry = true;
 
