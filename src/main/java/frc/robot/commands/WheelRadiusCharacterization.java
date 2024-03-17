@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
@@ -21,7 +22,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class WheelRadiusCharacterization extends Command {
 	private static final LoggedTunableNumber characterizationSpeed = new LoggedTunableNumber(
-			"WheelRadiusCharacterization/SpeedRadsPerSec", 0.1);
+			"WheelRadiusCharacterization/SpeedRadsPerSec", 2.0);
 	private static final double driveRadius = Math.hypot(DriveConstants.kTrackWidth / 2.0,
 			DriveConstants.kWheelBase / 2.0);
 	private static DoubleSupplier gyroYawRadsSupplier = () -> 0.0;
@@ -34,7 +35,7 @@ public class WheelRadiusCharacterization extends Command {
 	}
 
 	private final Swerve swerve;
-	private final Gyrometer odometry;
+	private final Gyrometer gyro;
 	private final Direction omegaDirection;
 	private final SlewRateLimiter omegaLimiter = new SlewRateLimiter(1.0);
 
@@ -45,10 +46,11 @@ public class WheelRadiusCharacterization extends Command {
 
 	private double currentEffectiveWheelRadius = 0.0;
 
-	public WheelRadiusCharacterization(Swerve swerve, Gyrometer odometry, Direction omegaDirection) {
+	public WheelRadiusCharacterization(Swerve swerve, Gyrometer gyro, Direction omegaDirection) {
 		this.swerve = swerve;
-		this.odometry = odometry;
+		this.gyro = gyro;
 		this.omegaDirection = omegaDirection;
+
 		addRequirements(swerve);
 	}
 
@@ -59,7 +61,7 @@ public class WheelRadiusCharacterization extends Command {
 		accumGyroYawRads = 0.0;
 
 		startWheelPositions = swerve.getWheelRadiusCharacterizationPosition();
-		gyroYawRadsSupplier = () -> (odometry.getHeading()).getRadians();
+		gyroYawRadsSupplier = () -> (gyro.getHeading()).getRadians();
 
 		omegaLimiter.reset(0);
 	}
@@ -67,8 +69,9 @@ public class WheelRadiusCharacterization extends Command {
 	@Override
 	public void execute() {
 		// Run drive at velocity
-		swerve.runWheelRadiusCharacterization(
+		ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0, 0,
 				omegaLimiter.calculate(omegaDirection.value * characterizationSpeed.get()));
+		swerve.setModuleStates(chassisSpeeds);
 
 		// Get yaw and wheel positions
 		accumGyroYawRads += MathUtil.angleModulus(gyroYawRadsSupplier.getAsDouble() - lastGyroYawRads);
@@ -95,5 +98,7 @@ public class WheelRadiusCharacterization extends Command {
 			System.out.println(
 					"Effective Wheel Radius: " + Units.metersToInches(currentEffectiveWheelRadius) + " inches");
 		}
+
+		swerve.stopModules();
 	}
 }

@@ -14,10 +14,6 @@ import org.littletonrobotics.junction.Logger;
 public class Swerve extends SubsystemBase {
 	private final SwerveModule frontLeft, frontRight, backLeft, backRight;
 
-	private final SwerveModule[] modules = new SwerveModule[4];
-	public double characterizationInput;
-	public boolean wheelRadiusCharacterization;
-
 	public Swerve() {
 		frontLeft = new SwerveModule(CAN.kFrontLeftDriveMotorPort, CAN.kFrontLeftTurningMotorPort,
 				DriveConstants.kFrontLeftDriveEncoderReversed, DriveConstants.kFrontLeftTurningEncoderReversed,
@@ -46,11 +42,11 @@ public class Swerve extends SubsystemBase {
 	public void periodic() {
 		// FL angle, FL speed, FR angle, FR speed, BL angle, BL speed, BR angle, BR
 		// speed
-		Logger.recordOutput("Measured/SwerveModuleStates", getModuleStates());
+		Logger.recordOutput("Swerve/ModuleStatesMeasured", getModuleStates());
 
 		// FL absolute encoder angle, FR absolute encoder angle, BL absolute encoder
 		// angle, BR absolute encoder angle
-		Logger.recordOutput("AbsoluteEncoders/Swerve",
+		Logger.recordOutput("Swerve/AbsoluteEncoders",
 				new double[]{frontLeft.getAbsoluteEncoderAngle(), frontRight.getAbsoluteEncoderAngle(),
 						backLeft.getAbsoluteEncoderAngle(), backRight.getAbsoluteEncoderAngle()});
 	}
@@ -81,7 +77,7 @@ public class Swerve extends SubsystemBase {
 		backLeft.setDesiredState(desiredStates[2]);
 		backRight.setDesiredState(desiredStates[3]);
 
-		Logger.recordOutput("Setpoints/SwerveModuleStates", desiredStates);
+		Logger.recordOutput("Swerve/ModuleStateSetpoints", desiredStates);
 	}
 
 	// Sets the wheels to 45 degree angles so it doesn't move
@@ -94,13 +90,9 @@ public class Swerve extends SubsystemBase {
 		setModuleStates(locked);
 	}
 
-	public void runWheelRadiusCharacterization(double omegaSpeed) {
-		wheelRadiusCharacterization = true;
-		characterizationInput = omegaSpeed;
-	}
-
 	public double[] getWheelRadiusCharacterizationPosition() {
-		return Arrays.stream(modules).mapToDouble(SwerveModule::getTurningPosition).toArray();
+		return Arrays.stream(new SwerveModule[]{frontLeft, frontRight, backLeft, backRight})
+				.mapToDouble(SwerveModule::getTurningPosition).toArray();
 	}
 
 	public void resetEncoders() {
