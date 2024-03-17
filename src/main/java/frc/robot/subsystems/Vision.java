@@ -14,25 +14,27 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 public class Vision extends SubsystemBase {
 	private static final AprilTagFieldLayout fieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
-	private PhotonCamera cameraMu, cameraNu, cameraXi;
-	private PhotonPoseEstimator estimatorMu, estimatorNu, estimatorXi;
+	// TODO: Put estimatorMu back when back-straight camera wired
+	private PhotonCamera cameraNu, cameraXi;
+	private PhotonPoseEstimator estimatorNu, estimatorXi;
 
 	public Vision() {
-		// Mu ID is 70, location
-		cameraMu = new PhotonCamera("Mu");
-		// Nu ID is 71, back right
-		cameraNu = new PhotonCamera("Nu");
-		// Xi ID is 72, back left
-		cameraXi = new PhotonCamera("Xi");
+		// "Mu", ID is 70, location
+		// cameraMu = new PhotonCamera("BackStraight");
+		// "Nu", ID is 71, back right
+		cameraNu = new PhotonCamera("BackRight");
+		// "Xi", ID is 72, back left
+		cameraXi = new PhotonCamera("BackLeft");
 
-		estimatorMu = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraMu,
-				Cameras.robotToCameraMu);
+		// estimatorMu = new PhotonPoseEstimator(fieldLayout,
+		// PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraMu,
+		// Cameras.robotToCameraMu);
 		estimatorNu = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraNu,
 				Cameras.robotToCameraNu);
 		estimatorXi = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraXi,
 				Cameras.robotToCameraXi);
 
-		estimatorMu.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+		// estimatorMu.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 		estimatorNu.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 		estimatorXi.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 	}
@@ -66,7 +68,8 @@ public class Vision extends SubsystemBase {
 	public List<EstimatedRobotPose> getEstimatedPoses() {
 		List<EstimatedRobotPose> estimatedPoses = Collections.emptyList();
 
-		for (PhotonPoseEstimator estimator : List.of(estimatorMu, estimatorNu, estimatorXi)) {
+		// TODO: Put estimatorMu back when back-straight camera wired
+		for (PhotonPoseEstimator estimator : List.of(estimatorNu, estimatorXi)) {
 			Optional<EstimatedRobotPose> optionalEstimatedPose = estimator.update();
 			if (optionalEstimatedPose.isPresent()) {
 				estimatedPoses.add(optionalEstimatedPose.get());
@@ -76,13 +79,12 @@ public class Vision extends SubsystemBase {
 		return estimatedPoses;
 	}
 
-	// THIS CODE IS IN NEED OF COMPATIBILITY CHANGES
-	//
-	// CODE PROPERTIES:
-	// 1) This uses an XYZ system where Z is the up axis
-	// 2) Purely mathematical, no interface with data from the robot
-	// 3) Completely untested, uses math imported from https://www.desmos.com/3d/606011a56d
-
+	/* THIS CODE IS IN NEED OF COMPATIBILITY CHANGES	
+	 * CODE PROPERTIES:
+	 * 1) This uses an XYZ system where Z is the up axis
+	 * 2) Purely mathematical, no interface with data from the robot
+	 * 3) Completely untested, uses math imported from https://www.desmos.com/3d/606011a56d
+	 */
 	public void setPose() {
 		// Interface code
 	}
