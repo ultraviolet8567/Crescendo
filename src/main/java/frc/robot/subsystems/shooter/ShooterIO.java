@@ -6,11 +6,13 @@ public interface ShooterIO {
 	@AutoLog
 	class ShooterIOInputs {
 		public double topVelocityRPM = 0.0;
+		public double topTargetVelocityRPM = 0.0;
 		public double topAppliedVoltage = 0.0;
 		public double[] topCurrentAmps = new double[]{0.0};
 		public double[] topTempCelsius = new double[]{0.0};
 
 		public double bottomVelocityRPM = 0.0;
+		public double bottomTargetVelocityRPM = 0.0;
 		public double bottomAppliedVoltage = 0.0;
 		public double[] bottomCurrentAmps = new double[]{0.0};
 		public double[] bottomTempCelsius = new double[]{0.0};

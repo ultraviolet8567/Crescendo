@@ -14,14 +14,35 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.*;
-import frc.robot.commands.*;
-import frc.robot.commands.autos.*;
-import frc.robot.subsystems.*;
-import frc.robot.subsystems.arm.*;
+import frc.robot.Constants.ControllerType;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.OIConstants;
+import frc.robot.commands.Drop;
+import frc.robot.commands.MoveArm;
+import frc.robot.commands.Pickup;
+import frc.robot.commands.Shoot;
+import frc.robot.commands.SwerveTeleOp;
+import frc.robot.commands.WheelRadiusCharacterization;
+import frc.robot.commands.autos.AutoIntake;
+import frc.robot.commands.autos.AutoIntakeTimed;
+import frc.robot.commands.autos.AutoSetArmMode;
+import frc.robot.commands.autos.AutoShoot;
+import frc.robot.subsystems.AutoChooser;
+import frc.robot.subsystems.Odometry;
+import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.Arm.ArmMode;
-import frc.robot.subsystems.intake.*;
-import frc.robot.subsystems.shooter.*;
+import frc.robot.subsystems.arm.ArmIO;
+import frc.robot.subsystems.arm.ArmIOSim;
+import frc.robot.subsystems.arm.ArmIOSparkMax;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIO;
+import frc.robot.subsystems.intake.IntakeIOSim;
+import frc.robot.subsystems.intake.IntakeIOSparkMax;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterIO;
+import frc.robot.subsystems.shooter.ShooterIOSim;
+import frc.robot.subsystems.shooter.ShooterIOSparkMax;
 import frc.robot.util.ControllerIO;
 
 /**
@@ -33,13 +54,13 @@ public class RobotContainer {
 	// Subsystems
 	private final Arm arm;
 	// private final Climber climber;
-	private final Gyrometer gyro;
+	// private final Gyrometer gyro;
 	private final Intake intake;
 	// private final KMeans kmeans;
 	private final Odometry odometry;
 	private final Shooter shooter;
 	private final Swerve swerve;
-	private final Vision vision;
+	// private final Vision vision;
 	private final AutoChooser autoChooser;
 
 	// Joysticks
@@ -84,15 +105,15 @@ public class RobotContainer {
 		}
 		// kmeans = new KMeans();
 		swerve = new Swerve();
-		gyro = new Gyrometer(swerve);
-		vision = new Vision();
-		odometry = new Odometry(gyro, swerve, vision);
+		// gyro = new Gyrometer(swerve);
+		// vision = new Vision();
+		odometry = new Odometry(swerve);
 
 		// Create AutoChooser
 		autoChooser = new AutoChooser();
 
 		// Configure default commands for driving and arm movement
-		swerve.setDefaultCommand(new SwerveTeleOp(swerve, gyro,
+		swerve.setDefaultCommand(new SwerveTeleOp(swerve, odometry,
 				() -> ControllerIO.inversionY() * driverJoystick.getRawAxis(ControllerIO.getLeftY()),
 				() -> ControllerIO.inversionX() * driverJoystick.getRawAxis(ControllerIO.getLeftX()),
 				() -> ControllerIO.inversionRot() * driverJoystick.getRawAxis(ControllerIO.getRot()),
@@ -111,8 +132,8 @@ public class RobotContainer {
 				.withPosition(5, 0);
 
 		// Configure the PathPlanner auto-builder
-		AutoBuilder.configureHolonomic(gyro::getPose, gyro::resetPose, swerve::getRobotRelativeSpeeds,
-				swerve::setModuleStates, DriveConstants.kHolonomicConfig, () -> {
+		AutoBuilder.configureHolonomic(odometry::getGyrometerPose, odometry::resetGyrometerPose,
+				swerve::getRobotRelativeSpeeds, swerve::setModuleStates, DriveConstants.kHolonomicConfig, () -> {
 					var alliance = DriverStation.getAlliance();
 					if (alliance.isPresent()) {
 						return alliance.get() == Alliance.Red;
@@ -123,12 +144,13 @@ public class RobotContainer {
 
 	public void configureBindings() {
 		// Button bindings
-		driverController.leftBumper()
-				.whileTrue(new InstantCommand(() -> shooter.autoShoot(0.75 * shooter.getTargetVelocity())))
+		driverController.leftBumper().whileTrue(new InstantCommand(() -> shooter.shoot(0.75)))
 				.onFalse(new InstantCommand(() -> shooter.stop()));
 
-		// driverController.y().whileTrue(new WheelRadiusCharacterization(swerve, gyro,
-		// WheelRadiusCharacterization.Direction.COUNTER_CLOCKWISE));
+		driverController.y().whileTrue(new WheelRadiusCharacterization(swerve, odometry,
+				WheelRadiusCharacterization.Direction.COUNTER_CLOCKWISE));
+		driverController.a().whileTrue(
+				new WheelRadiusCharacterization(swerve, odometry, WheelRadiusCharacterization.Direction.CLOCKWISE));
 
 		operatorController.leftBumper().whileTrue(new Pickup(intake));
 		operatorController.leftTrigger(0.5).whileTrue(new Drop(intake));
@@ -145,17 +167,18 @@ public class RobotContainer {
 				.or(operatorController.povRight()).onTrue(new InstantCommand(() -> intake.toggleSensorDisabled()));
 
 		// Overrides
-		driverController.back()
-				.onTrue(new InstantCommand(() -> Lights.getInstance().hasNote = !Lights.getInstance().hasNote));
-		driverController.start().onTrue(new InstantCommand(() -> gyro.reset()));
+		driverController.back().onTrue(new InstantCommand(() -> odometry.resetGyrometerPose(Constants.speaker)));
+		driverController.start().onTrue(new InstantCommand(() -> odometry.resetPose(Constants.speaker)));
 
 		// Register PathPlanner named commands
 		// Make new shoot commands by RPM
-		NamedCommands.registerCommand("AutoShoot", new AutoShoot(shooter, intake, 4000));
+		NamedCommands.registerCommand("AutoShoot", new AutoShoot(shooter, intake));
+		NamedCommands.registerCommand("RampUp", new InstantCommand(() -> shooter.shoot()));
+		NamedCommands.registerCommand("FirstShot", new InstantCommand(() -> shooter.shoot(0.67)));
 		NamedCommands.registerCommand("Pickup", new AutoIntake(intake));
 		NamedCommands.registerCommand("PickupTimed", new AutoIntakeTimed(intake));
-		NamedCommands.registerCommand("TaxiPosition", new AutoSetArmMode(arm, ArmMode.TAXI, 0.1));
-		NamedCommands.registerCommand("AmpPosition", new AutoSetArmMode(arm, ArmMode.AMP, 0.1));
+		NamedCommands.registerCommand("TaxiPosition", new AutoSetArmMode(arm, ArmMode.TAXI, 0.05));
+		NamedCommands.registerCommand("AmpPosition", new AutoSetArmMode(arm, ArmMode.AMP, 0.05));
 		NamedCommands.registerCommand("IntakePosition", new AutoSetArmMode(arm, ArmMode.ROOMBA, 0.05));
 		NamedCommands.registerCommand("SpeakerFrontPosition", new AutoSetArmMode(arm, ArmMode.SPEAKERFRONT, 0.2));
 		NamedCommands.registerCommand("SpeakerAnglePosition", new AutoSetArmMode(arm, ArmMode.SPEAKERANGLE, 0.2));

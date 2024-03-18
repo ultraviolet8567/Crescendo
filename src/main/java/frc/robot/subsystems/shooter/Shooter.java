@@ -34,8 +34,9 @@ public class Shooter extends SubsystemBase {
 		io.setVelocity(targetVel, targetVel);
 	}
 
-	public void autoShoot(double rpm) {
-		io.setVelocity(rpm, rpm);
+	public void shoot(double scaleDown) {
+		double targetVel = scaleDown * getTargetVelocity();
+		io.setVelocity(targetVel, targetVel);
 	}
 
 	public boolean atVelocity() {
@@ -45,8 +46,8 @@ public class Shooter extends SubsystemBase {
 				? ShooterConstants.kVelocityThresholdAmp
 				: ShooterConstants.kVelocityThreshold;
 
-		return inputs.topVelocityRPM >= threshold * getTargetVelocity()
-				&& inputs.bottomVelocityRPM >= threshold * getTargetVelocity();
+		return inputs.topVelocityRPM >= threshold * inputs.topTargetVelocityRPM
+				&& inputs.bottomVelocityRPM >= threshold * inputs.bottomTargetVelocityRPM;
 	}
 
 	public double getTargetVelocity() {

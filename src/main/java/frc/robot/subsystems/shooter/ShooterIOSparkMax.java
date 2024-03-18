@@ -21,6 +21,8 @@ public class ShooterIOSparkMax implements ShooterIO {
 	private final SparkPIDController shooterTopPID, shooterBottomPID;
 	private SimpleMotorFeedforward shooterTopFF, shooterBottomFF;
 
+	private double topTarget, bottomTarget;
+
 	public ShooterIOSparkMax() {
 		System.out.println("[Init] Creating ShooterIOSparkMax");
 
@@ -44,16 +46,21 @@ public class ShooterIOSparkMax implements ShooterIO {
 		setGains(shooterTopGains.kP(), shooterTopGains.kI(), shooterTopGains.kD(), shooterTopGains.ffkS(),
 				shooterTopGains.ffkV(), shooterBottomGains.kP(), shooterBottomGains.kI(), shooterBottomGains.kD(),
 				shooterBottomGains.ffkS(), shooterBottomGains.ffkV());
+
+		topTarget = 0;
+		bottomTarget = 0;
 	}
 
 	@Override
 	public void updateInputs(ShooterIOInputs inputs) {
 		inputs.topVelocityRPM = shooterTopEncoder.getVelocity();
+		inputs.topTargetVelocityRPM = topTarget;
 		inputs.topAppliedVoltage = shooterTopMotor.getAppliedOutput() * shooterTopMotor.getBusVoltage();
 		inputs.topCurrentAmps = new double[]{shooterTopMotor.getOutputCurrent()};
 		inputs.topTempCelsius = new double[]{shooterBottomMotor.getMotorTemperature()};
 
 		inputs.bottomVelocityRPM = shooterBottomEncoder.getVelocity();
+		inputs.bottomTargetVelocityRPM = bottomTarget;
 		inputs.bottomAppliedVoltage = shooterBottomMotor.getAppliedOutput() * shooterBottomMotor.getBusVoltage();
 		inputs.bottomCurrentAmps = new double[]{shooterBottomMotor.getOutputCurrent()};
 		inputs.bottomTempCelsius = new double[]{shooterBottomMotor.getMotorTemperature()};
@@ -111,5 +118,8 @@ public class ShooterIOSparkMax implements ShooterIO {
 				shooterTopFF.calculate(topTargetVel));
 		shooterBottomPID.setReference(bottomTargetVel, CANSparkBase.ControlType.kVelocity, 0,
 				shooterBottomFF.calculate(bottomTargetVel));
+
+		topTarget = topTargetVel;
+		bottomTarget = bottomTargetVel;
 	}
 }

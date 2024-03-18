@@ -10,20 +10,16 @@ public class AutoShoot extends Command {
 	private Shooter shooter;
 	private Intake intake;
 	private Timer timer;
-	private double rpm;
 
-	public AutoShoot(Shooter shooter, Intake intake, double rpm) {
+	public AutoShoot(Shooter shooter, Intake intake) {
 		this.shooter = shooter;
 		this.intake = intake;
-		this.rpm = rpm;
 		timer = new Timer();
 	}
 
 	@Override
 	public void initialize() {
 		timer.reset();
-		timer.start();
-		shooter.autoShoot(rpm);
 
 		System.out.println("Shooting");
 	}
@@ -32,6 +28,7 @@ public class AutoShoot extends Command {
 	public void execute() {
 		if (shooter.atVelocity()) {
 			intake.runIndexer();
+			timer.start();
 		}
 	}
 
@@ -43,6 +40,6 @@ public class AutoShoot extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return shooter.atVelocity() && timer.get() > AutoConstants.kAutoShootTime;
+		return timer.get() > AutoConstants.kAutoShootTime;
 	}
 }
