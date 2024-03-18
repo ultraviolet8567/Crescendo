@@ -6,6 +6,8 @@ import static edu.wpi.first.units.Units.Volts;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -38,6 +40,8 @@ public final class Constants {
 	public static final boolean lightsExist = false;
 
 	public static final Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+
+	public static final Pose2d speaker = new Pose2d(1.5, 5.5, new Rotation2d());
 
 	// Color of note and detection tolerance, subject to change.
 	public static final Color kNoteColor = new Color(138, 94, 23);
@@ -140,7 +144,7 @@ public final class Constants {
 		public static final double kPhysicalMaxSpeedMetersPerSecond = 4.5;
 		public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 3 * Math.PI;
 
-		public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond * 0.9;
+		public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond;
 		public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond
 				* 0.4;
 		public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
@@ -162,7 +166,7 @@ public final class Constants {
 	}
 
 	public static final class ArmConstants {
-		public static final int kArmEncoderPort = 0;
+		public static final int kArmEncoderPort = 2;
 		public static final double kArmEncoderOffset = -2.65016;
 		public static final boolean kArmEncoderReversed = true;
 
@@ -221,8 +225,8 @@ public final class Constants {
 		public static final boolean ampUpperEntry = false;
 		public static final boolean speakerUpperEntry = true;
 
-		public static final double ampHoriEntryRange = Math.PI/6;
-		public static final double speakerHoriEntryRange = Math.PI/2;
+		public static final double ampHoriEntryRange = Math.PI / 6;
+		public static final double speakerHoriEntryRange = Math.PI / 2;
 	}
 
 	public static final class IntakeConstants {
@@ -233,9 +237,9 @@ public final class Constants {
 	}
 
 	public static final class AutoConstants {
-		public static final double kAutoShootTime = 2.0;
+		public static final double kAutoShootTime = 0.75;
 		public static final double kAutoArmTime = 1.0;
-		public static final double kAutoIntakeTime = 1.75;
+		public static final double kAutoIntakeTime = 0.75;
 	}
 
 	public static final class GainsConstants {
