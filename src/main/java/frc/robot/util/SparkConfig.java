@@ -16,12 +16,16 @@ public class SparkConfig {
 	 * @param type
 	 *            Type of Spark object
 	 */
-	public static void config(CANSparkBase spark, SparkType type) {
+	public static void config(CANSparkBase spark, SparkType type, IdleMode idleMode) {
 		spark.restoreFactoryDefaults();
 		spark.setSmartCurrentLimit(type.getCurrentLimit());
 		spark.enableVoltageCompensation(120.0);
-		spark.setIdleMode(IdleMode.kBrake);
+		spark.setIdleMode(idleMode);
 		spark.burnFlash();
+	}
+
+	public static void config(CANSparkBase spark, SparkType type) {
+		config(spark, type, IdleMode.kBrake);
 	}
 
 	public enum SparkType {

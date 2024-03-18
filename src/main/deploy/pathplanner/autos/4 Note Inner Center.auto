@@ -20,6 +20,12 @@
         {
           "type": "named",
           "data": {
+            "name": "FirstShot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "AutoShoot"
           }
         },
@@ -49,12 +55,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "PickupTimed"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -68,6 +68,12 @@
                 "type": "named",
                 "data": {
                   "name": "SpeakerFrontPosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUp"
                 }
               }
             ]
@@ -105,12 +111,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "PickupTimed"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -124,6 +124,12 @@
                 "type": "named",
                 "data": {
                   "name": "SpeakerFrontPosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUp"
                 }
               }
             ]
@@ -161,12 +167,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "PickupTimed"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -180,6 +180,12 @@
                 "type": "named",
                 "data": {
                   "name": "SpeakerFrontPosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUp"
                 }
               }
             ]

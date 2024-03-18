@@ -20,11 +20,23 @@
         {
           "type": "named",
           "data": {
+            "name": "FirstShot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "AutoShoot"
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
+          "data": {
+            "name": "IntakePosition"
+          }
+        },
+        {
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -49,12 +61,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "PickupTimed"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -68,6 +74,12 @@
                 "type": "named",
                 "data": {
                   "name": "SpeakerFrontPosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUp"
                 }
               }
             ]

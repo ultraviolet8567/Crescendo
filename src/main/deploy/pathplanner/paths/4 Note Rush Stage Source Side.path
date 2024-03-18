@@ -33,9 +33,9 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 11.43,
-    "maxAngularVelocity": 343.77,
-    "maxAngularAcceleration": 171.89
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "4 Note Rush",
+  "folder": null,
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0
