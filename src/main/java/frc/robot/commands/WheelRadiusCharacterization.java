@@ -13,7 +13,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.subsystems.Gyrometer;
+import frc.robot.subsystems.Odometry;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.LoggedTunableNumber;
 import java.util.function.DoubleSupplier;
@@ -25,7 +25,7 @@ public class WheelRadiusCharacterization extends Command {
 			"WheelRadiusCharacterization/SpeedRadsPerSec", 2.0);
 	private static final double driveRadius = Math.hypot(DriveConstants.kTrackWidth / 2.0,
 			DriveConstants.kWheelBase / 2.0);
-	private static DoubleSupplier gyroYawRadsSupplier = () -> 0.0;
+	private static DoubleSupplier gyroYawRadsSupplier;
 
 	@RequiredArgsConstructor
 	public enum Direction {
@@ -35,7 +35,7 @@ public class WheelRadiusCharacterization extends Command {
 	}
 
 	private final Swerve swerve;
-	private final Gyrometer gyro;
+	private final Odometry odometry;
 	private final Direction omegaDirection;
 	private final SlewRateLimiter omegaLimiter = new SlewRateLimiter(1.0);
 
@@ -46,10 +46,12 @@ public class WheelRadiusCharacterization extends Command {
 
 	private double currentEffectiveWheelRadius = 0.0;
 
-	public WheelRadiusCharacterization(Swerve swerve, Gyrometer gyro, Direction omegaDirection) {
+	public WheelRadiusCharacterization(Swerve swerve, Odometry odometry, Direction omegaDirection) {
 		this.swerve = swerve;
-		this.gyro = gyro;
+		this.odometry = odometry;
 		this.omegaDirection = omegaDirection;
+
+		gyroYawRadsSupplier = () -> this.odometry.getGyrometerHeading().getRadians();
 
 		addRequirements(swerve);
 	}
@@ -61,7 +63,6 @@ public class WheelRadiusCharacterization extends Command {
 		accumGyroYawRads = 0.0;
 
 		startWheelPositions = swerve.getWheelRadiusCharacterizationPosition();
-		gyroYawRadsSupplier = () -> (gyro.getHeading()).getRadians();
 
 		omegaLimiter.reset(0);
 	}
