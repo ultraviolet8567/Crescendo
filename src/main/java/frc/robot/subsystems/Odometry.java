@@ -142,6 +142,10 @@ public class Odometry extends SubsystemBase {
 		return gyro.getRotation2d();
 	}
 
+	public void setGyroYaw(Rotation2d yaw) {
+		gyro.setYaw(yaw.getDegrees());
+	}
+
 	public void resetPose(Pose2d pose) {
 		poseEstimator.resetPosition(gyro.getRotation2d(), swerve.getModulePositions(), pose);
 	}

@@ -167,8 +167,8 @@ public class RobotContainer {
 				.or(operatorController.povRight()).onTrue(new InstantCommand(() -> intake.toggleSensorDisabled()));
 
 		// Overrides
-		driverController.back().onTrue(new InstantCommand(() -> odometry.resetGyrometerPose(Constants.speaker)));
-		driverController.start().onTrue(new InstantCommand(() -> odometry.resetPose(Constants.speaker)));
+		driverController.back().onTrue(new InstantCommand(() -> odometry.resetPose(Constants.speaker)));
+		driverController.start().onTrue(new InstantCommand(() -> odometry.resetGyrometerHeading()));
 
 		// Register PathPlanner named commands
 		// Make new shoot commands by RPM
@@ -189,8 +189,13 @@ public class RobotContainer {
 		if (autoChooser.getAutoCommand().equals("Do Nothing")) {
 			return null;
 		}
+		else {
+			// Set the gyro yaw to the actual starting heading
+			odometry.setGyroYaw(PathPlannerAuto.getStaringPoseFromAutoFile(autoChooser.getAutoCommand()).getRotation());
 
-		return new PathPlannerAuto(autoChooser.getAutoCommand());
+			// Return autonomous command
+			return new PathPlannerAuto(autoChooser.getAutoCommand());
+		}
 	}
 
 	public static Joystick getDriverJoystick() {
