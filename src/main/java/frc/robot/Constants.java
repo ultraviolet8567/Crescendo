@@ -37,11 +37,13 @@ public final class Constants {
 
 	public static final ModuleType powerDistributionType = ModuleType.kRev;
 	public static final boolean fieldOriented = true;
-	public static final boolean lightsExist = false;
+	public static final boolean lightsExist = true;
 
 	public static final Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
 
-	public static final Pose2d speaker = new Pose2d(1.5, 5.5, new Rotation2d());
+	public static final Pose2d speaker = (alliance == Alliance.Blue)
+			? new Pose2d(1.5, 5.5, new Rotation2d())
+			: new Pose2d(1.5, 5.5, new Rotation2d(180));
 
 	// Color of note and detection tolerance, subject to change.
 	public static final Color kNoteColor = new Color(138, 94, 23);
@@ -166,7 +168,7 @@ public final class Constants {
 	}
 
 	public static final class ArmConstants {
-		public static final int kArmEncoderPort = 2;
+		public static final int kArmEncoderPort = 5;
 		public static final double kArmEncoderOffset = -2.65016;
 		public static final boolean kArmEncoderReversed = true;
 
@@ -185,7 +187,7 @@ public final class Constants {
 
 		// Arm presets
 		public static final double kTaxiAngle = -1.175;
-		public static final double kRoombaAngle = -0.1;
+		public static final double kRoombaAngle = -0.13;
 		public static final double kSpeakerFrontAngle = -0.31;
 		public static final double kSpeakerAngleAngle = -0.31;
 		public static final double kSpeakerStageAngle = -0.75;
@@ -253,7 +255,7 @@ public final class Constants {
 		};
 
 		public static final Gains armGains = switch (currentRobot) {
-			case REALBOT -> new Gains(12, 0.0, 0, 0.016186, 0.02131, 0.087119, 1.4338);
+			case REALBOT -> new Gains(14, 0.0, 0, 0.016186, 0.02131, 0.087119, 1.4338);
 			case SIMBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
 		};
 	}

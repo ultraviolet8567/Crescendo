@@ -35,7 +35,7 @@ public class Lights extends VirtualSubsystem {
 	private static final int rightLength = 19;
 	private static final int backLength = 13;
 	private static final int frontLength = rightLength + leftLength;
-	private static final int length = frontLength + 2 * backLength;
+	private static final int length = 86;
 	private static final int bottomLength = 8;
 	private static final int minLoopCycleCount = 10;
 	private static final double lowBatteryVoltage = 10.0;
@@ -43,7 +43,7 @@ public class Lights extends VirtualSubsystem {
 	private static final double shimmerSpeed = 1;
 	private static final double strobeTickSkip = 15;
 	private static final int strobeSlowDuration = 5;
-	private static final double stripeDuration = 1.0;
+	private static final double stripeDuration = 0.75;
 	private static final int stripeLength = 5;
 	private static final double breathDuration = 1.0;
 	private static final double waveExponent = 0.4;
@@ -103,9 +103,9 @@ public class Lights extends VirtualSubsystem {
 			else {
 				// Alliance colors
 				if (Constants.alliance == Alliance.Blue) {
-					stripes(Section.FULL, List.of(Color.kRoyalBlue, Color.kAliceBlue), stripeLength, stripeDuration);
+					shimmer(Section.FULL, Color.kRoyalBlue);
 				} else {
-					stripes(Section.FULL, List.of(Color.kRed, Color.kOrangeRed), stripeLength, stripeDuration);
+					shimmer(Section.FULL, Color.kPaleVioletRed);
 				}
 
 				// Pickup indicator
