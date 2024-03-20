@@ -20,8 +20,8 @@
         "y": 4.114935548166836
       },
       "prevControl": {
-        "x": 6.881465793006775,
-        "y": 4.114935548166836
+        "x": 7.714740241510558,
+        "y": 3.353672471755971
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": 41.729512076816455,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "4 Note Rush",
   "previewStartingState": {
     "rotation": -1.3639275316027872,
     "velocity": 0

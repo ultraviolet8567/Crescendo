@@ -36,7 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4 Note Inner Third Note Amp Side"
+                  "pathName": "4 Note Inner Third Note Source Side"
                 }
               },
               {
@@ -61,7 +61,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4 Note Speaker 2 Amp Side"
+                  "pathName": "4 Note Speaker Source Side"
                 }
               },
               {
@@ -148,7 +148,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4 Note Inner Third Note Source Side"
+                  "pathName": "4 Note Inner Third Note Amp Side"
                 }
               },
               {
@@ -173,7 +173,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4 Note Speaker Source Side"
+                  "pathName": "4 Note Speaker 2 Amp Side"
                 }
               },
               {
@@ -200,6 +200,6 @@
       ]
     }
   },
-  "folder": "4 Note Autos",
+  "folder": "IMPORTANT AUTOS",
   "choreoAuto": false
 }

@@ -20,6 +20,12 @@
         {
           "type": "named",
           "data": {
+            "name": "FirstShot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "AutoShoot"
           }
         },
@@ -49,12 +55,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "PickupTimed"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -68,6 +68,12 @@
                 "type": "named",
                 "data": {
                   "name": "SpeakerStagePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUp"
                 }
               }
             ]
@@ -105,12 +111,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "PickupTimed"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -123,10 +123,16 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "SpeakerStagePosition"
+                  "name": "RampUp"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SpeakerStagePosition"
           }
         },
         {
@@ -161,12 +167,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "PickupTimed"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -179,10 +179,16 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "SpeakerStagePosition"
+                  "name": "RampUp"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SpeakerStagePosition"
           }
         },
         {
@@ -194,6 +200,6 @@
       ]
     }
   },
-  "folder": "4 Note Autos",
+  "folder": "IMPORTANT AUTOS",
   "choreoAuto": false
 }

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.8094544209138546,
-        "y": 1.141894614616298
+        "x": 7.920487018918901,
+        "y": 1.9545943853792473
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +20,8 @@
         "y": 1.8208589800638249
       },
       "prevControl": {
-        "x": 5.6881344840383905,
-        "y": 1.4505147807288103
+        "x": 5.72928383952006,
+        "y": 1.5842501860442317
       },
       "nextControl": null,
       "isLocked": false,
@@ -43,9 +43,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "4 Note Rush",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 29.744881296942193,
     "velocity": 0
   },
   "useDefaultConstraints": true

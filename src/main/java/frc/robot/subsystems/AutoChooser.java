@@ -30,6 +30,7 @@ public class AutoChooser extends VirtualSubsystem {
 		otherStuff.addOption("Test", "Test");
 		otherStuff.addOption("Rush", "Rush ");
 		otherStuff.addOption("Inner", "Inner ");
+		otherStuff.addOption("Shark", "Shark ");
 		otherStuff.addOption("Out of Way", "Out Of Way ");
 		otherStuff.addOption("Don't Move", "Don't Move ");
 

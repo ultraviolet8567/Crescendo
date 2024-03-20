@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.511121593671758,
-        "y": 6.522172843844435
+        "x": 6.727155709950519,
+        "y": 6.295851388695259
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +20,8 @@
         "y": 5.802059122915239
       },
       "prevControl": {
-        "x": 7.087212570415116,
-        "y": 6.388437438529013
+        "x": 7.4987061252317995,
+        "y": 4.968784674411454
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -22.306205054907725,
+    "rotation": 47.436648246810115,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "4 Note Rush",
   "previewStartingState": {
     "rotation": 7.125016348901859,
     "velocity": 0

@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3057281252407118,
-      "y": 6.707344943511942
+      "x": 1.336590141851963,
+      "y": 7.108551159458209
     },
     "rotation": 60.439645535319286
   },
@@ -20,6 +20,12 @@
         {
           "type": "named",
           "data": {
+            "name": "FirstShot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "AutoShoot"
           }
         },
@@ -30,7 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "4 Note Rush Second Note Amp Side"
+                  "pathName": "5 Note Second Note Amp Side"
                 }
               },
               {
@@ -49,9 +55,53 @@
           }
         },
         {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeakerAnglePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUp"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "PickupTimed"
+            "name": "AutoShoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "5 Note Third Note Amp Side"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
+                }
+              }
+            ]
           }
         },
         {
@@ -68,6 +118,12 @@
                 "type": "named",
                 "data": {
                   "name": "SpeakerStagePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUp"
                 }
               }
             ]
@@ -105,12 +161,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "PickupTimed"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -125,61 +175,11 @@
                 "data": {
                   "name": "SpeakerStagePosition"
                 }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AutoShoot"
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "4 Note Rush Fourth Note Amp Side"
-                }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "IntakePosition"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Pickup"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "PickupTimed"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "4 Note Rush Stage 3 Amp Side"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "SpeakerStagePosition"
+                  "name": "RampUp"
                 }
               }
             ]
@@ -194,6 +194,6 @@
       ]
     }
   },
-  "folder": "4 Note Autos",
+  "folder": "IMPORTANT AUTOS",
   "choreoAuto": false
 }
