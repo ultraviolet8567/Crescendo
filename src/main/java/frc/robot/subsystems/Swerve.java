@@ -15,6 +15,8 @@ public class Swerve extends SubsystemBase {
 	private final SwerveModule frontLeft, frontRight, backLeft, backRight;
 
 	public Swerve() {
+		System.out.println("[Init] Creating Swerve");
+
 		frontLeft = new SwerveModule(CAN.kFrontLeftDriveMotorPort, CAN.kFrontLeftTurningMotorPort,
 				DriveConstants.kFrontLeftDriveEncoderReversed, DriveConstants.kFrontLeftTurningEncoderReversed,
 				DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
