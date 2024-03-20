@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Cameras;
@@ -51,6 +52,8 @@ public class Odometry extends SubsystemBase {
 	private PhotonPoseEstimator estimatorNu, estimatorXi;
 
 	public Odometry(Swerve swerve) {
+		System.out.println("[Init] Creating Odometry");
+
 		this.swerve = swerve;
 
 		/* Gyro */
@@ -65,8 +68,10 @@ public class Odometry extends SubsystemBase {
 		// cameraMu = new PhotonCamera("BackStraight");
 		// "Nu", ID is 71, back right
 		cameraNu = new PhotonCamera("BackRight");
+		cameraNu.setDriverMode(false);
 		// "Xi", ID is 72, back left
 		cameraXi = new PhotonCamera("BackLeft");
+		cameraXi.setDriverMode(false);
 
 		// estimatorMu = new PhotonPoseEstimator(fieldLayout,
 		// PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraMu,
@@ -124,6 +129,12 @@ public class Odometry extends SubsystemBase {
 		}
 
 		return estimatedPoses;
+	}
+
+	public Rotation2d getSpeakerHeading() {
+		int centerSpeakerTagID = (Constants.alliance == Alliance.Blue) ? 7 : 4;
+
+		return getPose().minus(fieldLayout.getTagPose(centerSpeakerTagID).get().toPose2d()).getRotation();
 	}
 
 	public Pose2d getPose() {
