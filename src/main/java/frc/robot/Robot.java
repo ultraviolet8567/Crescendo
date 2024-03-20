@@ -121,14 +121,18 @@ public class Robot extends LoggedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+		// Set initial gyro yaw based on auto command
+		m_robotContainer.setInitialGyroYaw();
 
+		// Set state to auto
+		Lights.getInstance().state = RobotState.AUTO;
+
+		// Run autonomous command
+		m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.schedule();
 		}
 
-		// Set state to auto
-		Lights.getInstance().state = RobotState.AUTO;
 	}
 
 	/** This function is called periodically during autonomous. */

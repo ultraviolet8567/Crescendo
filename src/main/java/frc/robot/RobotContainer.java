@@ -2,7 +2,6 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -109,6 +108,29 @@ public class RobotContainer {
 		// vision = new Vision();
 		odometry = new Odometry(swerve);
 
+		// Configure the PathPlanner auto-builder
+		AutoBuilder.configureHolonomic(odometry::getGyrometerPose, odometry::resetGyrometerPose,
+				swerve::getRobotRelativeSpeeds, swerve::setModuleStates, DriveConstants.kHolonomicConfig, () -> {
+					var alliance = DriverStation.getAlliance();
+					if (alliance.isPresent()) {
+						return alliance.get() == Alliance.Red;
+					}
+					return false;
+				}, swerve);
+
+		// Register PathPlanner named commands
+		NamedCommands.registerCommand("AutoShoot", new AutoShoot(shooter, intake));
+		NamedCommands.registerCommand("RampUp", new InstantCommand(() -> shooter.shoot()));
+		NamedCommands.registerCommand("FirstShot", new InstantCommand(() -> shooter.shoot(0.67)));
+		NamedCommands.registerCommand("Pickup", new AutoIntake(intake));
+		NamedCommands.registerCommand("PickupTimed", new AutoIntakeTimed(intake));
+		NamedCommands.registerCommand("TaxiPosition", new AutoSetArmMode(arm, ArmMode.TAXI, 0.05));
+		NamedCommands.registerCommand("AmpPosition", new AutoSetArmMode(arm, ArmMode.AMP, 0.05));
+		NamedCommands.registerCommand("IntakePosition", new AutoSetArmMode(arm, ArmMode.ROOMBA, 0.05));
+		NamedCommands.registerCommand("SpeakerFrontPosition", new AutoSetArmMode(arm, ArmMode.SPEAKERFRONT, 0.2));
+		NamedCommands.registerCommand("SpeakerAnglePosition", new AutoSetArmMode(arm, ArmMode.SPEAKERANGLE, 0.2));
+		NamedCommands.registerCommand("SpeakerStagePosition", new AutoSetArmMode(arm, ArmMode.SPEAKERSTAGE, 0.2));
+
 		// Create AutoChooser
 		autoChooser = new AutoChooser();
 
@@ -130,16 +152,6 @@ public class RobotContainer {
 		// Post webcam feed to Shuffleboard
 		Shuffleboard.getTab("Main").add("Camera", driverCam).withWidget(BuiltInWidgets.kCameraStream).withSize(4, 4)
 				.withPosition(5, 0);
-
-		// Configure the PathPlanner auto-builder
-		AutoBuilder.configureHolonomic(odometry::getGyrometerPose, odometry::resetGyrometerPose,
-				swerve::getRobotRelativeSpeeds, swerve::setModuleStates, DriveConstants.kHolonomicConfig, () -> {
-					var alliance = DriverStation.getAlliance();
-					if (alliance.isPresent()) {
-						return alliance.get() == Alliance.Red;
-					}
-					return false;
-				}, swerve);
 	}
 
 	public void configureBindings() {
@@ -169,33 +181,14 @@ public class RobotContainer {
 		// Overrides
 		driverController.back().onTrue(new InstantCommand(() -> odometry.resetPose(Constants.speaker)));
 		driverController.start().onTrue(new InstantCommand(() -> odometry.resetGyrometerHeading()));
-
-		// Register PathPlanner named commands
-		// Make new shoot commands by RPM
-		NamedCommands.registerCommand("AutoShoot", new AutoShoot(shooter, intake));
-		NamedCommands.registerCommand("RampUp", new InstantCommand(() -> shooter.shoot()));
-		NamedCommands.registerCommand("FirstShot", new InstantCommand(() -> shooter.shoot(0.67)));
-		NamedCommands.registerCommand("Pickup", new AutoIntake(intake));
-		NamedCommands.registerCommand("PickupTimed", new AutoIntakeTimed(intake));
-		NamedCommands.registerCommand("TaxiPosition", new AutoSetArmMode(arm, ArmMode.TAXI, 0.05));
-		NamedCommands.registerCommand("AmpPosition", new AutoSetArmMode(arm, ArmMode.AMP, 0.05));
-		NamedCommands.registerCommand("IntakePosition", new AutoSetArmMode(arm, ArmMode.ROOMBA, 0.05));
-		NamedCommands.registerCommand("SpeakerFrontPosition", new AutoSetArmMode(arm, ArmMode.SPEAKERFRONT, 0.2));
-		NamedCommands.registerCommand("SpeakerAnglePosition", new AutoSetArmMode(arm, ArmMode.SPEAKERANGLE, 0.2));
-		NamedCommands.registerCommand("SpeakerStagePosition", new AutoSetArmMode(arm, ArmMode.SPEAKERSTAGE, 0.2));
 	}
 
 	public Command getAutonomousCommand() {
-		if (autoChooser.getAutoCommand().equals("Do Nothing")) {
-			return null;
-		}
-		else {
-			// Set the gyro yaw to the actual starting heading
-			odometry.setGyroYaw(PathPlannerAuto.getStaringPoseFromAutoFile(autoChooser.getAutoCommand()).getRotation());
+		return autoChooser.getSelectedAuto();
+	}
 
-			// Return autonomous command
-			return new PathPlannerAuto(autoChooser.getAutoCommand());
-		}
+	public void setInitialGyroYaw() {
+		odometry.setGyroYaw(autoChooser.getAutoStartingPose().getRotation());
 	}
 
 	public static Joystick getDriverJoystick() {
