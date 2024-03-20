@@ -1,40 +1,38 @@
-// package frc.robot.commands;
+package frc.robot.commands;
 
-// import edu.wpi.first.math.geometry.Rotation2d;
-// import edu.wpi.first.math.kinematics.ChassisSpeeds;
-// import edu.wpi.first.math.kinematics.SwerveModuleState;
-// import edu.wpi.first.wpilibj2.command.Command;
-// import frc.robot.Constants.DriveConstants;
-// import frc.robot.subsystems.Swerve;
-// import frc.robot.subsystems.Vision;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Odometry;
+import frc.robot.subsystems.Swerve;
 
-// public class YawAlign extends Command {
-// private final Swerve swerve;
-// private final Vision vision;
+public class YawAlign extends Command {
+	private final Swerve swerve;
+	private final Odometry odometry;
+	private final PIDController controller;
 
-// public YawAlign(Swerve swerve, Vision vision) {
-// this.swerve = swerve;
-// this.vision = vision;
-// }
+	public YawAlign(Swerve swerve, Odometry odometry) {
+		this.swerve = swerve;
+		this.odometry = odometry;
 
-// @Override
-// public void initialize() {
-// }
+		controller = new PIDController(0.5, 0, 0);
+	}
 
-// @Override
-// public void execute() {
-// turn(vision.getRotToAlign());
-// }
+	@Override
+	public void initialize() {
+		controller.reset();
 
-// @Override
-// public void end(boolean interrupted) {
-// }
+		controller.setSetpoint(odometry.getSpeakerHeading().getRadians());
+	}
 
-// public void turn(Rotation2d angle) {
-// ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(1.0, 0,
-// 0, angle);
-// SwerveModuleState[] moduleStates =
-// DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
-// swerve.setModuleStates(moduleStates);
-// }
-// }
+	@Override
+	public void execute() {
+		double omega = controller.calculate(odometry.getHeading().getRadians());
+		swerve.setModuleStates(new ChassisSpeeds(0.0, 0.0, omega));
+	}
+
+	@Override
+	public void end(boolean interrupted) {
+		swerve.stopModules();
+	}
+}
