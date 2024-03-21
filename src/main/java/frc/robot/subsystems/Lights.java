@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -102,10 +103,12 @@ public class Lights extends VirtualSubsystem {
 			// Teleop
 			else {
 				// Alliance colors
-				if (Constants.alliance == Alliance.Blue) {
-					shimmer(Section.FULL, Color.kRoyalBlue);
+				if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue) {
+					wave(Section.FULL, Color.kRoyalBlue, Color.kDarkBlue, waveSlowCycleLength, waveSlowDuration);
+					// shimmer(Section.FULL, Color.kRoyalBlue);
 				} else {
-					shimmer(Section.FULL, Color.kPaleVioletRed);
+					wave(Section.FULL, Color.kPaleVioletRed, Color.kRed, waveSlowCycleLength, waveSlowDuration);
+					// shimmer(Section.FULL, Color.kPaleVioletRed);
 				}
 
 				// Pickup indicator
@@ -145,12 +148,7 @@ public class Lights extends VirtualSubsystem {
 	}
 
 	private void rainbow(Section section) {
-		if (section == Section.FULL) {
-			rainbow(Section.LEFTFULL);
-			rainbow(Section.RIGHTFULL);
-			rainbow(Section.LEFTBACK);
-			rainbow(Section.RIGHTBACK);
-		} else if (section == Section.BOTTOM) {
+		if (section == Section.BOTTOM) {
 			rainbow(Section.LEFTBOTTOM);
 			rainbow(Section.RIGHTBOTTOM);
 		} else {

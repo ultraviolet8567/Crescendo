@@ -32,128 +32,16 @@
     },
     {
       "anchor": {
-        "x": 7.653016208288056,
-        "y": 1.7179855913648
-      },
-      "prevControl": {
-        "x": 7.723720016830348,
-        "y": 1.31143869224663
-      },
-      "nextControl": {
-        "x": 7.570717497324718,
-        "y": 2.1912031794039875
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 8.342267912606001,
-        "y": 2.4483866511592676
-      },
-      "prevControl": {
-        "x": 8.085084440845574,
-        "y": 2.1191918073110645
-      },
-      "nextControl": {
-        "x": 8.533215716739253,
-        "y": 2.69279984044601
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 7.653016208288056,
-        "y": 3.353672471755971
-      },
-      "prevControl": {
-        "x": 7.644732342475337,
-        "y": 2.9891823759962968
-      },
-      "nextControl": {
-        "x": 7.663303547158472,
-        "y": 3.806315382054322
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
         "x": 8.23939452390183,
-        "y": 4.1252228870372525
-      },
-      "prevControl": {
-        "x": 8.013073068752654,
-        "y": 3.806315382054324
-      },
-      "nextControl": {
-        "x": 8.467587725233122,
-        "y": 4.446767852549527
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 7.653016208288056,
-        "y": 5.040796046504375
-      },
-      "prevControl": {
-        "x": 7.663303547158472,
-        "y": 4.59844047507644
-      },
-      "nextControl": {
-        "x": 7.6461131795332085,
-        "y": 5.33762628296285
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 8.23939452390183,
-        "y": 5.781484445174405
-      },
-      "prevControl": {
-        "x": 7.982211052141404,
-        "y": 5.606599684377313
-      },
-      "nextControl": {
-        "x": 8.528753284956899,
-        "y": 5.978248402691855
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 7.653016208288056,
-        "y": 6.7279196212579215
-      },
-      "prevControl": {
-        "x": 7.556148032320271,
-        "y": 6.359820552580334
-      },
-      "nextControl": {
-        "x": 7.755889596992226,
-        "y": 7.118838498333771
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 8.23939452390183,
-        "y": 7.458320681057534
+        "y": 7.437482225391801
       },
       "prevControl": {
         "x": 8.247206264747259,
-        "y": 7.036486675404259
+        "y": 7.015648219738526
       },
       "nextControl": {
         "x": 8.229107185031413,
-        "y": 8.013836980060058
+        "y": 7.9929985243943245
       },
       "isLocked": false,
       "linkedName": null
@@ -164,8 +52,8 @@
         "y": 7.005677770759182
       },
       "prevControl": {
-        "x": 4.937158746497945,
-        "y": 7.0468271262459945
+        "x": 4.932874194962224,
+        "y": 7.005677770759182
       },
       "nextControl": null,
       "isLocked": false,
@@ -179,22 +67,32 @@
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 9,
-      "rotationDegrees": -176.77547739348006,
+      "waypointRelativePos": 2.0,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 3.0,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 3.0,
+      "rotationDegrees": 0,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 4.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -2.1475854282985467,
+    "rotation": -177.05085340117816,
     "rotateFast": false
   },
   "reversed": false,

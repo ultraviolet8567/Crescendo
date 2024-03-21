@@ -51,7 +51,7 @@ public class WheelRadiusCharacterization extends Command {
 		this.odometry = odometry;
 		this.omegaDirection = omegaDirection;
 
-		gyroYawRadsSupplier = () -> this.odometry.getGyrometerHeading().getRadians();
+		gyroYawRadsSupplier = () -> Math.IEEEremainder(this.odometry.getGyrometerHeading().getRadians(), 2 * Math.PI);
 
 		addRequirements(swerve);
 	}

@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.util.LoggedTunableNumber;
 
@@ -41,13 +40,9 @@ public final class Constants {
 
 	public static final Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
 
-	public static final Pose2d speaker = (alliance == Alliance.Blue)
+	public static final Pose2d speaker = (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue)
 			? new Pose2d(1.5, 5.5, new Rotation2d())
 			: new Pose2d(1.5, 5.5, new Rotation2d(180));
-
-	// Color of note and detection tolerance, subject to change.
-	public static final Color kNoteColor = new Color(138, 94, 23);
-	public static final double kColorConfidenceThreshold = 0.8;
 
 	public static final class OIConstants {
 		public static final ControllerType controllerTypeDriver = ControllerType.XBOX;
@@ -108,9 +103,9 @@ public final class Constants {
 
 	public static final class DriveConstants {
 		// Distance between right and left wheels:
-		public static final double kTrackWidth = Units.inchesToMeters(21);
+		public static final double kTrackWidth = Units.inchesToMeters(20.75);
 		// Distance between front and back wheels:
-		public static final double kWheelBase = Units.inchesToMeters(20.5);
+		public static final double kWheelBase = Units.inchesToMeters(20.75);
 		public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
 				new Translation2d(kWheelBase / 2, kTrackWidth / 2), // Front left (+/+)
 				new Translation2d(kWheelBase / 2, -kTrackWidth / 2), // Front right (+/-)
@@ -139,9 +134,9 @@ public final class Constants {
 		public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
 
 		public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -1.677 - 0.005 - 0.004 + 0.011;
-		public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -0.804 + 0.069 + 0.071 - 0.121;
-		public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.452 - 0.01 + 0.046 - 0.016;
-		public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.132 - 0.064 + 0.017 - 0.012;
+		public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -0.804 + 0.069 + 0.071 - 0.121 - 0.008;
+		public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.452 - 0.01 + 0.046 - 0.016 + 0.014;
+		public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.132 - 0.064 + 0.017 - 0.012 - 0.017;
 
 		public static final double kPhysicalMaxSpeedMetersPerSecond = 4.5;
 		public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 3 * Math.PI;
@@ -235,11 +230,11 @@ public final class Constants {
 		public static final double kIntakeReduction = 4.0 * 3.0;
 		public static final int kSensorPort = 8;
 
-		public static final LoggedTunableNumber kIntakeVoltage = new LoggedTunableNumber("Intake/Voltage", 10);
+		public static final LoggedTunableNumber kIntakeVoltage = new LoggedTunableNumber("Intake/Voltage", 12);
 	}
 
 	public static final class AutoConstants {
-		public static final double kAutoShootTime = 0.75;
+		public static final double kAutoShootTime = 0.45;
 		public static final double kAutoArmTime = 1.0;
 		public static final double kAutoIntakeTime = 0.75;
 	}
@@ -255,7 +250,7 @@ public final class Constants {
 		};
 
 		public static final Gains armGains = switch (currentRobot) {
-			case REALBOT -> new Gains(14, 0.0, 0, 0.016186, 0.02131, 0.087119, 1.4338);
+			case REALBOT -> new Gains(15, 0.0, 0, 0.016186, 0.02131, 0.087119, 1.4338);
 			case SIMBOT -> new Gains(1.0, 0.0, 0.0, 0.009078, 2.77, 0.06, 1.07);
 		};
 	}

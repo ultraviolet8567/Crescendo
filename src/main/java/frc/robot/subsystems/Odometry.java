@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -38,7 +39,7 @@ public class Odometry extends SubsystemBase {
 	 * trust global measurements from vision less. This matrix is in the form [x, y,
 	 * theta]ᵀ, with units in meters and radians.
 	 */
-	private static final Vector<N3> VISION_STDS = VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(10));
+	private static final Vector<N3> VISION_STDS = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(2));
 
 	private Swerve swerve;
 
@@ -132,7 +133,7 @@ public class Odometry extends SubsystemBase {
 	}
 
 	public Rotation2d getSpeakerHeading() {
-		int centerSpeakerTagID = (Constants.alliance == Alliance.Blue) ? 7 : 4;
+		int centerSpeakerTagID = (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue) ? 7 : 4;
 
 		return getPose().minus(fieldLayout.getTagPose(centerSpeakerTagID).get().toPose2d()).getRotation();
 	}
