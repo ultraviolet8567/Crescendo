@@ -1,21 +1,24 @@
 package frc.robot.commands.autos;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.intake.Intake;
 
-public class AutoIntake extends Command {
+public class AutoRetract extends Command {
 	private Intake intake;
+	private Timer timer;
 
-	public AutoIntake(Intake intake) {
+	public AutoRetract(Intake intake) {
 		this.intake = intake;
+		timer = new Timer();
 	}
 
 	@Override
 	public void initialize() {
-		intake.pickup(0.8);
+		timer.start();
+		intake.drop();
 
-		System.out.println("Intaking");
+		System.out.println("Retracting");
 	}
 
 	@Override
@@ -25,6 +28,6 @@ public class AutoIntake extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return Lights.getInstance().hasNote;
+		return timer.get() >= 0.05;
 	}
 }

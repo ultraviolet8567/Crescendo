@@ -61,6 +61,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "AutoRetract"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -117,6 +123,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "AutoRetract"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -170,6 +182,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoRetract"
           }
         },
         {
