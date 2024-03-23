@@ -2,15 +2,39 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4408703461281565,
-      "y": 7.004798511021523
+      "x": 1.3468774807223807,
+      "y": 5.54487565115481
     },
-    "rotation": 0
+    "rotation": -1.3101083973819783
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "SpeakerFrontPosition"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FirstShot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakePosition"
+          }
+        },
         {
           "type": "deadline",
           "data": {
@@ -18,7 +42,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Drive Out"
+                  "pathName": "1 Note Drive Center"
                 }
               },
               {
@@ -37,9 +61,28 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "PickupTimed"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "2 Note Speaker Center"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeakerFrontPosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUp"
+                }
+              }
+            ]
           }
         }
       ]
