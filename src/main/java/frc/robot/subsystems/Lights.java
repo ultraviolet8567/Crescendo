@@ -83,7 +83,7 @@ public class Lights extends VirtualSubsystem {
 			// Exit during initial cycles
 			loopCycleCount++;
 			if (loopCycleCount < minLoopCycleCount) {
-				return;
+				wave(Section.FULL, Color.kBlue, Color.kWhiteSmoke, waveSlowCycleLength, waveSlowDuration);
 			}
 
 			// First branch off depending on what part of the match the robot is in
@@ -91,7 +91,7 @@ public class Lights extends VirtualSubsystem {
 			// Disabled
 			if (state == RobotState.DISABLED) {
 				// Purple and yellow stripes
-				stripes(Section.FULL, List.of(Color.kPurple, Color.kPink), stripeLength, stripeDuration);
+				stripes(Section.FULL, List.of(Color.kPurple, Color.kHotPink), stripeLength, stripeDuration);
 			}
 
 			// Autonomous
@@ -104,11 +104,9 @@ public class Lights extends VirtualSubsystem {
 			else {
 				// Alliance colors
 				if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue) {
-					wave(Section.FULL, Color.kRoyalBlue, Color.kDarkBlue, waveSlowCycleLength, waveSlowDuration);
-					// shimmer(Section.FULL, Color.kRoyalBlue);
+					wave(Section.FULL, Color.kLightBlue, Color.kDarkBlue, waveSlowCycleLength, waveSlowDuration);
 				} else {
 					wave(Section.FULL, Color.kFirstRed, Color.kRed, waveSlowCycleLength, waveSlowDuration);
-					// shimmer(Section.FULL, Color.kPaleVioletRed);
 				}
 
 				// Pickup indicator

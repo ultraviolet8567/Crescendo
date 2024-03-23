@@ -158,10 +158,12 @@ public class RobotContainer {
 		driverController.leftBumper().whileTrue(new InstantCommand(() -> shooter.shoot(0.75)))
 				.onFalse(new InstantCommand(() -> shooter.stop()));
 
-		// driverController.y().whileTrue(new WheelRadiusCharacterization(swerve, odometry,
-		// 		WheelRadiusCharacterization.Direction.COUNTER_CLOCKWISE));
+		// driverController.y().whileTrue(new WheelRadiusCharacterization(swerve,
+		// odometry,
+		// WheelRadiusCharacterization.Direction.COUNTER_CLOCKWISE));
 		// driverController.a().whileTrue(
-		// 		new WheelRadiusCharacterization(swerve, odometry, WheelRadiusCharacterization.Direction.CLOCKWISE));
+		// new WheelRadiusCharacterization(swerve, odometry,
+		// WheelRadiusCharacterization.Direction.CLOCKWISE));
 
 		operatorController.leftBumper().whileTrue(new Pickup(intake));
 		operatorController.leftTrigger(0.5).whileTrue(new Drop(intake));
@@ -178,7 +180,8 @@ public class RobotContainer {
 				.or(operatorController.povRight()).onTrue(new InstantCommand(() -> intake.toggleSensorDisabled()));
 
 		// Overrides
-		driverController.back().onTrue(new InstantCommand(() -> odometry.resetPose(Constants.speaker)));
+		// driverController.back().onTrue(new InstantCommand(() ->
+		// odometry.resetPose(Constants.speaker)));
 		driverController.start().onTrue(new InstantCommand(() -> odometry.resetGyrometerHeading()));
 	}
 
