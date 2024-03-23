@@ -21,7 +21,6 @@ import frc.robot.commands.MoveArm;
 import frc.robot.commands.Pickup;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.SwerveTeleOp;
-import frc.robot.commands.WheelRadiusCharacterization;
 import frc.robot.commands.autos.AutoIntake;
 import frc.robot.commands.autos.AutoIntakeTimed;
 import frc.robot.commands.autos.AutoSetArmMode;
@@ -159,10 +158,10 @@ public class RobotContainer {
 		driverController.leftBumper().whileTrue(new InstantCommand(() -> shooter.shoot(0.75)))
 				.onFalse(new InstantCommand(() -> shooter.stop()));
 
-		driverController.y().whileTrue(new WheelRadiusCharacterization(swerve, odometry,
-				WheelRadiusCharacterization.Direction.COUNTER_CLOCKWISE));
-		driverController.a().whileTrue(
-				new WheelRadiusCharacterization(swerve, odometry, WheelRadiusCharacterization.Direction.CLOCKWISE));
+		// driverController.y().whileTrue(new WheelRadiusCharacterization(swerve, odometry,
+		// 		WheelRadiusCharacterization.Direction.COUNTER_CLOCKWISE));
+		// driverController.a().whileTrue(
+		// 		new WheelRadiusCharacterization(swerve, odometry, WheelRadiusCharacterization.Direction.CLOCKWISE));
 
 		operatorController.leftBumper().whileTrue(new Pickup(intake));
 		operatorController.leftTrigger(0.5).whileTrue(new Drop(intake));

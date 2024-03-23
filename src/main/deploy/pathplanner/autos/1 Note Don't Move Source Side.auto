@@ -5,7 +5,7 @@
       "x": 0.6884877930156866,
       "y": 4.392693697668098
     },
-    "rotation": -59.305855273122376
+    "rotation": -60.0
   },
   "command": {
     "type": "sequential",
@@ -15,6 +15,12 @@
           "type": "named",
           "data": {
             "name": "SpeakerAnglePosition"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FirstShot"
           }
         },
         {

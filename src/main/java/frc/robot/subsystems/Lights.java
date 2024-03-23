@@ -91,7 +91,7 @@ public class Lights extends VirtualSubsystem {
 			// Disabled
 			if (state == RobotState.DISABLED) {
 				// Purple and yellow stripes
-				stripes(Section.FULL, List.of(Color.kPurple, Color.kDarkGoldenrod), stripeLength, stripeDuration);
+				stripes(Section.FULL, List.of(Color.kPurple, Color.kPink), stripeLength, stripeDuration);
 			}
 
 			// Autonomous
@@ -107,7 +107,7 @@ public class Lights extends VirtualSubsystem {
 					wave(Section.FULL, Color.kRoyalBlue, Color.kDarkBlue, waveSlowCycleLength, waveSlowDuration);
 					// shimmer(Section.FULL, Color.kRoyalBlue);
 				} else {
-					wave(Section.FULL, Color.kPaleVioletRed, Color.kRed, waveSlowCycleLength, waveSlowDuration);
+					wave(Section.FULL, Color.kFirstRed, Color.kRed, waveSlowCycleLength, waveSlowDuration);
 					// shimmer(Section.FULL, Color.kPaleVioletRed);
 				}
 
