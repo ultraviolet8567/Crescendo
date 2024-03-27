@@ -2,6 +2,7 @@ package frc.robot.commands.autos;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.intake.Intake;
 
 public class AutoRetract extends Command {
@@ -28,6 +29,6 @@ public class AutoRetract extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return timer.get() >= 0.05;
+		return timer.get() >= AutoConstants.kAutoRetractTime;
 	}
 }
