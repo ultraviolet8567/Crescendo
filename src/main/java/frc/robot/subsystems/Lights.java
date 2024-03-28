@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
@@ -26,10 +27,12 @@ public class Lights extends VirtualSubsystem {
 	public boolean lowBattery = false;
 	public boolean hasNote = false;
 	public RobotState state = RobotState.DISABLED;
+	public Alliance alliance = Alliance.Blue;
 
 	// LED IO
 	private final AddressableLED leds;
 	private final AddressableLEDBuffer buffer;
+	private final Notifier loadingNotifier;
 
 	// Constants
 	private static final int leftLength = 19;
@@ -74,10 +77,25 @@ public class Lights extends VirtualSubsystem {
 		} else {
 			System.out.println("[Init] Lights do not exist");
 		}
+
+		// Indicate robot is booting up
+		loadingNotifier = new Notifier(() -> {
+			synchronized (this) {
+				breath(Section.FULL, Color.kPurple, Color.kBlack, 0.25, System.currentTimeMillis() / 1000.0);
+				leds.setData(buffer);
+			}
+		});
+		loadingNotifier.startPeriodic(0.02);
 	}
 
 	public void periodic() {
+		loadingNotifier.stop();
+
 		Logger.recordOutput("RobotState/HasNote", hasNote);
+
+		if (DriverStation.getAlliance().isPresent()) {
+			alliance = DriverStation.getAlliance().get();
+		}
 
 		if (Constants.lightsExist) {
 			// Exit during initial cycles
@@ -86,12 +104,13 @@ public class Lights extends VirtualSubsystem {
 				return;
 			}
 
-			// First branch off depending on what part of the match the robot is in
+			// Default to off
+			solid(Section.FULL, Color.kBlack);
 
 			// Disabled
 			if (state == RobotState.DISABLED) {
 				// Purple and yellow stripes
-				stripes(Section.FULL, List.of(Color.kPurple, Color.kPink), stripeLength, stripeDuration);
+				stripes(Section.FULL, List.of(Color.kPurple, Color.kMediumPurple), stripeLength, stripeDuration);
 			}
 
 			// Autonomous
@@ -103,13 +122,13 @@ public class Lights extends VirtualSubsystem {
 			// Teleop
 			else {
 				// Alliance colors
-				if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue) {
-					wave(Section.FULL, Color.kRoyalBlue, Color.kDarkBlue, waveSlowCycleLength, waveSlowDuration);
-					// shimmer(Section.FULL, Color.kRoyalBlue);
-				} else {
-					wave(Section.FULL, Color.kFirstRed, Color.kRed, waveSlowCycleLength, waveSlowDuration);
-					// shimmer(Section.FULL, Color.kPaleVioletRed);
-				}
+				// if (alliance == Alliance.Blue) {
+				// wave(Section.FULL, Color.kLightBlue, Color.kDarkBlue, waveSlowCycleLength,
+				// waveSlowDuration);
+				// } else {
+				// wave(Section.FULL, Color.kFirstRed, Color.kRed, waveSlowCycleLength,
+				// waveSlowDuration);
+				// }
 
 				// Pickup indicator
 				if (hasNote) {

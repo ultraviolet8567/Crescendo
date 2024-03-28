@@ -72,6 +72,12 @@ public class Intake extends SubsystemBase {
 		sensorDisabled = !sensorDisabled;
 	}
 
+	public void pickup(double scaleFactor) {
+		if (!Lights.getInstance().hasNote) {
+			io.setInputVoltage(scaleFactor * IntakeConstants.kIntakeVoltage.get());
+		}
+	}
+
 	public void pickup() {
 		if (!Lights.getInstance().hasNote) {
 			io.setInputVoltage(IntakeConstants.kIntakeVoltage.get());

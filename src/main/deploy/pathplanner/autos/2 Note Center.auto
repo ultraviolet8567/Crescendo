@@ -88,12 +88,6 @@
         {
           "type": "named",
           "data": {
-            "name": "RampUp"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "AutoShoot"
           }
         }

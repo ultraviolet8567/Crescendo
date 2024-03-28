@@ -208,7 +208,7 @@ public final class Constants {
 		public static final LoggedTunableNumber kShooterPIDTolerance = new LoggedTunableNumber("Shooter/PID Tolerance",
 				0.5);
 
-		public static final LoggedTunableNumber kAmpRPM = new LoggedTunableNumber("Shooter/Amp RPM", 500);
+		public static final LoggedTunableNumber kAmpRPM = new LoggedTunableNumber("Shooter/Amp RPM", 750);
 		public static final LoggedTunableNumber kSpeakerFrontRPM = new LoggedTunableNumber("Shooter/SpeakerFront RPM",
 				4500);
 		public static final LoggedTunableNumber kSpeakerAngleRPM = new LoggedTunableNumber("Shooter/SpeakerAngle RPM",
@@ -230,13 +230,14 @@ public final class Constants {
 		public static final double kIntakeReduction = 4.0 * 3.0;
 		public static final int kSensorPort = 8;
 
-		public static final LoggedTunableNumber kIntakeVoltage = new LoggedTunableNumber("Intake/Voltage", 12);
+		public static final LoggedTunableNumber kIntakeVoltage = new LoggedTunableNumber("Intake/Voltage", 10);
 	}
 
 	public static final class AutoConstants {
-		public static final double kAutoShootTime = 0.45;
+		public static final double kAutoShootTime = 0.65;
 		public static final double kAutoArmTime = 1.0;
 		public static final double kAutoIntakeTime = 0.75;
+		public static final double kAutoRetractTime = 0.1;
 	}
 
 	public static final class GainsConstants {

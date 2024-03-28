@@ -23,6 +23,7 @@ import frc.robot.commands.Shoot;
 import frc.robot.commands.SwerveTeleOp;
 import frc.robot.commands.autos.AutoIntake;
 import frc.robot.commands.autos.AutoIntakeTimed;
+import frc.robot.commands.autos.AutoRetract;
 import frc.robot.commands.autos.AutoSetArmMode;
 import frc.robot.commands.autos.AutoShoot;
 import frc.robot.subsystems.AutoChooser;
@@ -122,6 +123,7 @@ public class RobotContainer {
 		NamedCommands.registerCommand("RampUp", new InstantCommand(() -> shooter.shoot()));
 		NamedCommands.registerCommand("FirstShot", new InstantCommand(() -> shooter.shoot(0.67)));
 		NamedCommands.registerCommand("Pickup", new AutoIntake(intake));
+		NamedCommands.registerCommand("AutoRetract", new AutoRetract(intake));
 		NamedCommands.registerCommand("PickupTimed", new AutoIntakeTimed(intake));
 		NamedCommands.registerCommand("TaxiPosition", new AutoSetArmMode(arm, ArmMode.TAXI, 0.05));
 		NamedCommands.registerCommand("AmpPosition", new AutoSetArmMode(arm, ArmMode.AMP, 0.05));
@@ -158,10 +160,12 @@ public class RobotContainer {
 		driverController.leftBumper().whileTrue(new InstantCommand(() -> shooter.shoot(0.75)))
 				.onFalse(new InstantCommand(() -> shooter.stop()));
 
-		// driverController.y().whileTrue(new WheelRadiusCharacterization(swerve, odometry,
-		// 		WheelRadiusCharacterization.Direction.COUNTER_CLOCKWISE));
+		// driverController.y().whileTrue(new WheelRadiusCharacterization(swerve,
+		// odometry,
+		// WheelRadiusCharacterization.Direction.COUNTER_CLOCKWISE));
 		// driverController.a().whileTrue(
-		// 		new WheelRadiusCharacterization(swerve, odometry, WheelRadiusCharacterization.Direction.CLOCKWISE));
+		// new WheelRadiusCharacterization(swerve, odometry,
+		// WheelRadiusCharacterization.Direction.CLOCKWISE));
 
 		operatorController.leftBumper().whileTrue(new Pickup(intake));
 		operatorController.leftTrigger(0.5).whileTrue(new Drop(intake));
@@ -178,7 +182,8 @@ public class RobotContainer {
 				.or(operatorController.povRight()).onTrue(new InstantCommand(() -> intake.toggleSensorDisabled()));
 
 		// Overrides
-		driverController.back().onTrue(new InstantCommand(() -> odometry.resetPose(Constants.speaker)));
+		// driverController.back().onTrue(new InstantCommand(() ->
+		// odometry.resetPose(Constants.speaker)));
 		driverController.start().onTrue(new InstantCommand(() -> odometry.resetGyrometerHeading()));
 	}
 

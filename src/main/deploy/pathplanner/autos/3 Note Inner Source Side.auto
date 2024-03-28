@@ -1,0 +1,155 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.35,
+      "y": 5.55
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "SpeakerFrontPosition"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FirstShot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakePosition"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "1 Note Drive Center"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "2 Note Speaker Center"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeakerFrontPosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUp"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShoot"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "4 Note Inner Third Note Amp Side"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "4 Note Speaker 2 Amp Side"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeakerFrontPosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUp"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "IMPORTANT AUTOS",
+  "choreoAuto": false
+}

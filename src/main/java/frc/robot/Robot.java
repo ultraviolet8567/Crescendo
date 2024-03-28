@@ -55,7 +55,7 @@ public class Robot extends LoggedRobot {
 
 		switch (Constants.currentMode) {
 			case REAL :
-				Logger.addDataReceiver(new WPILOGWriter());
+				Logger.addDataReceiver(new WPILOGWriter("/home/lvuser/logs"));
 				Logger.addDataReceiver(new NT4Publisher());
 				break;
 			case SIM :
@@ -72,11 +72,12 @@ public class Robot extends LoggedRobot {
 		System.out.println("[Init] Starting AdvantageKit");
 		Logger.start();
 
+		// Create lights
+		Lights.getInstance();
+
 		// Instantiate the RobotContainer
 		System.out.println("[Init] Instantiating RobotContainer");
 		m_robotContainer = new RobotContainer();
-
-		Lights.getInstance();
 
 		timer = Shuffleboard.getTab("Main").add("Time remaining", 0).withWidget(BuiltInWidgets.kNumberBar)
 				.withProperties(Map.of("min", 0, "max", 135)).withPosition(0, 2).withSize(2, 1).getEntry();
@@ -122,7 +123,7 @@ public class Robot extends LoggedRobot {
 	@Override
 	public void autonomousInit() {
 		// Set initial gyro yaw based on auto command
-		m_robotContainer.setInitialGyroYaw();
+		// m_robotContainer.setInitialGyroYaw();
 
 		// Set state to auto
 		Lights.getInstance().state = RobotState.AUTO;

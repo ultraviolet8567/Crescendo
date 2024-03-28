@@ -30,6 +30,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "IntakePosition"
+          }
+        },
+        {
           "type": "deadline",
           "data": {
             "commands": [
@@ -55,12 +61,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "PickupTimed"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -75,14 +75,14 @@
                 "data": {
                   "name": "SpeakerAnglePosition"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUp"
+                }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "RampUp"
           }
         },
         {
