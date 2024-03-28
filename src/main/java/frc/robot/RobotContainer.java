@@ -17,8 +17,10 @@ import frc.robot.Constants.ControllerType;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Drop;
+import frc.robot.commands.ExtendClimber;
 import frc.robot.commands.MoveArm;
 import frc.robot.commands.Pickup;
+import frc.robot.commands.RetractClimber;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.SwerveTeleOp;
 import frc.robot.commands.autos.AutoIntake;
@@ -34,6 +36,10 @@ import frc.robot.subsystems.arm.Arm.ArmMode;
 import frc.robot.subsystems.arm.ArmIO;
 import frc.robot.subsystems.arm.ArmIOSim;
 import frc.robot.subsystems.arm.ArmIOSparkMax;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.ClimberIO;
+import frc.robot.subsystems.climber.ClimberIOSim;
+import frc.robot.subsystems.climber.ClimberIOSparkMax;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOSim;
@@ -52,14 +58,11 @@ import frc.robot.util.ControllerIO;
 public class RobotContainer {
 	// Subsystems
 	private final Arm arm;
-	// private final Climber climber;
-	// private final Gyrometer gyro;
+	private final Climber climber;
 	private final Intake intake;
-	// private final KMeans kmeans;
 	private final Odometry odometry;
 	private final Shooter shooter;
 	private final Swerve swerve;
-	// private final Vision vision;
 	private final AutoChooser autoChooser;
 
 	// Joysticks
@@ -82,20 +85,21 @@ public class RobotContainer {
 		switch (Constants.currentMode) {
 			case REAL -> {
 				arm = new Arm(new ArmIOSparkMax());
-				// climber = new Climber(new ClimberIOSparkMax());
+				climber = new Climber(new ClimberIOSparkMax());
 				intake = new Intake(new IntakeIOSparkMax());
 				shooter = new Shooter(new ShooterIOSparkMax(), arm);
 			}
 			case SIM -> {
 				arm = new Arm(new ArmIOSim());
-				// climber = new Climber(new ClimberIOSim());
+				climber = new Climber(new ClimberIOSim());
 				intake = new Intake(new IntakeIOSim());
 				shooter = new Shooter(new ShooterIOSim(), arm);
 			}
 			default -> {
 				arm = new Arm(new ArmIO() {
 				});
-				// climber = new Climber(new ClimberIO() {});
+				climber = new Climber(new ClimberIO() {
+				});
 				intake = new Intake(new IntakeIO() {
 				});
 				shooter = new Shooter(new ShooterIO() {
@@ -123,8 +127,8 @@ public class RobotContainer {
 		NamedCommands.registerCommand("RampUp", new InstantCommand(() -> shooter.shoot()));
 		NamedCommands.registerCommand("FirstShot", new InstantCommand(() -> shooter.shoot(0.67)));
 		NamedCommands.registerCommand("Pickup", new AutoIntake(intake));
-		NamedCommands.registerCommand("AutoRetract", new AutoRetract(intake));
 		NamedCommands.registerCommand("PickupTimed", new AutoIntakeTimed(intake));
+		NamedCommands.registerCommand("AutoRetract", new AutoRetract(intake));
 		NamedCommands.registerCommand("TaxiPosition", new AutoSetArmMode(arm, ArmMode.TAXI, 0.05));
 		NamedCommands.registerCommand("AmpPosition", new AutoSetArmMode(arm, ArmMode.AMP, 0.05));
 		NamedCommands.registerCommand("IntakePosition", new AutoSetArmMode(arm, ArmMode.ROOMBA, 0.01));
@@ -178,8 +182,16 @@ public class RobotContainer {
 		operatorController.x().onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.TAXI)));
 		operatorController.y().onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SPEAKERFRONT)));
 
-		operatorController.povUp().or(operatorController.povDown()).or(operatorController.povLeft())
-				.or(operatorController.povRight()).onTrue(new InstantCommand(() -> intake.toggleSensorDisabled()));
+		operatorController.rightStick().onTrue(new InstantCommand(() -> intake.toggleSensorDisabled()));
+
+		operatorController.povUp().whileTrue(new ExtendClimber(climber, "Left"))
+				.onFalse(new InstantCommand(() -> climber.stopLeft()));
+		operatorController.povRight().whileTrue(new ExtendClimber(climber, "Right"))
+				.onFalse(new InstantCommand(() -> climber.stopRight()));
+		operatorController.povLeft().whileTrue(new RetractClimber(climber, "Right"))
+				.onFalse(new InstantCommand(() -> climber.stopRight()));
+		operatorController.povDown().whileTrue(new RetractClimber(climber, "Left"))
+				.onFalse(new InstantCommand(() -> climber.stopLeft()));
 
 		// Overrides
 		// driverController.back().onTrue(new InstantCommand(() ->

@@ -26,6 +26,7 @@ public class Lights extends VirtualSubsystem {
 	public int loopCycleCount = 0;
 	public boolean lowBattery = false;
 	public boolean hasNote = false;
+	public boolean climbed = false;
 	public RobotState state = RobotState.DISABLED;
 	public Alliance alliance = Alliance.Blue;
 
@@ -133,6 +134,10 @@ public class Lights extends VirtualSubsystem {
 				// Pickup indicator
 				if (hasNote) {
 					solid(Section.FULL, Color.kGreen);
+				}
+
+				if (climbed) {
+					solid(Section.FULL, Color.kOrange);
 				}
 			}
 

@@ -57,6 +57,9 @@ public final class Constants {
 	public static final class CAN {
 		public static final int kIntakePort = 4;
 
+		public static final int kLeftClimberPort = 5;
+		public static final int kRightClimberPort = 6;
+
 		public static final int kShooterTopPort = 7;
 		public static final int kShooterBottomPort = 8;
 
@@ -160,6 +163,12 @@ public final class Constants {
 
 		public static final double kClimberPositionReduction = 1.0;
 		public static final double kClimberVelocityReduction = 1.0;
+
+		public static final int kLeftClimberAbsoluteEncoderPort = 0;
+		public static final int kRightClimberAbsoluteEncoderPort = 1;
+
+		public static final double kLeftClimberEncoderOffset = 0.0;
+		public static final double kRightClimberEncoderOffset = 0.0;
 	}
 
 	public static final class ArmConstants {
