@@ -37,24 +37,22 @@ public class Odometry extends SubsystemBase {
 	 * model's state estimates less. This matrix is in the form [x, y, theta]ᵀ, with
 	 * units in meters and radians, then meters.
 	 */
-	private static final Vector<N3> STATE_STDS = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
+	private static final Vector<N3> STATE_STDS = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(10));
 	/**
 	 * Standard deviations of the vision measurements. Increase these numbers to
 	 * trust global measurements from vision less. This matrix is in the form [x, y,
 	 * theta]ᵀ, with units in meters and radians.
 	 */
-	private static final Vector<N3> VISION_STDS = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(2));
+	private static final Vector<N3> VISION_STDS = VecBuilder.fill(5, 5, Units.degreesToRadians(500));
 
 	private Swerve swerve;
-
 	private SwerveDrivePoseEstimator poseEstimator;
 
 	private Pigeon2 gyro;
 	private SwerveDriveOdometry odometer;
 
-	// TODO: Put estimatorMu back when back-straight camera wired
-	private PhotonCamera cameraNu, cameraXi;
-	private PhotonPoseEstimator estimatorNu, estimatorXi;
+	private PhotonCamera cameraMu, cameraNu, cameraXi;
+	private PhotonPoseEstimator estimatorMu, estimatorNu, estimatorXi;
 
 	public Odometry(Swerve swerve) {
 		System.out.println("[Init] Creating Odometry");
