@@ -27,6 +27,8 @@ public class Lights extends VirtualSubsystem {
 	public boolean lowBattery = false;
 	public boolean hasNote = false;
 	public boolean climbed = false;
+	public boolean autoFinished = false;
+	public double autoFinishedTime = 0.0;
 	public RobotState state = RobotState.DISABLED;
 	public Alliance alliance = Alliance.Blue;
 

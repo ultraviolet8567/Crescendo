@@ -7,6 +7,7 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -78,8 +79,10 @@ public class RobotContainer {
 
 	public RobotContainer() {
 		// Driver cam limitations
-		driverCam.setFPS(60);
-		driverCam.setResolution(320, 240);
+		if (RobotBase.isReal()) {
+			driverCam.setFPS(60);
+			driverCam.setResolution(320, 240);
+		}
 
 		// Create subsystems with real or simulated hardware depending on current mode
 		switch (Constants.currentMode) {
@@ -207,11 +210,11 @@ public class RobotContainer {
 		odometry.setGyroYaw(autoChooser.getAutoStartingPose().getRotation());
 	}
 
-	public static Joystick getDriverJoystick() {
-		return driverJoystick;
+	public static XboxController getDriverJoystick() {
+		return driverController.getHID();
 	}
 
-	public static Joystick getOperatorJoystick() {
-		return operatorJoystick;
+	public static XboxController getOperatorJoystick() {
+		return operatorController.getHID();
 	}
 }
