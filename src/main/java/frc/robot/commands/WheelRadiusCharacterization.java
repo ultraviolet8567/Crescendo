@@ -17,7 +17,6 @@ import frc.robot.subsystems.Odometry;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.LoggedTunableNumber;
 import java.util.function.DoubleSupplier;
-import lombok.RequiredArgsConstructor;
 import org.littletonrobotics.junction.Logger;
 
 public class WheelRadiusCharacterization extends Command {
@@ -27,11 +26,19 @@ public class WheelRadiusCharacterization extends Command {
 			DriveConstants.kWheelBase / 2.0);
 	private static DoubleSupplier gyroYawRadsSupplier;
 
-	@RequiredArgsConstructor
 	public enum Direction {
-		CLOCKWISE(-1), COUNTER_CLOCKWISE(1);
+		CLOCKWISE, COUNTER_CLOCKWISE;
 
-		private final int value;
+		public int value() {
+			switch (this) {
+				case CLOCKWISE :
+					return -1;
+				case COUNTER_CLOCKWISE :
+					return 1;
+				default :
+					return 1;
+			}
+		}
 	}
 
 	private final Swerve swerve;
@@ -71,7 +78,7 @@ public class WheelRadiusCharacterization extends Command {
 	public void execute() {
 		// Run drive at velocity
 		ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0, 0,
-				omegaLimiter.calculate(omegaDirection.value * characterizationSpeed.get()));
+				omegaLimiter.calculate(omegaDirection.value() * characterizationSpeed.get()));
 		swerve.setModuleStates(chassisSpeeds);
 
 		// Get yaw and wheel positions

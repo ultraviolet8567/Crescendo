@@ -14,41 +14,15 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.ControllerType;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OIConstants;
-import frc.robot.commands.Drop;
-import frc.robot.commands.ExtendClimber;
-import frc.robot.commands.MoveArm;
-import frc.robot.commands.Pickup;
-import frc.robot.commands.RetractClimber;
-import frc.robot.commands.Shoot;
-import frc.robot.commands.SwerveTeleOp;
-import frc.robot.commands.autos.AutoIntake;
-import frc.robot.commands.autos.AutoIntakeTimed;
-import frc.robot.commands.autos.AutoRetract;
-import frc.robot.commands.autos.AutoSetArmMode;
-import frc.robot.commands.autos.AutoShoot;
-import frc.robot.subsystems.AutoChooser;
-import frc.robot.subsystems.Odometry;
-import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.arm.Arm;
+import frc.robot.Constants.*;
+import frc.robot.commands.*;
+import frc.robot.commands.autos.*;
+import frc.robot.subsystems.*;
+import frc.robot.subsystems.arm.*;
 import frc.robot.subsystems.arm.Arm.ArmMode;
-import frc.robot.subsystems.arm.ArmIO;
-import frc.robot.subsystems.arm.ArmIOSim;
-import frc.robot.subsystems.arm.ArmIOSparkMax;
-import frc.robot.subsystems.climber.Climber;
-import frc.robot.subsystems.climber.ClimberIO;
-import frc.robot.subsystems.climber.ClimberIOSim;
-import frc.robot.subsystems.climber.ClimberIOSparkMax;
-import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeIO;
-import frc.robot.subsystems.intake.IntakeIOSim;
-import frc.robot.subsystems.intake.IntakeIOSparkMax;
-import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.ShooterIO;
-import frc.robot.subsystems.shooter.ShooterIOSim;
-import frc.robot.subsystems.shooter.ShooterIOSparkMax;
+import frc.robot.subsystems.climber.*;
+import frc.robot.subsystems.intake.*;
+import frc.robot.subsystems.shooter.*;
 import frc.robot.util.ControllerIO;
 
 /**
@@ -88,7 +62,7 @@ public class RobotContainer {
 		switch (Constants.currentMode) {
 			case REAL -> {
 				arm = new Arm(new ArmIOSparkMax());
-				climber = new Climber(new ClimberIOSparkMax());
+				climber = new Climber(new ClimberIOSim()); // Use simulated climber until electronics installed
 				intake = new Intake(new IntakeIOSparkMax());
 				shooter = new Shooter(new ShooterIOSparkMax(), arm);
 			}
