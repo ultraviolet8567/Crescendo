@@ -110,4 +110,8 @@ public class Swerve extends SubsystemBase {
 		backLeft.stop();
 		backRight.stop();
 	}
+
+	public double solveBodyRot(double xDiff, double yDiff) {
+		return Math.atan2(yDiff, xDiff);
+	}
 }

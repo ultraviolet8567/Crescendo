@@ -141,61 +141,61 @@ public class Odometry extends SubsystemBase {
 	// }
 
 	public void updateVisionPoses() {
-		Optional<EstimatedRobotPose> rightEstimatedPoses = estimatorNu.update();
+		Optional<EstimatedRobotPose> nuEstimatedPoses = estimatorNu.update();
 		estimatorNu.setReferencePose(poseEstimator.getEstimatedPosition());
-		Optional<EstimatedRobotPose> leftEstimatedPoses = estimatorXi.update();
+		Optional<EstimatedRobotPose> xiEstimatedPoses = estimatorXi.update();
 		estimatorXi.setReferencePose(poseEstimator.getEstimatedPosition());
 
-		List<Pose3d> rightOptions = new ArrayList<Pose3d>();
-		List<Pose3d> leftOptions = new ArrayList<Pose3d>();
+		List<Pose3d> nuOptions = new ArrayList<Pose3d>();
+		List<Pose3d> xiOptions = new ArrayList<Pose3d>();
 
 		// Create a list of Pose3d options for Nu/back right camera
-		if (rightEstimatedPoses.isPresent()) {
-			if (rightEstimatedPoses.get().strategy == PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR) {
-				rightOptions.add(rightEstimatedPoses.get().estimatedPose);
+		if (nuEstimatedPoses.isPresent()) {
+			if (nuEstimatedPoses.get().strategy == PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR) {
+				nuOptions.add(nuEstimatedPoses.get().estimatedPose);
 			} else {
-				rightOptions = getAmbiguousPoses(cameraNu.getLatestResult(), CameraConstants.kRobotToCameraNu);
+				nuOptions = getAmbiguousPoses(cameraNu.getLatestResult(), CameraConstants.kRobotToCameraNu);
 			}
 		}
 
 		// Create a list of Pose3d options for the Xi/back left camera
-		if (leftEstimatedPoses.isPresent()) {
-			if (leftEstimatedPoses.get().strategy == PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR) {
-				leftOptions.add(leftEstimatedPoses.get().estimatedPose);
+		if (xiEstimatedPoses.isPresent()) {
+			if (xiEstimatedPoses.get().strategy == PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR) {
+				xiOptions.add(xiEstimatedPoses.get().estimatedPose);
 			} else {
-				leftOptions = getAmbiguousPoses(cameraXi.getLatestResult(), CameraConstants.kRobotToCameraXi);
+				xiOptions = getAmbiguousPoses(cameraXi.getLatestResult(), CameraConstants.kRobotToCameraXi);
 			}
 		}
 
-		Pose3d bestRightPose3d = new Pose3d();
-		Pose3d bestLeftPose3d = new Pose3d();
+		Pose3d bestNuPose3d = new Pose3d();
+		Pose3d bestXiPose3d = new Pose3d();
 		double minDistance = 1e6;
 
-		if (!rightEstimatedPoses.isPresent() && leftEstimatedPoses.isPresent()) {
-			Pose2d pose = leftEstimatedPoses.get().estimatedPose.toPose2d();
+		if (!nuEstimatedPoses.isPresent() && xiEstimatedPoses.isPresent()) {
+			Pose2d pose = xiEstimatedPoses.get().estimatedPose.toPose2d();
 			poseEstimator.addVisionMeasurement(pose, cameraNu.getLatestResult().getTimestampSeconds());
-		} else if (!leftEstimatedPoses.isPresent() && rightEstimatedPoses.isPresent()) {
-			Pose2d pose = rightEstimatedPoses.get().estimatedPose.toPose2d();
+		} else if (!xiEstimatedPoses.isPresent() && nuEstimatedPoses.isPresent()) {
+			Pose2d pose = nuEstimatedPoses.get().estimatedPose.toPose2d();
 			poseEstimator.addVisionMeasurement(pose, cameraNu.getLatestResult().getTimestampSeconds());
-		} else if (rightEstimatedPoses.isPresent() && leftEstimatedPoses.isPresent()) {
+		} else if (nuEstimatedPoses.isPresent() && xiEstimatedPoses.isPresent()) {
 			// compare all right poses and left poses to each other to find correct robot
 			// pose
-			for (Pose3d rightPose : rightOptions) {
-				for (Pose3d leftPose : leftOptions) {
-					double distance = calculateDifference(rightPose, leftPose);
+			for (Pose3d nuPose : nuOptions) {
+				for (Pose3d xiPose : xiOptions) {
+					double distance = calculateDifference(nuPose, xiPose);
 
 					// makes the smallest difference the measurement
 					if (distance < minDistance) {
-						bestRightPose3d = rightPose;
-						bestLeftPose3d = leftPose;
+						bestNuPose3d = nuPose;
+						bestXiPose3d = xiPose;
 						minDistance = distance;
 					}
 				}
 			}
 
-			poseEstimator.addVisionMeasurement(bestLeftPose3d.toPose2d(),
+			poseEstimator.addVisionMeasurement(bestXiPose3d.toPose2d(),
 					cameraNu.getLatestResult().getTimestampSeconds());
-			poseEstimator.addVisionMeasurement(bestRightPose3d.toPose2d(),
+			poseEstimator.addVisionMeasurement(bestNuPose3d.toPose2d(),
 					cameraXi.getLatestResult().getTimestampSeconds());
 		}
 

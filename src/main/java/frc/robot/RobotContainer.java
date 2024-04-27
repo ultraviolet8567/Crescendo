@@ -150,7 +150,7 @@ public class RobotContainer {
 
 		operatorController.leftBumper().whileTrue(new Pickup(intake));
 		operatorController.leftTrigger(0.5).whileTrue(new Drop(intake));
-		operatorController.rightTrigger().whileTrue(new Shoot(shooter, intake));
+		operatorController.rightTrigger().whileTrue(new Shoot(shooter, intake, swerve, arm, odometry));
 
 		operatorController.back().onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SOURCE)));
 		operatorController.start().onTrue(new InstantCommand(() -> arm.setArmMode(ArmMode.SPEAKERSTAGE)));

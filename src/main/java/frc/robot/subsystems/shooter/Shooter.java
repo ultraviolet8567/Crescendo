@@ -71,3 +71,19 @@ public class Shooter extends SubsystemBase {
 		io.stop();
 	}
 }
+
+// Goes in Arm:
+/*
+ * public double solveArmRot(double xDiff, double zDiff, double exitVel, boolean
+ * isUpper) { //Desmos calculation to translate into code (do not uncomment): //
+ * a_{1}=\arctan\left(\frac{-T.x+\sqrt{T.x^{2}-4\left(\frac{gT.x^{2}}{v^{2}}\
+ * cdot\left(\frac{gT.x^{2}}{v^{2}}-T.y\right)\right)}}{2\cdot\frac{gT.x^{2}}{v^
+ * {2}}}\right) // \frac{gT.x^{2}}{v^{2}}
+ *
+ * double gravity = -9.8; double var = Math.pow(xDiff, 2) * gravity /
+ * Math.pow(exitVel, 2); double deriv = Math.pow(xDiff, 2) - 4 * (var * (var -
+ * zDiff));
+ *
+ * if (isUpper) { return Math.atan((-xDiff + Math.sqrt(deriv)) / (2 * var)); }
+ * else { return Math.atan((-xDiff - Math.sqrt(deriv)) / (2 * var)); }
+ */

@@ -79,16 +79,17 @@ public final class Constants {
 
 	public static final class CameraConstants {
 		public static final Transform3d kRobotToCameraMu = new Transform3d(
-				new Translation3d(Units.inchesToMeters(-12), Units.inchesToMeters(-8), Units.inchesToMeters(4.5)),
-				new Rotation3d(0, Math.PI / 6, Math.PI));
+				new Translation3d(Units.inchesToMeters(-10.472), Units.inchesToMeters(-4.102),
+						Units.inchesToMeters(7.591)),
+				new Rotation3d(0, Math.PI/9, Math.PI));
 		public static final Transform3d kRobotToCameraNu = new Transform3d(
 				new Translation3d(Units.inchesToMeters(-9.302), Units.inchesToMeters(-10.747),
 						Units.inchesToMeters(7.014)),
-				new Rotation3d(0, 28.125 * Math.PI / 180, 7 * Math.PI / 6));
+				new Rotation3d(0, Math.PI/6, 7 * Math.PI / 6));
 		public static final Transform3d kRobotToCameraXi = new Transform3d(
 				new Translation3d(Units.inchesToMeters(-9.302), Units.inchesToMeters(10.747),
 						Units.inchesToMeters(7.014)),
-				new Rotation3d(0, 28.125 * Math.PI / 180, 5 * Math.PI / 6));
+				new Rotation3d(0, Math.PI/6, 5 * Math.PI / 6));
 	}
 
 	public static final class ModuleConstants {
@@ -226,6 +227,9 @@ public final class Constants {
 				4000);
 		public static final LoggedTunableNumber kTrapRPM = new LoggedTunableNumber("Shooter/Manual RPM", 1000);
 		public static final LoggedTunableNumber kIdleRPM = new LoggedTunableNumber("Shooter/Idle RPM", 4500);
+		
+		// Pls change later
+		public static final LoggedTunableNumber kAutoShooterExitVel = new LoggedTunableNumber("Auto Shooter Exit Velocity",10);
 
 		// Constants for auto-aiming
 		public static final boolean ampUpperEntry = false;
