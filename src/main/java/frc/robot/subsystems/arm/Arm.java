@@ -3,8 +3,10 @@ package frc.robot.subsystems.arm;
 import static edu.wpi.first.units.Units.*;
 import static frc.robot.Constants.GainsConstants.armGains;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -123,6 +125,24 @@ public class Arm extends SubsystemBase {
 		return new Transform3d(0.0, y, 0.0, new Rotation3d());
 	}
 
+	public double solveArmRot(Pose2d robotPose, Translation3d targetPose, double exitVel, boolean isUpper) {
+		// a_{1}=\arctan\left(\frac{-T.x+\sqrt{T.x^{2}-4\left(\frac{gT.x^{2}}{v^{2}}\cdot\left(\frac{gT.x^{2}}{v^{2}}-T.y\right)\right)}}{2\cdot\frac{gT.x^{2}}{v^{2}}}\right)
+		// \frac{gT.x^{2}}{v^{2}}
+
+		double xDiff = targetPose.toTranslation2d().minus(robotPose.getTranslation()).getNorm();
+		double zDiff = targetPose.getZ();
+
+		double gravity = -9.8;
+		double var = Math.pow(xDiff, 2) * gravity / Math.pow(exitVel, 2);
+		double deriv = Math.pow(xDiff, 2) - 4 * (var * (var - zDiff));
+
+		if (isUpper) {
+			return Math.atan((-xDiff + Math.sqrt(deriv)) / (2 * var));
+		} else {
+			return Math.atan((-xDiff - Math.sqrt(deriv)) / (2 * var));
+		}
+	}
+
 	public SysIdRoutine routine() {
 		return routine;
 	}
@@ -158,20 +178,5 @@ public class Arm extends SubsystemBase {
 		TAXI,
 		/** Source */
 		SOURCE
-	}
-
-	public double solveArmRot(double xDiff, double zDiff, double exitVel, boolean isUpper) {
-		// a_{1}=\arctan\left(\frac{-T.x+\sqrt{T.x^{2}-4\left(\frac{gT.x^{2}}{v^{2}}\cdot\left(\frac{gT.x^{2}}{v^{2}}-T.y\right)\right)}}{2\cdot\frac{gT.x^{2}}{v^{2}}}\right)
-		// \frac{gT.x^{2}}{v^{2}}
-
-		double gravity = -9.8;
-		double var = Math.pow(xDiff, 2) * gravity / Math.pow(exitVel, 2);
-		double deriv = Math.pow(xDiff, 2) - 4 * (var * (var - zDiff));
-
-		if (isUpper) {
-			return Math.atan((-xDiff + Math.sqrt(deriv)) / (2 * var));
-		} else {
-			return Math.atan((-xDiff - Math.sqrt(deriv)) / (2 * var));
-		}
 	}
 }

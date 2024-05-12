@@ -1,12 +1,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.Constants.ShooterConstants;
+import frc.robot.FieldConstants;
 import frc.robot.subsystems.Odometry;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.shooter.Shooter;
 import org.littletonrobotics.junction.Logger;
 
 public class Shoot extends Command {
@@ -36,18 +37,12 @@ public class Shoot extends Command {
 		if (shooter.atVelocity()) {
 			intake.runIndexer();
 
-        	double robotPosX = odometry.getPose().getX();
-        	double robotPosY = odometry.getPose().getY();
-	
-        	double robotTargetX = 0;
-        	double robotTargetY = 0;
-        	double robotTargetZ = 3;
+			double targetRotZ = swerve.solveBodyRot(odometry.getPose(), FieldConstants.Speaker.centerSpeakerOpening);
+			double targetRotY = arm.solveArmRot(odometry.getPose(), FieldConstants.Speaker.centerSpeakerOpening,
+					ShooterConstants.kAutoShooterExitVel.get(), false);
 
-        	double targetRotZ = swerve.solveBodyRot(robotTargetX-robotPosX,robotTargetY-robotPosY);
-        	double targetRotY = arm.solveArmRot(Math.hypot(robotTargetX-robotPosX,robotTargetY-robotPosY),robotTargetZ,ShooterConstants.kAutoShooterExitVel.get(),false);
-        
-        	Logger.recordOutput("AutoTargeter/RotZ", targetRotZ);
-        	Logger.recordOutput("AutoTargeter/RotY", targetRotY);
+			Logger.recordOutput("AutoTargeter/RotZ", targetRotZ);
+			Logger.recordOutput("AutoTargeter/RotY", targetRotY);
 		}
 	}
 

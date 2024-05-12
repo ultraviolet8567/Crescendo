@@ -6,8 +6,6 @@ import static edu.wpi.first.units.Units.Volts;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -39,10 +37,6 @@ public final class Constants {
 	public static final boolean lightsExist = true;
 
 	public static final Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
-
-	public static final Pose2d speaker = (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue)
-			? new Pose2d(1.5, 5.5, new Rotation2d())
-			: new Pose2d(1.5, 5.5, new Rotation2d(180));
 
 	public static final class OIConstants {
 		public static final ControllerType controllerTypeDriver = ControllerType.XBOX;
@@ -78,18 +72,18 @@ public final class Constants {
 	}
 
 	public static final class CameraConstants {
-		public static final Transform3d kRobotToCameraMu = new Transform3d(
+		public static final Transform3d kRobotToCameraStraight = new Transform3d(
 				new Translation3d(Units.inchesToMeters(-10.472), Units.inchesToMeters(-4.102),
 						Units.inchesToMeters(7.591)),
-				new Rotation3d(0, Math.PI/9, Math.PI));
-		public static final Transform3d kRobotToCameraNu = new Transform3d(
+				new Rotation3d(0, Math.PI / 9, Math.PI));
+		public static final Transform3d kRobotToCameraRight = new Transform3d(
 				new Translation3d(Units.inchesToMeters(-9.302), Units.inchesToMeters(-10.747),
 						Units.inchesToMeters(7.014)),
-				new Rotation3d(0, Math.PI/6, 7 * Math.PI / 6));
-		public static final Transform3d kRobotToCameraXi = new Transform3d(
+				new Rotation3d(0, Math.PI / 6, 7 * Math.PI / 6));
+		public static final Transform3d kRobotToCameraLeft = new Transform3d(
 				new Translation3d(Units.inchesToMeters(-9.302), Units.inchesToMeters(10.747),
 						Units.inchesToMeters(7.014)),
-				new Rotation3d(0, Math.PI/6, 5 * Math.PI / 6));
+				new Rotation3d(0, Math.PI / 6, 5 * Math.PI / 6));
 	}
 
 	public static final class ModuleConstants {
@@ -227,9 +221,10 @@ public final class Constants {
 				4000);
 		public static final LoggedTunableNumber kTrapRPM = new LoggedTunableNumber("Shooter/Manual RPM", 1000);
 		public static final LoggedTunableNumber kIdleRPM = new LoggedTunableNumber("Shooter/Idle RPM", 4500);
-		
+
 		// Pls change later
-		public static final LoggedTunableNumber kAutoShooterExitVel = new LoggedTunableNumber("Auto Shooter Exit Velocity",10);
+		public static final LoggedTunableNumber kAutoShooterExitVel = new LoggedTunableNumber(
+				"Auto Shooter Exit Velocity", 10);
 
 		// Constants for auto-aiming
 		public static final boolean ampUpperEntry = false;

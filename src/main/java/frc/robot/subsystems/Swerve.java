@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -97,6 +99,10 @@ public class Swerve extends SubsystemBase {
 				.mapToDouble(SwerveModule::getTurningPosition).toArray();
 	}
 
+	public double solveBodyRot(Pose2d robotPose, Translation3d targetPose) {
+		return Math.atan2(targetPose.getY() - robotPose.getY(), targetPose.getX() - robotPose.getX());
+	}
+
 	public void resetEncoders() {
 		frontLeft.resetEncoders();
 		frontRight.resetEncoders();
@@ -109,9 +115,5 @@ public class Swerve extends SubsystemBase {
 		frontRight.stop();
 		backLeft.stop();
 		backRight.stop();
-	}
-
-	public double solveBodyRot(double xDiff, double yDiff) {
-		return Math.atan2(yDiff, xDiff);
 	}
 }

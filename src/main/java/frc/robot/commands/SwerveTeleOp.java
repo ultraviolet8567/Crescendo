@@ -17,19 +17,18 @@ public class SwerveTeleOp extends Command {
 	private final Swerve swerve;
 	private final Odometry odometry;
 	private final Supplier<Double> xSpdFunction, ySpdFunction, turningSpdFunction;
-	private final Supplier<Boolean> rotationOnFunction, rightBumper;
+	private final Supplier<Boolean> rightBumper;
 	private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
 
 	// First supplier is the forward velocity, then its horizontal velocity, then
 	// rotational velocity
 	public SwerveTeleOp(Swerve swerve, Odometry odometry, Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction,
-			Supplier<Double> turningSpdFunction, Supplier<Boolean> rotationOnFunction, Supplier<Boolean> rightBumper) {
+			Supplier<Double> turningSpdFunction, Supplier<Boolean> rightBumper) {
 		this.swerve = swerve;
 		this.odometry = odometry;
 		this.xSpdFunction = xSpdFunction;
 		this.ySpdFunction = ySpdFunction;
 		this.turningSpdFunction = turningSpdFunction;
-		this.rotationOnFunction = rotationOnFunction;
 		this.rightBumper = rightBumper;
 		this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
 		this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
@@ -47,7 +46,7 @@ public class SwerveTeleOp extends Command {
 		// Get real-time joystick inputs
 		double xSpeed = xSpdFunction.get();
 		double ySpeed = ySpdFunction.get();
-		double turningSpeed = rotationOnFunction.get() ? turningSpdFunction.get() : 0;
+		double turningSpeed = turningSpdFunction.get();
 
 		xSpeed *= (xSpeed > 0) ? (1.0 / 0.8) : (1.0 / 0.9);
 		ySpeed *= (1.0 / 0.9);

@@ -13,12 +13,11 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.FieldConstants;
+import frc.robot.util.AllianceFlipUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,8 +50,8 @@ public class Odometry extends SubsystemBase {
 	private Pigeon2 gyro;
 	private SwerveDriveOdometry odometer;
 
-	private PhotonCamera cameraMu, cameraNu, cameraXi;
-	private PhotonPoseEstimator estimatorMu, estimatorNu, estimatorXi;
+	private PhotonCamera cameraStraight, cameraRight, cameraLeft;
+	private PhotonPoseEstimator estimatorStraight, estimatorRight, estimatorLeft;
 
 	public Odometry(Swerve swerve) {
 		System.out.println("[Init] Creating Odometry");
@@ -64,30 +63,30 @@ public class Odometry extends SubsystemBase {
 		gyro.reset();
 
 		odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getGyrometerHeading(),
-				swerve.getModulePositions(), Constants.speaker);
+				swerve.getModulePositions(), AllianceFlipUtil.apply(new Pose2d(1.5, 5.5, new Rotation2d())));
 
 		/* Vision */
 		// "Mu", ID is 70, back middle
-		// cameraMu = new PhotonCamera("BackStraight");
-		// cameraMu.setDriverMode(false);
+		// cameraStraight = new PhotonCamera("BackStraight");
+		// cameraStraight.setDriverMode(false);
 		// "Nu", ID is 71, back right
-		cameraNu = new PhotonCamera("BackRight");
-		cameraNu.setDriverMode(false);
+		cameraRight = new PhotonCamera("BackRight");
+		cameraRight.setDriverMode(false);
 		// "Xi", ID is 72, back left
-		cameraXi = new PhotonCamera("BackLeft");
-		cameraXi.setDriverMode(false);
+		cameraLeft = new PhotonCamera("BackLeft");
+		cameraLeft.setDriverMode(false);
 
-		// estimatorMu = new PhotonPoseEstimator(fieldLayout,
-		// PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraMu,
+		// estimatorStraight = new PhotonPoseEstimator(fieldLayout,
+		// PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraStraight,
 		// Cameras.robotToCameraMu);
-		estimatorNu = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraNu,
-				CameraConstants.kRobotToCameraNu);
-		estimatorXi = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraXi,
-				CameraConstants.kRobotToCameraXi);
+		estimatorRight = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraRight,
+				CameraConstants.kRobotToCameraRight);
+		estimatorLeft = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraLeft,
+				CameraConstants.kRobotToCameraLeft);
 
-		// estimatorMu.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
-		estimatorNu.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
-		estimatorXi.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
+		// estimatorStraight.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
+		estimatorRight.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
+		estimatorLeft.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
 
 		/* Odometry */
 		poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics, gyro.getRotation2d(),
@@ -107,18 +106,6 @@ public class Odometry extends SubsystemBase {
 		odometer.update(getGyrometerHeading(), swerve.getModulePositions());
 
 		/* Vision */
-		// List<EstimatedRobotPose> estimatedPoses = getVisionEstimatedPoses();
-
-		// int counter = 0;
-		// for (EstimatedRobotPose estimatedPose : estimatedPoses) {
-		// poseEstimator.addVisionMeasurement(estimatedPose.estimatedPose.toPose2d(),
-		// estimatedPose.timestampSeconds);
-
-		// Logger.recordOutput("VisionPoses/" + counter,
-		// estimatedPoses.get(counter).estimatedPose.toPose2d());
-		// counter++;
-		// }
-
 		updateVisionPoses();
 
 		/* Odometry */
@@ -129,8 +116,9 @@ public class Odometry extends SubsystemBase {
 	// List<EstimatedRobotPose> estimatedPoses = new
 	// ArrayList<EstimatedRobotPose>();
 
-	// // TODO: Put estimatorMu back when back-straight camera wired
-	// for (PhotonPoseEstimator estimator : List.of(estimatorNu, estimatorXi)) {
+	// // TODO: Put estimatorStraight back when back-straight camera wired
+	// for (PhotonPoseEstimator estimator : List.of(estimatorRight, estimatorLeft))
+	// {
 	// Optional<EstimatedRobotPose> optionalEstimatedPose = estimator.update();
 	// if (optionalEstimatedPose.isPresent()) {
 	// estimatedPoses.add(optionalEstimatedPose.get());
@@ -141,65 +129,63 @@ public class Odometry extends SubsystemBase {
 	// }
 
 	public void updateVisionPoses() {
-		Optional<EstimatedRobotPose> nuEstimatedPoses = estimatorNu.update();
-		estimatorNu.setReferencePose(poseEstimator.getEstimatedPosition());
-		Optional<EstimatedRobotPose> xiEstimatedPoses = estimatorXi.update();
-		estimatorXi.setReferencePose(poseEstimator.getEstimatedPosition());
+		Optional<EstimatedRobotPose> estimatedPosesRight = estimatorRight.update();
+		estimatorRight.setReferencePose(poseEstimator.getEstimatedPosition());
+		Optional<EstimatedRobotPose> estimatedPosesLeft = estimatorLeft.update();
+		estimatorLeft.setReferencePose(poseEstimator.getEstimatedPosition());
 
-		List<Pose3d> nuOptions = new ArrayList<Pose3d>();
-		List<Pose3d> xiOptions = new ArrayList<Pose3d>();
+		List<Pose3d> optionsRight = new ArrayList<Pose3d>();
+		List<Pose3d> optionsLeft = new ArrayList<Pose3d>();
 
-		// Create a list of Pose3d options for Nu/back right camera
-		if (nuEstimatedPoses.isPresent()) {
-			if (nuEstimatedPoses.get().strategy == PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR) {
-				nuOptions.add(nuEstimatedPoses.get().estimatedPose);
+		// Create a list of Pose3d options for back right camera
+		if (estimatedPosesRight.isPresent()) {
+			if (estimatedPosesRight.get().strategy == PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR) {
+				optionsRight.add(estimatedPosesRight.get().estimatedPose);
 			} else {
-				nuOptions = getAmbiguousPoses(cameraNu.getLatestResult(), CameraConstants.kRobotToCameraNu);
+				optionsRight = getAmbiguousPoses(cameraRight.getLatestResult(), CameraConstants.kRobotToCameraRight);
 			}
 		}
 
-		// Create a list of Pose3d options for the Xi/back left camera
-		if (xiEstimatedPoses.isPresent()) {
-			if (xiEstimatedPoses.get().strategy == PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR) {
-				xiOptions.add(xiEstimatedPoses.get().estimatedPose);
+		// Create a list of Pose3d options for the back left camera
+		if (estimatedPosesLeft.isPresent()) {
+			if (estimatedPosesLeft.get().strategy == PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR) {
+				optionsLeft.add(estimatedPosesLeft.get().estimatedPose);
 			} else {
-				xiOptions = getAmbiguousPoses(cameraXi.getLatestResult(), CameraConstants.kRobotToCameraXi);
+				optionsLeft = getAmbiguousPoses(cameraLeft.getLatestResult(), CameraConstants.kRobotToCameraLeft);
 			}
 		}
 
-		Pose3d bestNuPose3d = new Pose3d();
-		Pose3d bestXiPose3d = new Pose3d();
-		double minDistance = 1e6;
+		Pose2d bestRightPose = new Pose2d();
+		Pose2d bestLeftPose = new Pose2d();
+		double minDistance = Double.MAX_VALUE;
 
-		if (!nuEstimatedPoses.isPresent() && xiEstimatedPoses.isPresent()) {
-			Pose2d pose = xiEstimatedPoses.get().estimatedPose.toPose2d();
-			poseEstimator.addVisionMeasurement(pose, cameraNu.getLatestResult().getTimestampSeconds());
-		} else if (!xiEstimatedPoses.isPresent() && nuEstimatedPoses.isPresent()) {
-			Pose2d pose = nuEstimatedPoses.get().estimatedPose.toPose2d();
-			poseEstimator.addVisionMeasurement(pose, cameraNu.getLatestResult().getTimestampSeconds());
-		} else if (nuEstimatedPoses.isPresent() && xiEstimatedPoses.isPresent()) {
-			// compare all right poses and left poses to each other to find correct robot
-			// pose
-			for (Pose3d nuPose : nuOptions) {
-				for (Pose3d xiPose : xiOptions) {
-					double distance = calculateDifference(nuPose, xiPose);
+		if (!estimatedPosesRight.isPresent() && estimatedPosesLeft.isPresent()) {
+			bestRightPose = estimatedPosesLeft.get().estimatedPose.toPose2d();
+			poseEstimator.addVisionMeasurement(bestRightPose, estimatedPosesRight.get().timestampSeconds);
+		} else if (!estimatedPosesLeft.isPresent() && estimatedPosesRight.isPresent()) {
+			bestLeftPose = estimatedPosesRight.get().estimatedPose.toPose2d();
+			poseEstimator.addVisionMeasurement(bestLeftPose, estimatedPosesLeft.get().timestampSeconds);
+		} else if (estimatedPosesRight.isPresent() && estimatedPosesLeft.isPresent()) {
+			// compare all left and right to each other to find correct robot pose
+			for (Pose3d poseRight : optionsRight) {
+				for (Pose3d poseLeft : optionsLeft) {
+					double distance = calculateDifference(poseRight, poseLeft);
 
-					// makes the smallest difference the measurement
+					// Makes the smallest difference the measurement
 					if (distance < minDistance) {
-						bestNuPose3d = nuPose;
-						bestXiPose3d = xiPose;
+						bestRightPose = poseRight.toPose2d();
+						bestLeftPose = poseLeft.toPose2d();
 						minDistance = distance;
 					}
 				}
 			}
 
-			poseEstimator.addVisionMeasurement(bestXiPose3d.toPose2d(),
-					cameraNu.getLatestResult().getTimestampSeconds());
-			poseEstimator.addVisionMeasurement(bestNuPose3d.toPose2d(),
-					cameraXi.getLatestResult().getTimestampSeconds());
+			poseEstimator.addVisionMeasurement(bestRightPose, estimatedPosesRight.get().timestampSeconds);
+			poseEstimator.addVisionMeasurement(bestLeftPose, estimatedPosesLeft.get().timestampSeconds);
 		}
 
-		return;
+		Logger.recordOutput("Odometry/Vision/LeftPose", bestLeftPose);
+		Logger.recordOutput("Odometry/Vision/RightPose", bestRightPose);
 	}
 
 	private ArrayList<Pose3d> getAmbiguousPoses(PhotonPipelineResult result, Transform3d robotToCamera) {
@@ -233,9 +219,8 @@ public class Odometry extends SubsystemBase {
 	}
 
 	public Rotation2d getSpeakerHeading() {
-		int centerSpeakerTagID = (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue) ? 7 : 4;
-
-		return getPose().minus(fieldLayout.getTagPose(centerSpeakerTagID).get().toPose2d()).getRotation();
+		return FieldConstants.Speaker.centerSpeakerOpening.toTranslation2d().minus(getPose().getTranslation())
+				.getAngle();
 	}
 
 	public Pose2d getPose() {

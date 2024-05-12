@@ -6,7 +6,6 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -23,7 +22,6 @@ import frc.robot.subsystems.arm.Arm.ArmMode;
 import frc.robot.subsystems.climber.*;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.shooter.*;
-import frc.robot.util.ControllerIO;
 
 /**
  * This class is where the bulk of the robot should be declared. The structure
@@ -41,8 +39,6 @@ public class RobotContainer {
 	private final AutoChooser autoChooser;
 
 	// Joysticks
-	private static final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
-	private static final Joystick operatorJoystick = new Joystick(OIConstants.kOperatorControllerPort);
 	private static final CommandXboxController driverController = new CommandXboxController(
 			OIConstants.kDriverControllerPort);
 	private static final CommandXboxController operatorController = new CommandXboxController(
@@ -117,16 +113,11 @@ public class RobotContainer {
 		autoChooser = new AutoChooser();
 
 		// Configure default commands for driving and arm movement
-		swerve.setDefaultCommand(new SwerveTeleOp(swerve, odometry,
-				() -> ControllerIO.inversionY() * driverJoystick.getRawAxis(ControllerIO.getLeftY()),
-				() -> ControllerIO.inversionX() * driverJoystick.getRawAxis(ControllerIO.getLeftX()),
-				() -> ControllerIO.inversionRot() * driverJoystick.getRawAxis(ControllerIO.getRot()),
-				() -> OIConstants.controllerTypeDriver == ControllerType.JOYSTICK
-						? driverJoystick.getRawButton(ControllerIO.getTrigger())
-						: true,
-				() -> driverJoystick.getRawButton(XboxController.Button.kRightBumper.value)));
+		swerve.setDefaultCommand(new SwerveTeleOp(swerve, odometry, () -> -driverController.getLeftY(),
+				() -> -driverController.getLeftX(), () -> -driverController.getRightX(),
+				() -> driverController.getHID().getRightBumper()));
 
-		arm.setDefaultCommand(new MoveArm(arm, () -> operatorJoystick.getRawAxis(ControllerIO.getLeftY())));
+		arm.setDefaultCommand(new MoveArm(arm, () -> operatorController.getLeftY()));
 
 		// Configure button bindings
 		configureBindings();
