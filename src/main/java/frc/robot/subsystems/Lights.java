@@ -42,7 +42,7 @@ public class Lights extends VirtualSubsystem {
 	private static final int rightLength = 19;
 	private static final int backLength = 13;
 	private static final int frontLength = rightLength + leftLength;
-	private static final int length = 86;
+	private static final int length = 20;
 	private static final int bottomLength = 8;
 	private static final int minLoopCycleCount = 10;
 	private static final double lowBatteryVoltage = 10.0;
@@ -67,7 +67,7 @@ public class Lights extends VirtualSubsystem {
 	private static final double waveAllianceDuration = 2.0;
 
 	private Lights() {
-		leds = new AddressableLED(1);
+		leds = new AddressableLED(0);
 		buffer = new AddressableLEDBuffer(length);
 
 		leds.setLength(length);
@@ -84,7 +84,7 @@ public class Lights extends VirtualSubsystem {
 		// Indicate robot is booting up
 		loadingNotifier = new Notifier(() -> {
 			synchronized (this) {
-				breath(Section.FULL, Color.kPurple, Color.kBlack, 0.25, System.currentTimeMillis() / 1000.0);
+				breath(Section.FULL, Color.kPurple, Color.kBlack, 0.4, System.currentTimeMillis() / 1000.0);
 				leds.setData(buffer);
 			}
 		});
@@ -113,7 +113,7 @@ public class Lights extends VirtualSubsystem {
 			// Disabled
 			if (state == RobotState.DISABLED) {
 				// Purple and yellow stripes
-				stripes(Section.FULL, List.of(Color.kPurple, Color.kMediumPurple), stripeLength, stripeDuration);
+				stripes(Section.FULL, List.of(Color.kPurple, Color.kGoldenrod), stripeLength, stripeDuration);
 			}
 
 			// Autonomous
@@ -148,6 +148,8 @@ public class Lights extends VirtualSubsystem {
 			if (lowBattery) {
 				strobe(Section.BOTTOM, Color.kRed);
 			}
+
+			rainbow(Section.FULL);
 
 			// Update LEDs
 			leds.setData(buffer);
