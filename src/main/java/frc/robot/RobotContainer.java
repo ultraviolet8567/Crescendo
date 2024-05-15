@@ -86,7 +86,7 @@ public class RobotContainer {
 		odometry = new Odometry(swerve);
 
 		// Configure the PathPlanner auto-builder
-		AutoBuilder.configureHolonomic(odometry::getGyrometerPose, odometry::resetGyrometerPose,
+		AutoBuilder.configureHolonomic(odometry::getOdometerPose, odometry::resetOdometerPose,
 				swerve::getRobotRelativeSpeeds, swerve::setModuleStates, DriveConstants.kHolonomicConfig, () -> {
 					var alliance = DriverStation.getAlliance();
 					if (alliance.isPresent()) {

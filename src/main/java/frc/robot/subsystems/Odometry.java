@@ -16,6 +16,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.OdometryConstants;
 import frc.robot.FieldConstants;
 import frc.robot.util.AllianceFlipUtil;
 import java.util.ArrayList;
@@ -105,11 +106,19 @@ public class Odometry extends SubsystemBase {
 		/* Gyro */
 		odometer.update(getGyrometerHeading(), swerve.getModulePositions());
 
-		/* Vision */
-		updateVisionPoses();
-
 		/* Odometry */
 		poseEstimator.update(gyro.getRotation2d(), swerve.getModulePositions());
+
+		/* Vision */
+		Pose2d visionPose = updateVisionPoses();
+		Pose2d odometerPose = odometer.getPoseMeters();
+
+		if (visionPose.getTranslation()
+				.getDistance(odometerPose.getTranslation()) < OdometryConstants.kOdometerDriftCorrection) {
+			resetOdometerPose(visionPose);
+			resetPose(visionPose);
+		}
+
 	}
 
 	// public List<EstimatedRobotPose> getVisionEstimatedPoses() {
@@ -128,7 +137,7 @@ public class Odometry extends SubsystemBase {
 	// return estimatedPoses;
 	// }
 
-	public void updateVisionPoses() {
+	public Pose2d updateVisionPoses() {
 		Optional<EstimatedRobotPose> estimatedPosesRight = estimatorRight.update();
 		estimatorRight.setReferencePose(poseEstimator.getEstimatedPosition());
 		Optional<EstimatedRobotPose> estimatedPosesLeft = estimatorLeft.update();
@@ -186,6 +195,11 @@ public class Odometry extends SubsystemBase {
 
 		Logger.recordOutput("Odometry/Vision/LeftPose", bestLeftPose);
 		Logger.recordOutput("Odometry/Vision/RightPose", bestRightPose);
+
+		double xSum = bestLeftPose.getX() + bestRightPose.getX();
+		double ySum = bestLeftPose.getY() + bestRightPose.getY();
+
+		return new Pose2d(xSum / 2, ySum / 2, bestLeftPose.getRotation());
 	}
 
 	private ArrayList<Pose3d> getAmbiguousPoses(PhotonPipelineResult result, Transform3d robotToCamera) {
@@ -227,7 +241,7 @@ public class Odometry extends SubsystemBase {
 		return poseEstimator.getEstimatedPosition();
 	}
 
-	public Pose2d getGyrometerPose() {
+	public Pose2d getOdometerPose() {
 		return odometer.getPoseMeters();
 	}
 
@@ -247,7 +261,7 @@ public class Odometry extends SubsystemBase {
 		poseEstimator.resetPosition(gyro.getRotation2d(), swerve.getModulePositions(), pose);
 	}
 
-	public void resetGyrometerPose(Pose2d pose) {
+	public void resetOdometerPose(Pose2d pose) {
 		odometer.resetPosition(getGyrometerHeading(), swerve.getModulePositions(), pose);
 	}
 

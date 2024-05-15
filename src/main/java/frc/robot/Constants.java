@@ -99,6 +99,10 @@ public final class Constants {
 		public static final double kPTurning = 0.5;
 	}
 
+	public static final class OdometryConstants {
+		public static final double kOdometerDriftCorrection = 0.25;
+	}
+
 	public static final class DriveConstants {
 		// Distance between right and left wheels:
 		public static final double kTrackWidth = Units.inchesToMeters(20.75);
