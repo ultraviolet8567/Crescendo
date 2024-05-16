@@ -28,8 +28,12 @@ public final class Constants {
 	 * - Left = y+ - Counterclockwise = z+
 	 */
 
-	public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
-	public static final RobotType currentRobot = (currentMode == Mode.REAL) ? RobotType.REALBOT : RobotType.SIMBOT;
+	public static final boolean isDemo = true;
+
+	public static final Mode currentMode = RobotBase.isReal() ? (isDemo ? Mode.DEMO : Mode.REAL) : Mode.SIM;
+	public static final RobotType currentRobot = (currentMode == Mode.REAL || currentMode == Mode.DEMO)
+			? RobotType.REALBOT
+			: RobotType.SIMBOT;
 	public static final boolean tuningMode = false;
 
 	public static final ModuleType powerDistributionType = ModuleType.kRev;
@@ -140,8 +144,26 @@ public final class Constants {
 		public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.452 - 0.01 + 0.046 - 0.016 + 0.014;
 		public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.132 - 0.064 + 0.017 - 0.012 - 0.017;
 
-		public static final double kPhysicalMaxSpeedMetersPerSecond = 4.5;
-		public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 3 * Math.PI;
+		/*
+		 * Demo Constants + Real Constants
+		 */
+
+		public static final double kDemoPhysicalMaxSpeedMetersPerSecond = 2;
+		public static final double kDemoPhysicalMaxAngularSpeedRadiansPerSecond = 1.5 * Math.PI;
+
+		public static final double kRealPhysicalMaxSpeedMetersPerSecond = 4.5;
+		public static final double kRealPhysicalMaxAngularSpeedRadiansPerSecond = 3 * Math.PI;
+
+		/*
+		 * End of Demo/Real Constants
+		 */
+
+		public static final double kPhysicalMaxSpeedMetersPerSecond = currentMode == Mode.DEMO
+				? kDemoPhysicalMaxSpeedMetersPerSecond
+				: kRealPhysicalMaxSpeedMetersPerSecond;
+		public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = currentMode == Mode.DEMO
+				? kDemoPhysicalMaxAngularSpeedRadiansPerSecond
+				: kRealPhysicalMaxAngularSpeedRadiansPerSecond;;
 
 		public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond;
 		public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond
@@ -284,7 +306,9 @@ public final class Constants {
 		/** Running a simulator */
 		SIM,
 		/** Replaying from a log file */
-		REPLAY
+		REPLAY,
+		/** Run on half the performance for demonstration purposes */
+		DEMO
 	}
 
 	public static enum ControllerType {

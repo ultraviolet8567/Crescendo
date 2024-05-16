@@ -60,32 +60,36 @@ public class Robot extends LoggedRobot {
 		Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
 		Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
 		switch (BuildConstants.DIRTY) {
-			case 0 :
+			case 0 -> {
 				Logger.recordMetadata("GitDirty", "All changes committed");
-				break;
-			case 1 :
+			}
+			case 1 -> {
 				Logger.recordMetadata("GitDirty", "Uncomitted changes");
-				break;
-			default :
+			}
+			default -> {
 				Logger.recordMetadata("GitDirty", "Unknown");
-				break;
+			}
 		}
 
 		// Set up data receivers & replay source
 		switch (Constants.currentMode) {
-			case REAL :
+			case REAL -> {
 				Logger.addDataReceiver(new WPILOGWriter("/home/lvuser/logs"));
 				Logger.addDataReceiver(new NT4Publisher());
-				break;
-			case SIM :
+			}
+			case DEMO -> {
+				// Logger.addDataReceiver(new WPILOGWriter("/home/lvuser/logs"));
 				Logger.addDataReceiver(new NT4Publisher());
-				break;
-			case REPLAY :
+			}
+			case SIM -> {
+				Logger.addDataReceiver(new NT4Publisher());
+			}
+			case REPLAY -> {
 				setUseTiming(false);
 				String logpath = LogFileUtil.findReplayLog();
 				Logger.setReplaySource(new WPILOGReader(logpath));
 				Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logpath, "_sim")));
-				break;
+			}
 		}
 
 		// Start AdvantageKit logger

@@ -114,9 +114,8 @@ public class Odometry extends SubsystemBase {
 		Pose2d odometerPose = odometer.getPoseMeters();
 
 		if (visionPose.getTranslation()
-				.getDistance(odometerPose.getTranslation()) < OdometryConstants.kOdometerDriftCorrection) {
+				.getDistance(odometerPose.getTranslation()) > OdometryConstants.kOdometerDriftCorrection) {
 			resetOdometerPose(visionPose);
-			resetPose(visionPose);
 		}
 
 	}
