@@ -9,6 +9,7 @@ public class RetractClimber extends Command {
 
 	public RetractClimber(Climber climber, String side) {
 		this.climber = climber;
+		this.side = side;
 	}
 
 	@Override

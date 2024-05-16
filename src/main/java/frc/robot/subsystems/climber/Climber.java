@@ -47,7 +47,7 @@ public class Climber extends SubsystemBase {
 
 	public void retractLeft() {
 		if (leftClimberWithinRange() || leftClimberGoingIntoRange(1)) {
-			io.setLeftInputVoltage(ClimberConstants.kClimbVoltage.get());
+			io.setLeftInputVoltage(-ClimberConstants.kClimbVoltage.get());
 		} else {
 			io.stopLeft();
 		}
@@ -55,7 +55,7 @@ public class Climber extends SubsystemBase {
 
 	public void retractRight() {
 		if (rightClimberWithinRange() || rightClimberGoingIntoRange(1)) {
-			io.setRightInputVoltage(ClimberConstants.kClimbVoltage.get());
+			io.setRightInputVoltage(-ClimberConstants.kClimbVoltage.get());
 		} else {
 			io.stopRight();
 		}
