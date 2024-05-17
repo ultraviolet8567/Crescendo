@@ -19,8 +19,6 @@ import org.littletonrobotics.junction.Logger;
 public class Lights extends VirtualSubsystem {
 	private static Lights instance;
 
-	private GenericEntry demoToggle;
-
 	public static Lights getInstance() {
 		if (instance == null)
 			instance = new Lights();
@@ -42,12 +40,9 @@ public class Lights extends VirtualSubsystem {
 	private final AddressableLED leds;
 	private final AddressableLEDBuffer buffer;
 	private final Notifier loadingNotifier;
+	private GenericEntry demoToggle;
 
 	// Constants
-	private static final int leftLength = 19;
-	private static final int rightLength = 19;
-	private static final int backLength = 13;
-	private static final int frontLength = rightLength + leftLength;
 	private static final int length = 20;
 	private static final int bottomLength = 8;
 	private static final int minLoopCycleCount = 10;
@@ -96,17 +91,21 @@ public class Lights extends VirtualSubsystem {
 		});
 		loadingNotifier.startPeriodic(0.02);
 
-		isDemo = demoToggle.getBoolean(false);
+		demoToggle = Shuffleboard.getTab("Main").add("Demo", false).withWidget(BuiltInWidgets.kToggleButton)
+				.withPosition(4, 0).getEntry();
 	}
 
 	public void periodic() {
 		loadingNotifier.stop();
 
 		Logger.recordOutput("RobotState/HasNote", hasNote);
+		Logger.recordOutput("RobotState/DemoMode", isDemo);
 
 		if (DriverStation.getAlliance().isPresent()) {
 			alliance = DriverStation.getAlliance().get();
 		}
+
+		isDemo = demoToggle.getBoolean(false);
 
 		if (Constants.lightsExist) {
 			// Exit during initial cycles
@@ -173,41 +172,26 @@ public class Lights extends VirtualSubsystem {
 	}
 
 	private void shimmer(Section section, Color color) {
-		if (section == Section.BOTTOM) {
-			shimmer(Section.LEFTBOTTOM, color);
-			shimmer(Section.RIGHTBOTTOM, color);
-		} else {
-			for (int i = section.start(); i < section.end(); i++) {
-				double brightnessFactor = shimmerExtremeness + Math.sin((loopCycleCount + i) * 0.01) * shimmerSpeed;
-				buffer.setLED(i, new Color(color.red * brightnessFactor, color.green * brightnessFactor,
-						color.blue * brightnessFactor));
-			}
+		for (int i = section.start(); i < section.end(); i++) {
+			double brightnessFactor = shimmerExtremeness + Math.sin((loopCycleCount + i) * 0.01) * shimmerSpeed;
+			buffer.setLED(i, new Color(color.red * brightnessFactor, color.green * brightnessFactor,
+					color.blue * brightnessFactor));
 		}
 	}
 
 	private void rainbow(Section section) {
-		if (section == Section.BOTTOM) {
-			rainbow(Section.LEFTBOTTOM);
-			rainbow(Section.RIGHTBOTTOM);
-		} else {
-			for (int i = section.start(); i < section.end(); i++) {
-				int hue = ((loopCycleCount * 3) % 180 + (i * 180 / leftLength)) % 180;
-				buffer.setHSV(i, hue, 255, 128);
-			}
+		for (int i = section.start(); i < section.end(); i++) {
+			int hue = ((loopCycleCount * 3) % 180 + (i * 180 / length)) % 180;
+			buffer.setHSV(i, hue, 255, 128);
 		}
 	}
 
 	private void strobe(Section section, Color color) {
-		if (section == Section.BOTTOM) {
-			strobe(Section.LEFTBOTTOM, color);
-			strobe(Section.RIGHTBOTTOM, color);
-		} else {
-			for (int i = section.start(); i < section.end(); i++) {
-				if (loopCycleCount % (strobeTickSkip) < strobeSlowDuration) {
-					buffer.setLED(i, color);
-				} else {
-					buffer.setHSV(i, 0, 0, 0);
-				}
+		for (int i = section.start(); i < section.end(); i++) {
+			if (loopCycleCount % (strobeTickSkip) < strobeSlowDuration) {
+				buffer.setLED(i, color);
+			} else {
+				buffer.setHSV(i, 0, 0, 0);
 			}
 		}
 	}
@@ -256,28 +240,16 @@ public class Lights extends VirtualSubsystem {
 	}
 
 	public static enum Section {
-		FULL, BOTTOM, UPPER, LEFTUPPER, LEFTBOTTOM, LEFTFULL, RIGHTUPPER, RIGHTBOTTOM, RIGHTFULL, LEFTSMALL, RIGHTSMALL, LEFTBACK, RIGHTBACK;
+		FULL, BOTTOM, UPPER;
 
 		private int start() {
 			switch (this) {
 				case FULL :
 					return 0;
-				case LEFTUPPER :
+				case BOTTOM :
+					return 0;
+				case UPPER :
 					return bottomLength;
-				case LEFTBOTTOM :
-					return 0;
-				case LEFTFULL :
-					return 0;
-				case RIGHTUPPER :
-					return bottomLength + leftLength;
-				case RIGHTBOTTOM :
-					return 1 + leftLength;
-				case RIGHTFULL :
-					return 0 + leftLength;
-				case LEFTBACK :
-					return 1 + frontLength;
-				case RIGHTBACK :
-					return 1 + frontLength + backLength;
 				default :
 					return 0;
 			}
@@ -287,22 +259,10 @@ public class Lights extends VirtualSubsystem {
 			switch (this) {
 				case FULL :
 					return length;
-				case LEFTUPPER :
-					return leftLength;
-				case LEFTBOTTOM :
+				case BOTTOM :
 					return bottomLength;
-				case LEFTFULL :
-					return leftLength;
-				case RIGHTUPPER :
-					return frontLength;
-				case RIGHTBOTTOM :
-					return leftLength + bottomLength + 1;
-				case RIGHTFULL :
-					return frontLength;
-				case LEFTBACK :
-					return frontLength + backLength;
-				case RIGHTBACK :
-					return frontLength + backLength + backLength;
+				case UPPER :
+					return length;
 				default :
 					return 0;
 			}

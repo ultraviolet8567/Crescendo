@@ -6,20 +6,15 @@ import static edu.wpi.first.units.Units.Volts;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.subsystems.Lights;
 import frc.robot.util.LoggedTunableNumber;
 
 public final class Constants {
@@ -32,16 +27,15 @@ public final class Constants {
 	 */
 
 	public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
-	public static final RobotType currentRobot = (currentMode == Mode.REAL)
-			? RobotType.REALBOT
-			: RobotType.SIMBOT;
+	public static final RobotType currentRobot = (currentMode == Mode.REAL) ? RobotType.REALBOT : RobotType.SIMBOT;
 	public static final boolean tuningMode = false;
 
 	public static final ModuleType powerDistributionType = ModuleType.kRev;
 	public static final boolean fieldOriented = true;
 	public static final boolean lightsExist = true;
 
-	// public static final Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+	// public static final Alliance alliance =
+	// DriverStation.getAlliance().orElse(Alliance.Blue);
 
 	public static final class OIConstants {
 		public static final ControllerType controllerTypeDriver = ControllerType.XBOX;
@@ -107,8 +101,8 @@ public final class Constants {
 	public static final class OdometryConstants {
 		public static final double kOdometerDriftCorrection = 0.25;
 
-		public static final Translation3d kBlueStagePosition = new Translation3d(0,5.551894,2.457194);
-		public static final Translation3d kRedStagePosition = new Translation3d(16.518826,5.551894,2.457194);
+		public static final Translation3d kBlueStagePosition = new Translation3d(0, 5.551894, 2.457194);
+		public static final Translation3d kRedStagePosition = new Translation3d(16.518826, 5.551894, 2.457194);
 
 		public static final double kRobotElevation = 8.259413;
 	}
@@ -159,11 +153,13 @@ public final class Constants {
 		public static final double kRealPhysicalMaxAngularSpeedRadiansPerSecond = 3 * Math.PI;
 
 		public static final double kDemoTeleDriveMaxSpeedMetersPerSecond = kDemoPhysicalMaxSpeedMetersPerSecond;
-		public static final double kDemoTeleDriveMaxAngularSpeedRadiansPerSecond = kDemoPhysicalMaxSpeedMetersPerSecond* 0.4;
-		
+		public static final double kDemoTeleDriveMaxAngularSpeedRadiansPerSecond = kDemoPhysicalMaxSpeedMetersPerSecond
+				* 0.4;
+
 		public static final double kRealTeleDriveMaxSpeedMetersPerSecond = kRealPhysicalMaxSpeedMetersPerSecond;
-		public static final double kRealTeleDriveMaxAngularSpeedRadiansPerSecond = kRealPhysicalMaxSpeedMetersPerSecond* 0.4;
-		
+		public static final double kRealTeleDriveMaxAngularSpeedRadiansPerSecond = kRealPhysicalMaxSpeedMetersPerSecond
+				* 0.4;
+
 		// Demo Constants + Real Constants End
 
 		public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;

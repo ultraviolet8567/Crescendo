@@ -76,13 +76,16 @@ public class SwerveTeleOp extends Command {
 		// acceleration
 		// And scale joystick input to m/s or rad/sec
 
-		double teleMaxSpeed = Lights.getInstance().isDemo ? DriveConstants.kDemoTeleDriveMaxSpeedMetersPerSecond : DriveConstants.kRealTeleDriveMaxSpeedMetersPerSecond;
-		double teleMaxAngularSpeed = Lights.getInstance().isDemo ? DriveConstants.kDemoTeleDriveMaxAngularSpeedRadiansPerSecond : DriveConstants.kRealTeleDriveMaxAngularSpeedRadiansPerSecond;
+		double teleMaxSpeed = Lights.getInstance().isDemo
+				? DriveConstants.kDemoTeleDriveMaxSpeedMetersPerSecond
+				: DriveConstants.kRealTeleDriveMaxSpeedMetersPerSecond;
+		double teleMaxAngularSpeed = Lights.getInstance().isDemo
+				? DriveConstants.kDemoTeleDriveMaxAngularSpeedRadiansPerSecond
+				: DriveConstants.kRealTeleDriveMaxAngularSpeedRadiansPerSecond;
 
 		xSpeed = xLimiter.calculate(xSpeed) * teleMaxSpeed;
 		ySpeed = yLimiter.calculate(ySpeed) * teleMaxSpeed;
-		turningSpeed = turningLimiter.calculate(turningSpeed)
-				* teleMaxAngularSpeed;
+		turningSpeed = turningLimiter.calculate(turningSpeed) * teleMaxAngularSpeed;
 
 		ChassisSpeeds chassisSpeeds;
 		if (Constants.fieldOriented) {
