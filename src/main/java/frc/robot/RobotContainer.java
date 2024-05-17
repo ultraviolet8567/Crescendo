@@ -62,12 +62,6 @@ public class RobotContainer {
 				intake = new Intake(new IntakeIOSparkMax());
 				shooter = new Shooter(new ShooterIOSparkMax(), arm);
 			}
-			case DEMO -> {
-				arm = new Arm(new ArmIOSparkMax());
-				climber = new Climber(new ClimberIOSim()); // Use simulated climber until electronics installed
-				intake = new Intake(new IntakeIOSparkMax());
-				shooter = new Shooter(new ShooterIOSparkMax(), arm);
-			}
 			case SIM -> {
 				arm = new Arm(new ArmIOSim());
 				climber = new Climber(new ClimberIOSim());

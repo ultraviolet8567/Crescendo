@@ -9,6 +9,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.Odometry;
 import frc.robot.subsystems.Swerve;
 import java.util.function.Supplier;
@@ -74,10 +75,14 @@ public class SwerveTeleOp extends Command {
 		// Make the driving smoother by using a slew rate limiter to minimize
 		// acceleration
 		// And scale joystick input to m/s or rad/sec
-		xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-		ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+
+		double teleMaxSpeed = Lights.getInstance().isDemo ? DriveConstants.kDemoTeleDriveMaxSpeedMetersPerSecond : DriveConstants.kRealTeleDriveMaxSpeedMetersPerSecond;
+		double teleMaxAngularSpeed = Lights.getInstance().isDemo ? DriveConstants.kDemoTeleDriveMaxAngularSpeedRadiansPerSecond : DriveConstants.kRealTeleDriveMaxAngularSpeedRadiansPerSecond;
+
+		xSpeed = xLimiter.calculate(xSpeed) * teleMaxSpeed;
+		ySpeed = yLimiter.calculate(ySpeed) * teleMaxSpeed;
 		turningSpeed = turningLimiter.calculate(turningSpeed)
-				* DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+				* teleMaxAngularSpeed;
 
 		ChassisSpeeds chassisSpeeds;
 		if (Constants.fieldOriented) {

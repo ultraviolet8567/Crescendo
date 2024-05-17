@@ -77,10 +77,6 @@ public class Robot extends LoggedRobot {
 				Logger.addDataReceiver(new WPILOGWriter("/home/lvuser/logs"));
 				Logger.addDataReceiver(new NT4Publisher());
 			}
-			case DEMO -> {
-				// Logger.addDataReceiver(new WPILOGWriter("/home/lvuser/logs"));
-				Logger.addDataReceiver(new NT4Publisher());
-			}
 			case SIM -> {
 				Logger.addDataReceiver(new NT4Publisher());
 			}

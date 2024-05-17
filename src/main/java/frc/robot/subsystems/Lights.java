@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -7,6 +8,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.Constants;
 import frc.robot.util.VirtualSubsystem;
@@ -15,6 +18,8 @@ import org.littletonrobotics.junction.Logger;
 
 public class Lights extends VirtualSubsystem {
 	private static Lights instance;
+
+	private GenericEntry demoToggle;
 
 	public static Lights getInstance() {
 		if (instance == null)
@@ -31,6 +36,7 @@ public class Lights extends VirtualSubsystem {
 	public double autoFinishedTime = 0.0;
 	public RobotState state = RobotState.DISABLED;
 	public Alliance alliance = Alliance.Blue;
+	public boolean isDemo = false;
 
 	// LED IO
 	private final AddressableLED leds;
@@ -89,6 +95,8 @@ public class Lights extends VirtualSubsystem {
 			}
 		});
 		loadingNotifier.startPeriodic(0.02);
+
+		isDemo = demoToggle.getBoolean(false);
 	}
 
 	public void periodic() {
@@ -154,6 +162,8 @@ public class Lights extends VirtualSubsystem {
 			// Update LEDs
 			leds.setData(buffer);
 		}
+
+		isDemo = demoToggle.getBoolean(false);
 	}
 
 	public void solid(Section section, Color color) {

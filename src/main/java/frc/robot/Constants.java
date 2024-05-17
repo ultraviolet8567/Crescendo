@@ -6,6 +6,8 @@ import static edu.wpi.first.units.Units.Volts;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -17,6 +19,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.subsystems.Lights;
 import frc.robot.util.LoggedTunableNumber;
 
 public final class Constants {
@@ -28,10 +31,8 @@ public final class Constants {
 	 * - Left = y+ - Counterclockwise = z+
 	 */
 
-	public static final boolean isDemo = true;
-
-	public static final Mode currentMode = RobotBase.isReal() ? (isDemo ? Mode.DEMO : Mode.REAL) : Mode.SIM;
-	public static final RobotType currentRobot = (currentMode == Mode.REAL || currentMode == Mode.DEMO)
+	public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
+	public static final RobotType currentRobot = (currentMode == Mode.REAL)
 			? RobotType.REALBOT
 			: RobotType.SIMBOT;
 	public static final boolean tuningMode = false;
@@ -40,7 +41,7 @@ public final class Constants {
 	public static final boolean fieldOriented = true;
 	public static final boolean lightsExist = true;
 
-	public static final Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+	// public static final Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
 
 	public static final class OIConstants {
 		public static final ControllerType controllerTypeDriver = ControllerType.XBOX;
@@ -105,6 +106,11 @@ public final class Constants {
 
 	public static final class OdometryConstants {
 		public static final double kOdometerDriftCorrection = 0.25;
+
+		public static final Translation3d kBlueStagePosition = new Translation3d(0,5.551894,2.457194);
+		public static final Translation3d kRedStagePosition = new Translation3d(16.518826,5.551894,2.457194);
+
+		public static final double kRobotElevation = 8.259413;
 	}
 
 	public static final class DriveConstants {
@@ -144,9 +150,7 @@ public final class Constants {
 		public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.452 - 0.01 + 0.046 - 0.016 + 0.014;
 		public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.132 - 0.064 + 0.017 - 0.012 - 0.017;
 
-		/*
-		 * Demo Constants + Real Constants
-		 */
+		// Demo Constants + Real Constants
 
 		public static final double kDemoPhysicalMaxSpeedMetersPerSecond = 2;
 		public static final double kDemoPhysicalMaxAngularSpeedRadiansPerSecond = 1.5 * Math.PI;
@@ -154,27 +158,21 @@ public final class Constants {
 		public static final double kRealPhysicalMaxSpeedMetersPerSecond = 4.5;
 		public static final double kRealPhysicalMaxAngularSpeedRadiansPerSecond = 3 * Math.PI;
 
-		/*
-		 * End of Demo/Real Constants
-		 */
+		public static final double kDemoTeleDriveMaxSpeedMetersPerSecond = kDemoPhysicalMaxSpeedMetersPerSecond;
+		public static final double kDemoTeleDriveMaxAngularSpeedRadiansPerSecond = kDemoPhysicalMaxSpeedMetersPerSecond* 0.4;
+		
+		public static final double kRealTeleDriveMaxSpeedMetersPerSecond = kRealPhysicalMaxSpeedMetersPerSecond;
+		public static final double kRealTeleDriveMaxAngularSpeedRadiansPerSecond = kRealPhysicalMaxSpeedMetersPerSecond* 0.4;
+		
+		// Demo Constants + Real Constants End
 
-		public static final double kPhysicalMaxSpeedMetersPerSecond = currentMode == Mode.DEMO
-				? kDemoPhysicalMaxSpeedMetersPerSecond
-				: kRealPhysicalMaxSpeedMetersPerSecond;
-		public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = currentMode == Mode.DEMO
-				? kDemoPhysicalMaxAngularSpeedRadiansPerSecond
-				: kRealPhysicalMaxAngularSpeedRadiansPerSecond;;
-
-		public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond;
-		public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond
-				* 0.4;
 		public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
 		public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
 
 		public static final HolonomicPathFollowerConfig kHolonomicConfig = new HolonomicPathFollowerConfig(
 				new PIDConstants(0.25, 0.0, 0.0), // Translation PID constants
 				new PIDConstants(0.5, 0.0, 0.0), // Rotation PID constants
-				kTeleDriveMaxSpeedMetersPerSecond, // Max module speed, in m/s
+				kRealTeleDriveMaxSpeedMetersPerSecond, // Max module speed, in m/s
 				// Drive base radius in meters. Distance from robot center to furthest module.
 				Math.sqrt(Math.pow(kTrackWidth, 2) + Math.pow(kWheelBase, 2)) / 2, new ReplanningConfig());
 	}
@@ -306,9 +304,7 @@ public final class Constants {
 		/** Running a simulator */
 		SIM,
 		/** Replaying from a log file */
-		REPLAY,
-		/** Run on half the performance for demonstration purposes */
-		DEMO
+		REPLAY
 	}
 
 	public static enum ControllerType {
