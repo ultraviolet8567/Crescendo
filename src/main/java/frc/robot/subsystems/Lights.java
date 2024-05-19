@@ -156,7 +156,9 @@ public class Lights extends VirtualSubsystem {
 				strobe(Section.BOTTOM, Color.kRed);
 			}
 
-			rainbow(Section.FULL);
+			if (isDemo) {
+				rainbow(Section.FULL);
+			}
 
 			// Update LEDs
 			leds.setData(buffer);
