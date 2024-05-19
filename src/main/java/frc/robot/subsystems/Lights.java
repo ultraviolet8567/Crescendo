@@ -91,8 +91,8 @@ public class Lights extends VirtualSubsystem {
 		});
 		loadingNotifier.startPeriodic(0.02);
 
-		demoToggle = Shuffleboard.getTab("Main").add("Demo", false).withWidget(BuiltInWidgets.kToggleButton)
-				.withPosition(4, 0).getEntry();
+		demoToggle = Shuffleboard.getTab("Main").add("Demo Mode", false).withWidget(BuiltInWidgets.kToggleSwitch)
+				.withSize(1, 1).withPosition(9, 0).getEntry();
 	}
 
 	public void periodic() {

@@ -34,9 +34,6 @@ public final class Constants {
 	public static final boolean fieldOriented = true;
 	public static final boolean lightsExist = true;
 
-	// public static final Alliance alliance =
-	// DriverStation.getAlliance().orElse(Alliance.Blue);
-
 	public static final class OIConstants {
 		public static final ControllerType controllerTypeDriver = ControllerType.XBOX;
 		public static final ControllerType controllerTypeOperator = ControllerType.XBOX;
@@ -144,23 +141,17 @@ public final class Constants {
 		public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.452 - 0.01 + 0.046 - 0.016 + 0.014;
 		public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.132 - 0.064 + 0.017 - 0.012 - 0.017;
 
-		// Demo Constants + Real Constants
+		public static final double kPhysicalMaxSpeedMetersPerSecond = 4.5;
+		public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 3 * Math.PI;
 
-		public static final double kDemoPhysicalMaxSpeedMetersPerSecond = 2;
-		public static final double kDemoPhysicalMaxAngularSpeedRadiansPerSecond = 1.5 * Math.PI;
+		public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond;
+		public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxSpeedMetersPerSecond * 0.4;
 
-		public static final double kRealPhysicalMaxSpeedMetersPerSecond = 4.5;
-		public static final double kRealPhysicalMaxAngularSpeedRadiansPerSecond = 3 * Math.PI;
-
-		public static final double kDemoTeleDriveMaxSpeedMetersPerSecond = kDemoPhysicalMaxSpeedMetersPerSecond;
-		public static final double kDemoTeleDriveMaxAngularSpeedRadiansPerSecond = kDemoPhysicalMaxSpeedMetersPerSecond
-				* 0.4;
-
-		public static final double kRealTeleDriveMaxSpeedMetersPerSecond = kRealPhysicalMaxSpeedMetersPerSecond;
-		public static final double kRealTeleDriveMaxAngularSpeedRadiansPerSecond = kRealPhysicalMaxSpeedMetersPerSecond
-				* 0.4;
-
-		// Demo Constants + Real Constants End
+		public static final double swerveDemoScaleFactor = 0.4;
+		public static final double kDemoTeleDriveMaxSpeedMetersPerSecond = kTeleDriveMaxSpeedMetersPerSecond
+				* swerveDemoScaleFactor;
+		public static final double kDemoTeleDriveMaxAngularSpeedRadiansPerSecond = kTeleDriveMaxAngularSpeedRadiansPerSecond
+				* swerveDemoScaleFactor;
 
 		public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
 		public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
@@ -168,7 +159,7 @@ public final class Constants {
 		public static final HolonomicPathFollowerConfig kHolonomicConfig = new HolonomicPathFollowerConfig(
 				new PIDConstants(0.25, 0.0, 0.0), // Translation PID constants
 				new PIDConstants(0.5, 0.0, 0.0), // Rotation PID constants
-				kRealTeleDriveMaxSpeedMetersPerSecond, // Max module speed, in m/s
+				kTeleDriveMaxSpeedMetersPerSecond, // Max module speed, in m/s
 				// Drive base radius in meters. Distance from robot center to furthest module.
 				Math.sqrt(Math.pow(kTrackWidth, 2) + Math.pow(kWheelBase, 2)) / 2, new ReplanningConfig());
 	}
@@ -224,10 +215,13 @@ public final class Constants {
 	}
 
 	public static final class ShooterConstants {
+
+		public static final double shooterDemoScaleFactor = 0.25;
+
 		public static final double kShooterReduction = 1.0;
 
 		public static final double kVelocityThreshold = 0.8;
-		public static final double kVelocityThresholdAmp = 0.6;
+		public static final double kVelocityThresholdLow = 0.6;
 
 		public static final LoggedTunableNumber kShooterPIDTolerance = new LoggedTunableNumber("Shooter/PID Tolerance",
 				0.5);
@@ -242,7 +236,7 @@ public final class Constants {
 		public static final LoggedTunableNumber kTrapRPM = new LoggedTunableNumber("Shooter/Manual RPM", 1000);
 		public static final LoggedTunableNumber kIdleRPM = new LoggedTunableNumber("Shooter/Idle RPM", 4500);
 
-		// Pls change later
+		// TODO: Change to computed value
 		public static final LoggedTunableNumber kAutoShooterExitVel = new LoggedTunableNumber(
 				"Auto Shooter Exit Velocity", 10);
 

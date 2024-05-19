@@ -75,10 +75,11 @@ public class Swerve extends SubsystemBase {
 	}
 
 	public void setModuleStates(SwerveModuleState[] desiredStates) {
-		SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates,
-				Lights.getInstance().isDemo
-						? DriveConstants.kDemoPhysicalMaxSpeedMetersPerSecond
-						: DriveConstants.kRealPhysicalMaxSpeedMetersPerSecond);
+		double maxSpeed = Lights.getInstance().isDemo
+				? DriveConstants.kDemoTeleDriveMaxSpeedMetersPerSecond
+				: DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+
+		SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, maxSpeed);
 		frontLeft.setDesiredState(desiredStates[0]);
 		frontRight.setDesiredState(desiredStates[1]);
 		backLeft.setDesiredState(desiredStates[2]);

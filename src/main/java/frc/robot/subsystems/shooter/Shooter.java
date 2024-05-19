@@ -2,8 +2,8 @@ package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.Arm.ArmMode;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
@@ -42,8 +42,8 @@ public class Shooter extends SubsystemBase {
 	public boolean atVelocity() {
 		// Velocity threshold for Amp shots is lower because shot velocity requires less
 		// precision
-		double threshold = (arm.getArmMode() == ArmMode.AMP)
-				? ShooterConstants.kVelocityThresholdAmp
+		double threshold = (getTargetVelocity() < 800)
+				? ShooterConstants.kVelocityThresholdLow
 				: ShooterConstants.kVelocityThreshold;
 
 		return inputs.topVelocityRPM >= threshold * inputs.topTargetVelocityRPM
@@ -51,19 +51,19 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public double getTargetVelocity() {
-		switch (arm.getArmMode()) {
-			case SPEAKERFRONT :
-				return ShooterConstants.kSpeakerFrontRPM.get();
-			case SPEAKERANGLE :
-				return ShooterConstants.kSpeakerAngleRPM.get();
-			case SPEAKERSTAGE :
-				return ShooterConstants.kSpeakerStageRPM.get();
-			case AMP :
-				return ShooterConstants.kAmpRPM.get();
-			case TRAP :
-				return ShooterConstants.kTrapRPM.get();
-			default :
-				return ShooterConstants.kIdleRPM.get();
+		double vel = switch (arm.getArmMode()) {
+			case SPEAKERFRONT -> ShooterConstants.kSpeakerFrontRPM.get();
+			case SPEAKERANGLE -> ShooterConstants.kSpeakerAngleRPM.get();
+			case SPEAKERSTAGE -> ShooterConstants.kSpeakerStageRPM.get();
+			case AMP -> ShooterConstants.kAmpRPM.get();
+			case TRAP -> ShooterConstants.kTrapRPM.get();
+			default -> ShooterConstants.kIdleRPM.get();
+		};
+
+		if (Lights.getInstance().isDemo && vel >= 800) {
+			return ShooterConstants.shooterDemoScaleFactor * vel;
+		} else {
+			return vel;
 		}
 	}
 

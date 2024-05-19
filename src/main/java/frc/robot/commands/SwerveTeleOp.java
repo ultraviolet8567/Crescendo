@@ -78,10 +78,10 @@ public class SwerveTeleOp extends Command {
 
 		double teleMaxSpeed = Lights.getInstance().isDemo
 				? DriveConstants.kDemoTeleDriveMaxSpeedMetersPerSecond
-				: DriveConstants.kRealTeleDriveMaxSpeedMetersPerSecond;
+				: DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
 		double teleMaxAngularSpeed = Lights.getInstance().isDemo
 				? DriveConstants.kDemoTeleDriveMaxAngularSpeedRadiansPerSecond
-				: DriveConstants.kRealTeleDriveMaxAngularSpeedRadiansPerSecond;
+				: DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
 		xSpeed = xLimiter.calculate(xSpeed) * teleMaxSpeed;
 		ySpeed = yLimiter.calculate(ySpeed) * teleMaxSpeed;

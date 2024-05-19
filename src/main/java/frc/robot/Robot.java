@@ -122,7 +122,7 @@ public class Robot extends LoggedRobot {
 
 		// Post match timer to Shuffleboard
 		matchTimer = Shuffleboard.getTab("Main").add("Time remaining", 0).withWidget(BuiltInWidgets.kNumberBar)
-				.withProperties(Map.of("min", 0, "max", 135)).withPosition(0, 2).withSize(2, 1).getEntry();
+				.withProperties(Map.of("min", 0, "max", 135)).withPosition(3, 0).withSize(2, 1).getEntry();
 	}
 
 	/**

@@ -48,12 +48,12 @@ public class AutoChooser extends VirtualSubsystem {
 
 		// Post the selectors to the ShuffleBoard
 		main.add("Number of Notes", noteNumber).withWidget(BuiltInWidgets.kComboBoxChooser).withSize(2, 1)
-				.withPosition(3, 0);
-		main.add("Side of Field", sideOfField).withWidget(BuiltInWidgets.kComboBoxChooser).withSize(2, 1)
 				.withPosition(3, 1);
-		main.add("Other Variables", otherStuff).withWidget(BuiltInWidgets.kComboBoxChooser).withSize(2, 1)
+		main.add("Side of Field", sideOfField).withWidget(BuiltInWidgets.kComboBoxChooser).withSize(2, 1)
 				.withPosition(3, 2);
-		autoName = main.add("Auto Name", "").withWidget(BuiltInWidgets.kTextView).withSize(3, 1).withPosition(3, 3)
+		main.add("Other Variables", otherStuff).withWidget(BuiltInWidgets.kComboBoxChooser).withSize(2, 1)
+				.withPosition(3, 3);
+		autoName = main.add("Auto Name", "").withWidget(BuiltInWidgets.kTextView).withSize(2, 1).withPosition(3, 4)
 				.getEntry();
 
 		for (String pathName : AutoBuilder.getAllAutoNames()) {
