@@ -69,8 +69,6 @@ public class Odometry extends SubsystemBase {
 		/* Vision */
 		// "Mu", ID is 70, back middle
 		// cameraStraight = new PhotonCamera("BackStraight");
-		// cameraStraight.setDriverMode(false);
-		// "Nu", ID is 71, back right
 		cameraRight = new PhotonCamera("BackRight");
 		cameraRight.setDriverMode(false);
 		// "Xi", ID is 72, back left
@@ -112,9 +110,10 @@ public class Odometry extends SubsystemBase {
 		/* Vision */
 		Pose2d visionPose = updateVisionPoses();
 		Pose2d odometerPose = odometer.getPoseMeters();
-
+		
+		//Tests code for translation between vision pose and gyrometer pose to reset gryo. (Theoretically) Only does this if vision has a pose.
 		if (visionPose.getTranslation()
-				.getDistance(odometerPose.getTranslation()) > OdometryConstants.kOdometerDriftCorrection) {
+				.getDistance(odometerPose.getTranslation()) > OdometryConstants.kOdometerDriftCorrection && visionPose.getX() != 0) {
 			resetOdometerPose(visionPose);
 		}
 
