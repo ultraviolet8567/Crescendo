@@ -110,10 +110,12 @@ public class Odometry extends SubsystemBase {
 		/* Vision */
 		Pose2d visionPose = updateVisionPoses();
 		Pose2d odometerPose = odometer.getPoseMeters();
-		
-		//Tests code for translation between vision pose and gyrometer pose to reset gryo. (Theoretically) Only does this if vision has a pose.
+
+		// Tests code for translation between vision pose and gyrometer pose to reset
+		// gryo. (Theoretically) Only does this if vision has a pose.
 		if (visionPose.getTranslation()
-				.getDistance(odometerPose.getTranslation()) > OdometryConstants.kOdometerDriftCorrection && visionPose.getX() != 0) {
+				.getDistance(odometerPose.getTranslation()) > OdometryConstants.kOdometerDriftCorrection
+				&& visionPose.getX() != 0) {
 			resetOdometerPose(visionPose);
 		}
 

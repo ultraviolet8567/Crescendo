@@ -163,8 +163,6 @@ public class Lights extends VirtualSubsystem {
 			// Update LEDs
 			leds.setData(buffer);
 		}
-
-		isDemo = demoToggle.getBoolean(false);
 	}
 
 	public void solid(Section section, Color color) {
