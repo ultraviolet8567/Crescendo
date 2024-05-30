@@ -170,10 +170,10 @@ public class Odometry extends SubsystemBase {
 
 		if (!estimatedPosesRight.isPresent() && estimatedPosesLeft.isPresent()) {
 			bestRightPose = estimatedPosesLeft.get().estimatedPose.toPose2d();
-			poseEstimator.addVisionMeasurement(bestRightPose, estimatedPosesRight.get().timestampSeconds);
+			poseEstimator.addVisionMeasurement(bestRightPose, estimatedPosesLeft.get().timestampSeconds);
 		} else if (!estimatedPosesLeft.isPresent() && estimatedPosesRight.isPresent()) {
 			bestLeftPose = estimatedPosesRight.get().estimatedPose.toPose2d();
-			poseEstimator.addVisionMeasurement(bestLeftPose, estimatedPosesLeft.get().timestampSeconds);
+			poseEstimator.addVisionMeasurement(bestLeftPose, estimatedPosesRight.get().timestampSeconds);
 		} else if (estimatedPosesRight.isPresent() && estimatedPosesLeft.isPresent()) {
 			// compare all left and right to each other to find correct robot pose
 			for (Pose3d poseRight : optionsRight) {
