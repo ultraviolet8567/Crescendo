@@ -1,0 +1,30 @@
+{
+  "robotWidth": 0.8128,
+  "robotLength": 0.8255,
+  "holonomicMode": true,
+  "pathFolders": [
+    "1 Note",
+    "1 Note Out Of Way",
+    "2 Note",
+    "3 Note",
+    "3 Note Rush",
+    "4 Note",
+    "4 Note Inner",
+    "4 Note Rush",
+    "5 Note"
+  ],
+  "autoFolders": [
+    "1 Note Autos",
+    "2 Note Autos",
+    "3 Note Autos",
+    "4 Note Autos",
+    "5 Note Autos",
+    "IMPORTANT AUTOS",
+    "not working but important"
+  ],
+  "defaultMaxVel": 4.0,
+  "defaultMaxAccel": 3.0,
+  "defaultMaxAngVel": 540.0,
+  "defaultMaxAngAccel": 720.0,
+  "maxModuleSpeed": 4.5
+}

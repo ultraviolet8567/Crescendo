@@ -1,0 +1,143 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.6884877930156866,
+      "y": 6.6456209102894395
+    },
+    "rotation": -57.84770485871766
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "SpeakerAnglePosition"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShoot"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "3 Note Rush Second Note Source Side"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PickupTimed"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "3 Note Rush Speaker Source Side"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeakerAnglePosition"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShoot"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "3 Note Rush Third Note Source Side"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PickupTimed"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "3 Note Rush Speaker 2 Source Side"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeakerAnglePosition"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "3 Note Autos",
+  "choreoAuto": false
+}

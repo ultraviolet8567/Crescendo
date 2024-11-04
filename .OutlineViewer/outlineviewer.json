@@ -1,0 +1,29 @@
+{
+  "NetworkTables Settings": {
+    "mode": "Client (NT4)",
+    "serverTeam": "8567"
+  },
+  "transitory": {
+    "Shuffleboard": {
+      "open": true
+    },
+    "SmartDashboard": {
+      "TunableNumbers": {
+        "Arm": {
+          "open": true
+        },
+        "Intake": {
+          "open": true
+        },
+        "Shooter": {
+          "Top": {
+            "open": true
+          },
+          "open": true
+        },
+        "open": true
+      },
+      "open": true
+    }
+  }
+}

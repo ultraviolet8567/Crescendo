@@ -1,0 +1,199 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.336590141851963,
+      "y": 7.108551159458209
+    },
+    "rotation": 60.439645535319286
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "SpeakerAnglePosition"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FirstShot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShoot"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "5 Note Second Note Amp Side"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeakerAnglePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUp"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "5 Note Third Note Amp Side"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "4 Note Stage"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeakerStagePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUp"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShoot"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "4 Note Rush Third Note Amp Side"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Pickup"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "4 Note Rush Stage 2 Amp Side"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpeakerStagePosition"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RampUp"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "not working but important",
+  "choreoAuto": false
+}

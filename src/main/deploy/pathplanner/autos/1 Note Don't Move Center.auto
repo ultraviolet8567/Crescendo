@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.3468774807223807,
+      "y": 5.55
+    },
+    "rotation": 0.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "SpeakerFrontPosition"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FirstShot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "1 Note Autos",
+  "choreoAuto": false
+}

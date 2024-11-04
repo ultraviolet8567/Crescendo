@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7418259386281802,
+      "y": 6.691938312786578
+    },
+    "rotation": 60.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "SpeakerAnglePosition"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FirstShot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "1 Note Drive Amp Side"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "1 Note Autos",
+  "choreoAuto": false
+}

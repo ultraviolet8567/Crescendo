@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7193498096269378,
+      "y": 4.4544177308906
+    },
+    "rotation": -60.10109816138542
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "SpeakerAnglePosition"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "FirstShot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "5 Note Shark Source Side"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "IMPORTANT AUTOS",
+  "choreoAuto": false
+}

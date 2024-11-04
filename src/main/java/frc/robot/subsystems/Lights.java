@@ -1,14 +1,20 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.Constants;
 import frc.robot.util.VirtualSubsystem;
 import java.util.List;
+import org.littletonrobotics.junction.Logger;
 
 public class Lights extends VirtualSubsystem {
 	private static Lights instance;
@@ -22,19 +28,22 @@ public class Lights extends VirtualSubsystem {
 	// Robot state tracking
 	public int loopCycleCount = 0;
 	public boolean lowBattery = false;
-	public boolean pickUp = false;
+	public boolean hasNote = false;
+	public boolean climbed = false;
+	public boolean autoFinished = false;
+	public double autoFinishedTime = 0.0;
 	public RobotState state = RobotState.DISABLED;
+	public Alliance alliance = Alliance.Blue;
+	public boolean isDemo = false;
 
 	// LED IO
 	private final AddressableLED leds;
 	private final AddressableLEDBuffer buffer;
+	private final Notifier loadingNotifier;
+	private GenericEntry demoToggle;
 
 	// Constants
-	private static final int leftLength = 19;
-	private static final int rightLength = 19;
-	private static final int backLength = 13;
-	private static final int frontLength = rightLength + leftLength;
-	private static final int length = frontLength + 2 * backLength;
+	private static final int length = 20;
 	private static final int bottomLength = 8;
 	private static final int minLoopCycleCount = 10;
 	private static final double lowBatteryVoltage = 10.0;
@@ -42,7 +51,7 @@ public class Lights extends VirtualSubsystem {
 	private static final double shimmerSpeed = 1;
 	private static final double strobeTickSkip = 15;
 	private static final int strobeSlowDuration = 5;
-	private static final double stripeDuration = 1.0;
+	private static final double stripeDuration = 0.75;
 	private static final int stripeLength = 5;
 	private static final double breathDuration = 1.0;
 	private static final double waveExponent = 0.4;
@@ -59,110 +68,130 @@ public class Lights extends VirtualSubsystem {
 	private static final double waveAllianceDuration = 2.0;
 
 	private Lights() {
-		System.out.println("[Init] Creating LEDs");
-
-		leds = new AddressableLED(1);
+		leds = new AddressableLED(0);
 		buffer = new AddressableLEDBuffer(length);
 
 		leds.setLength(length);
 
-		leds.setData(buffer);
-		leds.start();
+		if (Constants.lightsExist) {
+			System.out.println("[Init] Creating Lights");
+
+			leds.setData(buffer);
+			leds.start();
+		} else {
+			System.out.println("[Init] Lights do not exist");
+		}
+
+		// Indicate robot is booting up
+		loadingNotifier = new Notifier(() -> {
+			synchronized (this) {
+				breath(Section.FULL, Color.kPurple, Color.kBlack, 0.4, System.currentTimeMillis() / 1000.0);
+				leds.setData(buffer);
+			}
+		});
+		loadingNotifier.startPeriodic(0.02);
+
+		demoToggle = Shuffleboard.getTab("Main").add("Demo Mode", false).withWidget(BuiltInWidgets.kToggleSwitch)
+				.withSize(1, 1).withPosition(9, 0).getEntry();
 	}
 
 	public void periodic() {
-		// Exit during initial cycles
-		loopCycleCount++;
-		if (loopCycleCount < minLoopCycleCount) {
-			return;
+		loadingNotifier.stop();
+
+		Logger.recordOutput("RobotState/HasNote", hasNote);
+		Logger.recordOutput("RobotState/DemoMode", isDemo);
+
+		if (DriverStation.getAlliance().isPresent()) {
+			alliance = DriverStation.getAlliance().get();
 		}
 
-		// First branch off depending on what part of the match the robot is in
+		isDemo = demoToggle.getBoolean(false);
 
-		// Disabled
-		if (state == RobotState.DISABLED) {
-			// Purple and yellow stripes
-			stripes(Section.FULL, List.of(Color.kPurple, Color.kDarkGoldenrod), stripeLength, stripeDuration);
-		}
-
-		// Autonomous
-		else if (state == RobotState.AUTO) {
-			// Rainbow
-			rainbow(Section.FULL);
-		}
-
-		// Teleop
-		else {
-			// Alliance colors
-			if (Constants.alliance == Alliance.Blue) {
-				stripes(Section.FULL, List.of(Color.kRoyalBlue, Color.kAliceBlue), stripeLength, stripeDuration);
-			} else {
-				stripes(Section.FULL, List.of(Color.kRed, Color.kOrangeRed), stripeLength, stripeDuration);
+		if (Constants.lightsExist) {
+			// Exit during initial cycles
+			loopCycleCount++;
+			if (loopCycleCount < minLoopCycleCount) {
+				return;
 			}
 
-			// Pickup indicator
-			if (pickUp) {
-				solid(Section.FULL, Color.kGreen);
+			// Default to off
+			solid(Section.FULL, Color.kBlack);
+
+			// Disabled
+			if (state == RobotState.DISABLED) {
+				// Purple and yellow stripes
+				stripes(Section.FULL, List.of(Color.kPurple, Color.kGoldenrod), stripeLength, stripeDuration);
 			}
-		}
 
-		// Indicate low battery in every case
-		lowBattery = (RobotController.getBatteryVoltage() < lowBatteryVoltage);
-		if (lowBattery) {
-			strobe(Section.BOTTOM, Color.kRed);
-		}
+			// Autonomous
+			else if (state == RobotState.AUTO) {
+				// Rainbow
+				rainbow(Section.FULL);
+			}
 
-		// Update LEDs
-		leds.setData(buffer);
+			// Teleop
+			else {
+				// Alliance colors
+				// if (alliance == Alliance.Blue) {
+				// wave(Section.FULL, Color.kLightBlue, Color.kDarkBlue, waveSlowCycleLength,
+				// waveSlowDuration);
+				// } else {
+				// wave(Section.FULL, Color.kFirstRed, Color.kRed, waveSlowCycleLength,
+				// waveSlowDuration);
+				// }
+
+				// Pickup indicator
+				if (hasNote) {
+					solid(Section.FULL, Color.kGreen);
+				}
+
+				if (climbed) {
+					solid(Section.FULL, Color.kOrange);
+				}
+			}
+
+			// Indicate low battery in every case
+			lowBattery = (RobotController.getBatteryVoltage() < lowBatteryVoltage);
+			if (lowBattery) {
+				strobe(Section.BOTTOM, Color.kRed);
+			}
+
+			if (isDemo) {
+				rainbow(Section.FULL);
+			}
+
+			// Update LEDs
+			leds.setData(buffer);
+		}
 	}
 
-	private void solid(Section section, Color color) {
+	public void solid(Section section, Color color) {
 		for (int i = section.start(); i < section.end(); i++) {
 			buffer.setLED(i, color);
 		}
 	}
 
 	private void shimmer(Section section, Color color) {
-		if (section == Section.BOTTOM) {
-			shimmer(Section.LEFTBOTTOM, color);
-			shimmer(Section.RIGHTBOTTOM, color);
-		} else {
-			for (int i = section.start(); i < section.end(); i++) {
-				double brightnessFactor = shimmerExtremeness + Math.sin((loopCycleCount + i) * 0.01) * shimmerSpeed;
-				buffer.setLED(i, new Color(color.red * brightnessFactor, color.green * brightnessFactor,
-						color.blue * brightnessFactor));
-			}
+		for (int i = section.start(); i < section.end(); i++) {
+			double brightnessFactor = shimmerExtremeness + Math.sin((loopCycleCount + i) * 0.01) * shimmerSpeed;
+			buffer.setLED(i, new Color(color.red * brightnessFactor, color.green * brightnessFactor,
+					color.blue * brightnessFactor));
 		}
 	}
 
 	private void rainbow(Section section) {
-		if (section == Section.FULL) {
-			rainbow(Section.LEFTFULL);
-			rainbow(Section.RIGHTFULL);
-			rainbow(Section.LEFTBACK);
-			rainbow(Section.RIGHTBACK);
-		} else if (section == Section.BOTTOM) {
-			rainbow(Section.LEFTBOTTOM);
-			rainbow(Section.RIGHTBOTTOM);
-		} else {
-			for (int i = section.start(); i < section.end(); i++) {
-				int hue = ((loopCycleCount * 3) % 180 + (i * 180 / leftLength)) % 180;
-				buffer.setHSV(i, hue, 255, 128);
-			}
+		for (int i = section.start(); i < section.end(); i++) {
+			int hue = ((loopCycleCount * 3) % 180 + (i * 180 / length)) % 180;
+			buffer.setHSV(i, hue, 255, 128);
 		}
 	}
 
 	private void strobe(Section section, Color color) {
-		if (section == Section.BOTTOM) {
-			strobe(Section.LEFTBOTTOM, color);
-			strobe(Section.RIGHTBOTTOM, color);
-		} else {
-			for (int i = section.start(); i < section.end(); i++) {
-				if (loopCycleCount % (strobeTickSkip) < strobeSlowDuration) {
-					buffer.setLED(i, color);
-				} else {
-					buffer.setHSV(i, 0, 0, 0);
-				}
+		for (int i = section.start(); i < section.end(); i++) {
+			if (loopCycleCount % (strobeTickSkip) < strobeSlowDuration) {
+				buffer.setLED(i, color);
+			} else {
+				buffer.setHSV(i, 0, 0, 0);
 			}
 		}
 	}
@@ -210,29 +239,17 @@ public class Lights extends VirtualSubsystem {
 		solid(section, new Color(red, green, blue));
 	}
 
-	private static enum Section {
-		FULL, BOTTOM, UPPER, LEFTUPPER, LEFTBOTTOM, LEFTFULL, RIGHTUPPER, RIGHTBOTTOM, RIGHTFULL, LEFTSMALL, RIGHTSMALL, LEFTBACK, RIGHTBACK;
+	public static enum Section {
+		FULL, BOTTOM, UPPER;
 
 		private int start() {
 			switch (this) {
 				case FULL :
 					return 0;
-				case LEFTUPPER :
+				case BOTTOM :
+					return 0;
+				case UPPER :
 					return bottomLength;
-				case LEFTBOTTOM :
-					return 0;
-				case LEFTFULL :
-					return 0;
-				case RIGHTUPPER :
-					return bottomLength + leftLength;
-				case RIGHTBOTTOM :
-					return 1 + leftLength;
-				case RIGHTFULL :
-					return 0 + leftLength;
-				case LEFTBACK :
-					return 1 + frontLength;
-				case RIGHTBACK :
-					return 1 + frontLength + backLength;
 				default :
 					return 0;
 			}
@@ -242,22 +259,10 @@ public class Lights extends VirtualSubsystem {
 			switch (this) {
 				case FULL :
 					return length;
-				case LEFTUPPER :
-					return leftLength;
-				case LEFTBOTTOM :
+				case BOTTOM :
 					return bottomLength;
-				case LEFTFULL :
-					return leftLength;
-				case RIGHTUPPER :
-					return frontLength;
-				case RIGHTBOTTOM :
-					return leftLength + bottomLength + 1;
-				case RIGHTFULL :
-					return frontLength;
-				case LEFTBACK :
-					return frontLength + backLength;
-				case RIGHTBACK :
-					return frontLength + backLength + backLength;
+				case UPPER :
+					return length;
 				default :
 					return 0;
 			}
